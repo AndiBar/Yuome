@@ -120,9 +120,16 @@ public class MainActivity extends Activity {
 	}
 
 	private void selectMenuItem(int position) { // Auswahl der Fragments passend zum ListItem
-		if (position == 0) { // Kamera wird geöffnet
-			Intent intent = new Intent(this, CameraActivity.class);
-			startActivity(intent);
+		if (position == 0) { // Eingabeauswahl wird geöffnet
+			Fragment fragment = new InputFragment();
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+			
+			// update selected item and title, then close the drawer
+			mMainMenu.setItemChecked(position, true);
+			mFragmentName=mMainMenuItems[position];
+			getActionBar().setTitle(mFragmentName);
+			mDrawerLayout.closeDrawer(mMainMenu);
 		}
 		if (position == 1) { // Schuldenübersicht
 			Fragment fragment = new SummaryFragment();

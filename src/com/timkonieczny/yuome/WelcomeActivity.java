@@ -71,41 +71,36 @@ public class WelcomeActivity extends Activity {
 	}
 
 	void userLogin(){
-        try{
-            httpclient=new DefaultHttpClient();
-            httppost= new HttpPost("http://timbotombo.heliohost.org/check_for_user.php"); 
-           
-            nameValuePairs = new ArrayList<NameValuePair>(2);
-            // Always use the same variable name for posting i.e the android side variable name and php side variable name should be similar,
-            nameValuePairs.add(new BasicNameValuePair("username",editUsername.getText().toString().trim()));  // $Edittext_value = $_POST['Edittext_value'];
-            nameValuePairs.add(new BasicNameValuePair("password",editPassword.getText().toString().trim()));
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-            //Execute HTTP Post Request
-            ResponseHandler<String> responseHandler = new BasicResponseHandler();
-            final String response = httpclient.execute(httppost, responseHandler);		//Bundles nutzen, um Login-Information an weitere Activities weiterzureichen
-            System.out.println("Response : " + response);
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    debugText.setText("Response from PHP : " + response);
-                    dialog.dismiss();
-                }
-            });
-            if(response.equalsIgnoreCase("User Found")){
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(WelcomeActivity.this,"Hallo, "+editUsername.getText().toString().trim()+"!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
-            }else{
-                showAlert();
-            }
-
-        }catch(Exception e){
-            dialog.dismiss();
-            System.out.println("Exception : " + e.getMessage());
-        }
+	   	 try{
+			 final String response = PHPConnector.getLoginResponse("http://andibar.dyndns.org:5678/Yuome/check_for_user.php", editUsername.getText().toString().trim(), editPassword.getText().toString().trim());
+	         System.out.println("Response : " + response);
+	         dialog.dismiss();
+	         if(response.equalsIgnoreCase(editUsername.getText() + " has logged in successfully.")){
+	             runOnUiThread(new Runnable() {
+	                 public void run() {
+	                     Toast.makeText(WelcomeActivity.this,response, Toast.LENGTH_SHORT).show();
+	                 }
+	             });
+	
+	             Intent intent = new Intent(this, MainActivity.class);
+	             startActivity(intent);
+	         }
+	         else if(response.equalsIgnoreCase(editUsername.getText() + " already logged in.")){
+	             runOnUiThread(new Runnable() {
+	                 public void run() {
+	                     Toast.makeText(WelcomeActivity.this,response, Toast.LENGTH_SHORT).show();
+	                 }
+	             });
+	             Intent intent = new Intent(this, MainActivity.class);
+	             startActivity(intent);
+	         }else{
+	             AlertDialogs.showAlert(this,"Login Error","User not found or password incorrect.");
+	         }
+	
+	     }catch(Exception e){
+	         dialog.dismiss();
+	         AlertDialogs.showAlert(this,"Connection Error",e.getMessage());
+		 }
     }
     public void showAlert(){
         WelcomeActivity.this.runOnUiThread(new Runnable() {

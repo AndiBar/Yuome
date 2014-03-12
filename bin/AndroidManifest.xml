@@ -45,6 +45,11 @@
             android:label="@string/title_activity_camera"
             android:screenOrientation="portrait" >
         </activity>
+           <activity
+            android:name="com.timkonieczny.yuome.ManualInputActivity"
+            android:label="@string/title_manual_input_activity"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>
