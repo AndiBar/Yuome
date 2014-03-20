@@ -15,6 +15,7 @@
     <string name="drawer_open">Menü offen</string>
     <string name="drawer_close">Menü geschlossen</string>
     <string name="menu_icon">Hauptmenü</string>
+    <string name="weiter">Weiter</string>
     
     <color name="green">#338A30</color>
     <color name="black">#000000</color>
@@ -30,5 +31,6 @@
 
     <string name="title_activity_camera">CameraActivity</string>
     <string name="title_manual_input_activity">ManualInputActivity</string>
+    <string name="title_chose_contacts_activity"></string>
 
 </resources>

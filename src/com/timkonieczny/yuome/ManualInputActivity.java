@@ -1,10 +1,14 @@
 package com.timkonieczny.yuome;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ActionBar.LayoutParams;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,47 +31,37 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import org.apache.http.client.ClientProtocolException;
+
+
 public class ManualInputActivity extends ListActivity{
-    ArrayAdapter<String> mAdapter;
-    private PopupWindow popupMessage;
+    public static SimpleAdapter mAdapter;
+    public static ArrayList<HashMap<String,String>> article_list = new ArrayList<HashMap<String,String>>();
+    public static double balance_value;
+
+    public AlertDialogs dialogs;
      
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual_input);
         
-        final SimpleAdapter mAdapter;
-        
-    	final ArrayList<HashMap<String,String>> depts_list = new ArrayList<HashMap<String,String>>();
+    	
         setTitle("Artikel");
         
-    	        // Set up ListView example
-    	        String[] articles = new String[]{};
-    	        Double[] balance = new Double[]{};
-    	        
-    	        double balance_value = 0.0;
-    	        for(Double value : balance){
-    	        	balance_value = balance_value + value;
-    	        }
-    	        balance_value = Math.round(balance_value * 100) / 100.;
+        		balance_value = 0.0;
     	        
     	        TextView text = (TextView) findViewById(R.id.text4);
     	        text.setText(String.valueOf(balance_value) + "€   ");
     	        
-    	        for(int index = 0; index < articles.length; index++){
-    	        	HashMap<String, String> depts = new HashMap<String, String>();
-    	        	depts.put("article", articles[index]);
-    	        	depts.put("balance", balance[index].toString() + "€   ");
-    	        	depts_list.add(depts);
-    	        }
-    	        
     	        mAdapter = new SimpleAdapter(this,
-    	        		depts_list,
+    	        		article_list,
     	        		 R.layout.row_articles,
-                         new String[] {"article", "balance"},
+                         new String[] {"article", "price"},
                          new int[] {R.id.text1,
                                  R.id.text2});
     	        
@@ -76,32 +70,18 @@ public class ManualInputActivity extends ListActivity{
 
         ListView listView = getListView();
         
-        LinearLayout layoutOfPopup = new LinearLayout(this);
-        
-        popupMessage = new PopupWindow(layoutOfPopup, LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT);
-        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View popupLayout = inflater.inflate(R.layout.popup_new_article, layoutOfPopup);
-        
-        popupMessage.setContentView(popupLayout);
-        
-        Button button = (Button) popupLayout.findViewById(R.id.new_article_button);
-        button.setOnClickListener(new OnClickListener(){
-    		public void onClick(View v) {
-    			popupMessage.dismiss();	
-    		}
-        });
+        dialogs = new AlertDialogs(this);
         
         Button new_article = (Button) findViewById(R.id.new_article);
         new_article.setOnClickListener(new OnClickListener(){
+        	public void onClick(View view){	
+                dialogs.newArticleDialog();   
+        	}
+        });
+        Button delete_articles = (Button) findViewById(R.id.delete_articles);
+        delete_articles.setOnClickListener(new OnClickListener(){
         	public void onClick(View view){
-        		if(popupMessage.isShowing()){
-        			popupMessage.dismiss();
-        		}
-        		popupMessage.showAsDropDown(view);
-        		EditText title = (EditText) popupLayout.findViewById(R.id.title);
-        		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(view.getRootView(), InputMethodManager.SHOW_IMPLICIT);
+        		dialogs.deleteAllArticlesDialog();
         	}
         });
         // Create a ListView-specific touch listener. ListViews are given special treatment because
@@ -119,9 +99,13 @@ public class ManualInputActivity extends ListActivity{
                             @Override
                             public void onDismiss(ListView listView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-                                	HashMap<String, String> test = new HashMap<String, String>();
-                                    test = (HashMap<String, String>) mAdapter.getItem(position);
-                                    depts_list.remove(test);
+                                	HashMap<String, String> article = new HashMap<String, String>();
+                                    article = (HashMap<String, String>) mAdapter.getItem(position);
+                                    article_list.remove(article);
+                                    balance_value = balance_value - Double.parseDouble(article.get("price"));
+                                    balance_value = Math.round(balance_value * 100) / 100.;
+                                    TextView text = (TextView) findViewById(R.id.text4);
+                                    text.setText(String.valueOf(balance_value) + "€   ");
                                 }
                                mAdapter.notifyDataSetChanged();
                             }
@@ -131,11 +115,43 @@ public class ManualInputActivity extends ListActivity{
         // we don't look for swipes.
         listView.setOnScrollListener(touchListener.makeScrollListener());
     }
+    public static void addArticle(String title, String price, Activity activity){
+    	HashMap<String, String> depts = new HashMap<String, String>();
+    	depts.put("article", title);
+    	depts.put("price", price);
+    	article_list.add(depts);
+
+    	balance_value = balance_value + Double.parseDouble(price);
+        balance_value = Math.round(balance_value * 100) / 100.;
+        
+        TextView text = (TextView) activity.findViewById(R.id.text4);
+        text.setText(String.valueOf(balance_value) + "€   ");
+    	mAdapter.notifyDataSetChanged();
+    }
+    public static void deleteAllArticles(Activity activity){
+    	article_list.removeAll(article_list);
+    	balance_value = 0.0;
+        TextView text = (TextView) activity.findViewById(R.id.text4);
+        text.setText(String.valueOf(balance_value) + "€   ");
+    	mAdapter.notifyDataSetChanged();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-    	return true;
+    	MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.article_input, menu);
+        return true;
     }
     public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()) {
+        case R.id.action_addbuy:
+        	Intent intent = new Intent(this, ChoseContactsActivity.class);
+            startActivity(intent);
+          break;
+        
+        default:
+          break;
+        }
+
         return true;
       } 
     protected double calculateValue(ArrayList<HashMap<String, Double>> depts_list){
