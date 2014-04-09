@@ -72,7 +72,7 @@ public class WelcomeActivity extends Activity {
 
 	void userLogin(){
 	   	 try{
-			 final String response = PHPConnector.getLoginResponse("http://andibar.dyndns.org:5678/Yuome/check_for_user.php", editUsername.getText().toString().trim(), editPassword.getText().toString().trim());
+			 final String response = PHPConnector.getLoginResponse("http://andibar.dyndns.org/Yuome/check_for_user.php", editUsername.getText().toString().trim(), editPassword.getText().toString().trim());
 	         System.out.println("Response : " + response);
 	         dialog.dismiss();
 	         if(response.equalsIgnoreCase(editUsername.getText() + " has logged in successfully.")){
