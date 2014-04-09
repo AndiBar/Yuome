@@ -27,7 +27,7 @@ import android.widget.SimpleAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ChoseContactsActivity extends ListActivity {
+public class ChooseContactsActivity extends ListActivity {
     ArrayAdapter<String> mAdapter;
      
     public void onCreate(Bundle savedInstanceState) {

@@ -122,7 +122,7 @@ public class ManualInputActivity extends ListActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch (item.getItemId()) {
         case R.id.action_addbuy:
-        	Intent intent = new Intent(this, ChoseContactsActivity.class);
+        	Intent intent = new Intent(this, ChooseContactsActivity.class);
             startActivity(intent);
           break;
         
