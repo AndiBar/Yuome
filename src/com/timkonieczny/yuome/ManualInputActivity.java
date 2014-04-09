@@ -138,7 +138,7 @@ public class ManualInputActivity extends ListActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.article_input, menu);
+        inflater.inflate(R.menu.receipt_postprocessing, menu);
         return true;
     }
     public boolean onOptionsItemSelected(MenuItem item) {
