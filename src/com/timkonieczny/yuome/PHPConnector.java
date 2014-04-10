@@ -42,7 +42,6 @@ public class PHPConnector {
 		return response;
 	}
 	public static void logOff() throws ClientProtocolException, IOException{
-		System.out.println("blaaa");
 		httpget = new HttpGet("http://andibar.dyndns.org/Yuome/log_off.php");
 		httpclient.execute(httpget);
 
