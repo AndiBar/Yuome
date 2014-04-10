@@ -32,7 +32,7 @@ public class ChooseContactsActivity extends ListActivity {
      
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chose_contacts);
+        setContentView(R.layout.activity_choose_contacts);
         
         setTitle("Kontakte");
         
@@ -52,7 +52,7 @@ public class ChooseContactsActivity extends ListActivity {
         
         mAdapter = new SimpleAdapter(this,
         		users_list,
-        		 R.layout.activity_chose_contacts_item,
+        		 R.layout.activity_choose_contacts_item,
                  new String[] {"contact"},
                  new int[] {R.id.contactCheckBox});
         
@@ -60,7 +60,7 @@ public class ChooseContactsActivity extends ListActivity {
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.chose_contacts, menu);
+        inflater.inflate(R.menu.choose_contacts, menu);
         return true;
       }
       public boolean onOptionsItemSelected(MenuItem item) {
