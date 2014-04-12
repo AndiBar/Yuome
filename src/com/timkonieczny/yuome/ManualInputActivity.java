@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,6 +15,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -121,6 +124,14 @@ public class ManualInputActivity extends ListActivity{
     	switch (item.getItemId()) {
         case R.id.action_addbuy:
         	Intent intent = new Intent(this, ChooseContactsActivity.class);
+        	ArrayList parcellist = new ArrayList<Article>();
+        	Bundle articles = new Bundle();
+        	for(HashMap<String,String> article : article_list){
+        		Parcelable parcel = new Article(article.get("article"),article.get("price"));
+        		parcellist.add(parcel);
+        	}
+        	articles.putParcelableArrayList("articles", parcellist);
+          	intent.putExtras(articles);
             startActivity(intent);
           break;
         

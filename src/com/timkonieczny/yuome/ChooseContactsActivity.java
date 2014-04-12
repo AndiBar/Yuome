@@ -36,17 +36,17 @@ public class ChooseContactsActivity extends ListActivity {
         
         setTitle("Kontakte");
         
+        Bundle data = getIntent().getExtras();
+        ArrayList<Article> articles = (ArrayList) data.getParcelableArrayList("articles");
+
         ArrayList<HashMap<String, String>> users_list = new ArrayList<HashMap<String,String>>();
         SimpleAdapter mAdapter;
         
-        String[] contacts = new String[]{
-        		"Erik Harbeck",
-        		"Nicolas Schwartau",
-        		"Tim Konieczny"};
+        ArrayList<String> contacts = new ArrayList<String>();
         
-        for(int index = 0; index < contacts.length; index++){
+        for(int index = 0; index < contacts.size(); index++){
         	HashMap<String, String> depts = new HashMap<String, String>();
-        	depts.put("contact", "   " + contacts[index]);
+        	depts.put("contact", "   " + contacts.get(index));
         	users_list.add(depts);
         }
         
