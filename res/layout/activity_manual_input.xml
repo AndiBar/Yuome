@@ -3,6 +3,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
+    <SearchView android:id="@+id/search_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:queryHint="Search dictionary"/>
+    <TextView
+            android:id="@+id/text"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="17dp"
+            android:text="Nach Artikeln suchen"
+            android:background="@android:drawable/title_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+    <ListView
+            android:id="@+id/dynamic_list"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    
    	<FrameLayout
     android:layout_width="match_parent"
     android:layout_height="55sp"
