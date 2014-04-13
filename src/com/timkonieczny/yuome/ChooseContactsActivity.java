@@ -24,11 +24,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.SimpleAdapter;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.http.client.ClientProtocolException;
+
 public class ChooseContactsActivity extends ListActivity {
-    ArrayAdapter<String> mAdapter;
+    public static SimpleAdapter mAdapter;
+    public static ArrayList<HashMap<String, String>> friends_list = new ArrayList<HashMap<String,String>>();
      
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,22 +43,26 @@ public class ChooseContactsActivity extends ListActivity {
         
         Bundle data = getIntent().getExtras();
         ArrayList<Article> articles = (ArrayList) data.getParcelableArrayList("articles");
-
-        ArrayList<HashMap<String, String>> users_list = new ArrayList<HashMap<String,String>>();
-        SimpleAdapter mAdapter;
         
-        ArrayList<String> contacts = new ArrayList<String>();
+        Thread friends_thread = new FriendsThread();
+        friends_thread.start();
         
-        for(int index = 0; index < contacts.size(); index++){
-        	HashMap<String, String> depts = new HashMap<String, String>();
-        	depts.put("contact", "   " + contacts.get(index));
-        	users_list.add(depts);
-        }
+        try {
+        	long waitMillis = 10000;
+        	   friends_thread.join(waitMillis);
+        	   if (friends_thread.isAlive()) {
+        	      // Die 10 Sekunden sind um; der Thread läuft noch
+        	   } else {
+        	      // Thread ist beendet
+        	   }
+        	} catch (InterruptedException e) {
+        	   // Thread wurde abgebrochen
+        	}
         
         mAdapter = new SimpleAdapter(this,
-        		users_list,
+        		friends_list,
         		 R.layout.activity_choose_contacts_item,
-                 new String[] {"contact"},
+                 new String[] {"username"},
                  new int[] {R.id.contactCheckBox});
         
         setListAdapter(mAdapter);	
@@ -75,5 +84,18 @@ public class ChooseContactsActivity extends ListActivity {
           }
 
           return true;
-        } 
+        }
+      public class FriendsThread extends Thread{
+    	  public void run(){
+  	       	try {
+  				friends_list = PHPConnector.getFriends();
+  			} catch (ClientProtocolException e) {
+  				// TODO Auto-generated catch block
+  				e.printStackTrace();
+  			} catch (IOException e) {
+  				// TODO Auto-generated catch block
+  				e.printStackTrace();
+  			}
+    	  }
+      }
 }

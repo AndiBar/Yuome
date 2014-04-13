@@ -52,18 +52,17 @@ public class ManualInputActivity extends ListActivity{
         mListView = (ListView) findViewById(R.id.dynamic_list);
         
         
-        		balance_value = 0.0;
-    	        
-    	        TextView text = (TextView) findViewById(R.id.text4);
-    	        text.setText(String.valueOf(balance_value) + "€   ");
-    	        
-    	        mAdapter = new SimpleAdapter(this,
-    	        		article_list,
-    	        		 R.layout.row_articles,
-                         new String[] {"article", "price"},
-                         new int[] {R.id.text1,
-                                 R.id.text2});
-    	        
+		balance_value = 0.0;
+        
+        TextView text = (TextView) findViewById(R.id.text4);
+        text.setText(String.valueOf(balance_value) + "€   ");
+        
+        mAdapter = new SimpleAdapter(this,
+        		article_list,
+        		 R.layout.row_articles,
+                 new String[] {"article", "price"},
+                 new int[] {R.id.text1,
+                         R.id.text2});
 
     	setListAdapter(mAdapter);
 
