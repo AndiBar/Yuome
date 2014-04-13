@@ -74,18 +74,7 @@ public class SignupActivity extends Activity {
 
 	void userSignup(){
         try{
-            httpclient=new DefaultHttpClient();
-            httppost= new HttpPost("http://timbotombo.heliohost.org/add_user.php"); 
-            
-            nameValuePairs = new ArrayList<NameValuePair>(2);
-            // Always use the same variable name for posting i.e the android side variable name and php side variable name should be similar,
-            nameValuePairs.add(new BasicNameValuePair("username",editUsername.getText().toString().trim()));  // $Edittext_value = $_POST['Edittext_value'];
-            nameValuePairs.add(new BasicNameValuePair("password",editPassword.getText().toString().trim()));
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-            //Execute HTTP Post Request
-            ResponseHandler<String> responseHandler = new BasicResponseHandler();
-            final String response = httpclient.execute(httppost, responseHandler);		//Bundles nutzen, um Login-Information an weitere Activities weiterzureichen
-            System.out.println("Response : " + response);
+            String response = PHPConnector.addUser(editUsername.getText().toString().trim(),editPassword.getText().toString().trim());
             runOnUiThread(new Runnable() {
                 public void run() {
                     //debugText.setText("Response from PHP : " + response);
@@ -96,11 +85,11 @@ public class SignupActivity extends Activity {
             if(response.equalsIgnoreCase("Success")){
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(SignupActivity.this,"Registrierung erfolgreich. Hallo, "+editUsername.getText().toString().trim()+"!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignupActivity.this,"Registrierung erfolgreich.", Toast.LENGTH_SHORT).show();
                     }
                 });
 
-                startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                startActivity(new Intent(SignupActivity.this, WelcomeActivity.class));
             }else{
                 showAlert();
             }

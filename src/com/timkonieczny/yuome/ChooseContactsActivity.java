@@ -49,15 +49,11 @@ public class ChooseContactsActivity extends ListActivity {
         
         try {
         	long waitMillis = 10000;
+        	while (friends_thread.isAlive()) {
         	   friends_thread.join(waitMillis);
-        	   if (friends_thread.isAlive()) {
-        	      // Die 10 Sekunden sind um; der Thread läuft noch
-        	   } else {
-        	      // Thread ist beendet
-        	   }
-        	} catch (InterruptedException e) {
-        	   // Thread wurde abgebrochen
         	}
+        } catch (InterruptedException e) {
+        }
         
         mAdapter = new SimpleAdapter(this,
         		friends_list,

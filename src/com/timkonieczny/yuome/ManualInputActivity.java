@@ -62,13 +62,10 @@ public class ManualInputActivity extends ListActivity implements OnItemSelectedL
         adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, mItems);
         mItemsTextView.setThreshold(2);
         mItemsTextView.setAdapter(adapter);
-
-
         
 		mTextView = (TextView) findViewById(R.id.text);
         mListView = (ListView) findViewById(R.id.dynamic_list);
-        
-        
+                
 		balance_value = 0.0;
         
         TextView text = (TextView) findViewById(R.id.text4);

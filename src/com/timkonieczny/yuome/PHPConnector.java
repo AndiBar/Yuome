@@ -2,6 +2,7 @@ package com.timkonieczny.yuome;
 
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -39,13 +40,11 @@ public class PHPConnector {
         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
         response = httpclient.execute(httppost, responseHandler);
-		
 		return response;
 	}
 	public static void logOff() throws ClientProtocolException, IOException{
 		httpget = new HttpGet("http://andibar.dyndns.org/Yuome/log_off.php");
 		httpclient.execute(httpget);
-		
 	}
 	public static String getItemListResponse(String url, String store) throws ClientProtocolException, IOException{
         httppost = new HttpPost(url);
@@ -72,5 +71,37 @@ public class PHPConnector {
         	friends.add(friends_map);
         }
 		return friends;
+	}
+	public static void addBuy(ArrayList<HashMap<String,String>> articles, ArrayList<HashMap<String,String>> contacts, String owner, String date, String store) throws ClientProtocolException, IOException{
+		httppost = new HttpPost("http://andibar.dyndns.org/Yuome/add_buy.php");
+        nameValuePairs = new ArrayList<NameValuePair>();
+        for(int i = 0; i < articles.size(); i++){
+        	nameValuePairs.add(new BasicNameValuePair("article" + i,articles.get(i).get("article")));
+        	nameValuePairs.add(new BasicNameValuePair("price" + i,articles.get(i).get("price")));
+        }
+        for(int i = 0; i < contacts.size(); i++){
+        	nameValuePairs.add(new BasicNameValuePair("ID" + i,contacts.get(i).get("ID")));
+        	nameValuePairs.add(new BasicNameValuePair("username" + i,contacts.get(i).get("username")));
+        }
+        nameValuePairs.add(new BasicNameValuePair("owner_id",owner));  
+        nameValuePairs.add(new BasicNameValuePair("date",date));
+        nameValuePairs.add(new BasicNameValuePair("store",store));
+		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		ResponseHandler<String> responseHandler = new BasicResponseHandler();
+        response = httpclient.execute(httppost, responseHandler);
+	
+	}
+	public static String addUser(String username, String password) throws ClientProtocolException, IOException{
+		httpclient=new DefaultHttpClient();
+	    httppost= new HttpPost("http://andibar.dyndns.org/Yuome/add_user.php"); 
+	    nameValuePairs = new ArrayList<NameValuePair>(2);
+	    // Always use the same variable name for posting i.e the android side variable name and php side variable name should be similar,
+	    nameValuePairs.add(new BasicNameValuePair("username",username));  // $Edittext_value = $_POST['Edittext_value'];
+	    nameValuePairs.add(new BasicNameValuePair("password",password));
+	    httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+	    //Execute HTTP Post Request
+	    ResponseHandler<String> responseHandler = new BasicResponseHandler();
+	    final String response = httpclient.execute(httppost, responseHandler);		//Bundles nutzen, um Login-Information an weitere Activities weiterzureichen
+	    return response;
 	}
 }
