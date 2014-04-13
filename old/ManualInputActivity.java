@@ -20,19 +20,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class ManualInputActivity extends ListActivity implements OnItemSelectedListener{
+public class ManualInputActivity extends ListActivity{
     public static SimpleAdapter mAdapter;
     public static ArrayList<HashMap<String,String>> article_list = new ArrayList<HashMap<String,String>>();
     public static double balance_value;
@@ -41,30 +36,18 @@ public class ManualInputActivity extends ListActivity implements OnItemSelectedL
     
     private TextView mTextView;
     private ListView mListView;
-    
-    private AutoCompleteTextView mItemsTextView;
-    private Spinner mStoreSpinner;
-
-    private String[] mItems = { "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten" };
-    private String[] mStores = { "Aldi", "REWE", "Penny", "Lidl", "real", "Sonstige" };
      
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual_input);
         setTitle("Artikel");
         
-        mStoreSpinner = (Spinner) findViewById(R.id.store_spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, mStores);
-        mStoreSpinner.setAdapter(adapter);
-        mStoreSpinner.setOnItemSelectedListener(this);
-
-        mItemsTextView = (AutoCompleteTextView) findViewById(R.id.add_item_textview);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, mItems);
-        mItemsTextView.setThreshold(2);
-        mItemsTextView.setAdapter(adapter);
-
-
-        
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		
+		SearchView searchView = (SearchView) findViewById(R.id.search_view);
+		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+		searchView.setIconifiedByDefault(false);
+		
 		mTextView = (TextView) findViewById(R.id.text);
         mListView = (ListView) findViewById(R.id.dynamic_list);
         
@@ -187,25 +170,63 @@ public class ManualInputActivity extends ListActivity implements OnItemSelectedL
 		return 0;
     	
     }
+    
+    @Override
+    protected void onNewIntent(Intent intent) {
+        // Because this activity has set launchMode="singleTop", the system calls this method
+        // to deliver the intent if this activity is currently the foreground activity when
+        // invoked again (when the user executes a search from this activity, we don't create
+        // a new instance of this activity, so the system delivers the search intent here)
+    	
+    	System.out.println("onNewIntent called");
+    	
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            // handles a click on a search suggestion; launches activity to show word
+            Intent wordIntent = new Intent(this, WordActivity.class);   //TODO: Was passiert, wenn in der Liste ein Eintrag ausgewählt wird?
+            wordIntent.setData(intent.getData());
+            startActivity(wordIntent);
+        } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            // handles a search query
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            showResults(query);
+        }
+    }
+    
+    private void showResults(String query) {
 
-	@Override
-	public void onItemSelected(AdapterView<?> arg0, View arg1, int pos, long arg3) {	//Auswertung des Spinners
-		mTextView.setText(mStores[pos]);
-		getItemList(mStores[pos]);
-	}
+        Cursor cursor = managedQuery(DictionaryProvider.CONTENT_URI, null, null, new String[] {query}, null);
+        
+        System.out.println("showResults called.");
+        
+        if (cursor == null) {
+            // There are no results
+            mTextView.setText("Kein Ergebnis gefunden");
+        } else {
+            // Specify the columns we want to display in the result
+            String[] from = new String[] { DictionaryDatabase.KEY_WORD,
+                                           DictionaryDatabase.KEY_DEFINITION };
 
-	@Override
-	public void onNothingSelected(AdapterView<?> arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	private void getItemList(String store){
-	   	 try{
-			 final String response = PHPConnector.getItemListResponse("http://andibar.dyndns.org/Yuome/search_item.php", store);
-	         System.out.println("Response : " + response);
-	     }catch(Exception e){
-	         AlertDialogs.showAlert(this,"Connection Error",e.getMessage());
-		 }
-   }
+            // Specify the corresponding layout elements where we want the columns to go
+            int[] to = new int[] { R.id.word,
+                                   R.id.definition };
+
+            // Create a simple cursor adapter for the definitions and apply them to the ListView
+            SimpleCursorAdapter words = new SimpleCursorAdapter(this, R.layout.result, cursor, from, to);
+            mListView.setAdapter(words);
+
+            // Define the on-click listener for the list items
+            mListView.setOnItemClickListener(new OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    // Build the Intent used to open WordActivity with a specific word Uri
+                    Intent wordIntent = new Intent(getApplicationContext(), WordActivity.class);
+                    Uri data = Uri.withAppendedPath(DictionaryProvider.CONTENT_URI,
+                                                    String.valueOf(id));
+                    wordIntent.setData(data);
+                    startActivity(wordIntent);
+                }
+            });
+        }
+    }
 }

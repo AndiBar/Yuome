@@ -41,6 +41,18 @@ public class PHPConnector {
 		
 		return response;
 	}
+	
+	public static String getItemListResponse(String url, String store) throws ClientProtocolException, IOException{
+        httppost = new HttpPost(url);
+        nameValuePairs = new ArrayList<NameValuePair>(1);
+        nameValuePairs.add(new BasicNameValuePair("store",store));  
+        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+        ResponseHandler<String> responseHandler = new BasicResponseHandler();
+        response = httpclient.execute(httppost, responseHandler);	//TODO: Hier crasht es
+
+		return response;
+	}
+	
 	public static void logOff() throws ClientProtocolException, IOException{
 		System.out.println("blaaa");
 		httpget = new HttpGet("http://andibar.dyndns.org/Yuome/log_off.php");
