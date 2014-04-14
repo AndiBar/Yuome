@@ -74,7 +74,7 @@ public class SignupActivity extends Activity {
 
 	void userSignup(){
         try{
-            String response = PHPConnector.addUser(editUsername.getText().toString().trim(),editPassword.getText().toString().trim());
+            String response = PHPConnector.getLoginResponse("http://andibar.dyndns.org/Yuome/add_user.php",editUsername.getText().toString().trim(),editPassword.getText().toString().trim());
             runOnUiThread(new Runnable() {
                 public void run() {
                     //debugText.setText("Response from PHP : " + response);

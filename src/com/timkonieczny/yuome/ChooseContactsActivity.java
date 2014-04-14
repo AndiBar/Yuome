@@ -22,8 +22,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,30 +64,44 @@ public class ChooseContactsActivity extends ListActivity {
         mAdapter = new SimpleAdapter(this,
         		friends_list,
         		 R.layout.activity_choose_contacts_item,
-                 new String[] {"username"},
-                 new int[] {R.id.contactCheckBox});
+                 new String[] {"username", "ID", "contactCheckBox"},
+                 new int[] {R.id.username, R.id.ID, R.id.contactCheckBox});
         
-        setListAdapter(mAdapter);	
+        setListAdapter(mAdapter);
+        
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.choose_contacts, menu);
         return true;
-      }
-      public boolean onOptionsItemSelected(MenuItem item) {
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
           switch (item.getItemId()) {
-          case R.id.action_addbuy:
-          	Intent intent = new Intent(this, MainActivity.class);
-              startActivity(intent);
-            break;
-          
-          default:
-            break;
+	          case R.id.action_addbuy:
+	        	getChosenContacts();
+	          	Intent intent = new Intent(this, MainActivity.class);
+	            startActivity(intent);
+	            break;
+	          
+	          default:
+	            break;
           }
-
-          return true;
-        }
-      public class FriendsThread extends Thread{
+	          return true;
+    }
+    public void getChosenContacts(){
+			ListView contacts_list = getListView();
+			SimpleAdapter contacts = (SimpleAdapter) contacts_list.getAdapter();
+			for(int i = 0; i < contacts.getCount(); i++){
+				View listItem = contacts.getView(i, null, contacts_list);
+				CheckBox check_box = (CheckBox) listItem.findViewById(R.id.contactCheckBox);
+				if(check_box.isChecked()){
+					TextView text_view = (TextView) listItem.findViewById(R.id.ID);
+					System.out.println(text_view.getText());
+				}
+				
+			}
+    }
+    public class FriendsThread extends Thread{
     	  public void run(){
   	       	try {
   				friends_list = PHPConnector.getFriends();
@@ -93,5 +113,5 @@ public class ChooseContactsActivity extends ListActivity {
   				e.printStackTrace();
   			}
     	  }
-      }
+    }
 }

@@ -91,17 +91,4 @@ public class PHPConnector {
         response = httpclient.execute(httppost, responseHandler);
 	
 	}
-	public static String addUser(String username, String password) throws ClientProtocolException, IOException{
-		httpclient=new DefaultHttpClient();
-	    httppost= new HttpPost("http://andibar.dyndns.org/Yuome/add_user.php"); 
-	    nameValuePairs = new ArrayList<NameValuePair>(2);
-	    // Always use the same variable name for posting i.e the android side variable name and php side variable name should be similar,
-	    nameValuePairs.add(new BasicNameValuePair("username",username));  // $Edittext_value = $_POST['Edittext_value'];
-	    nameValuePairs.add(new BasicNameValuePair("password",password));
-	    httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-	    //Execute HTTP Post Request
-	    ResponseHandler<String> responseHandler = new BasicResponseHandler();
-	    final String response = httpclient.execute(httppost, responseHandler);		//Bundles nutzen, um Login-Information an weitere Activities weiterzureichen
-	    return response;
-	}
 }
