@@ -73,6 +73,7 @@
         <!-- Points to searchable activity so the whole app can invoke search. -->
         <meta-data android:name="android.app.default_searchable"
                    android:value=".SearchableDictionary" />
+        <activity android:name="com.timkonieczny.yuome.ContactsNewActivity"></activity>
     </application>
 
 </manifest>
