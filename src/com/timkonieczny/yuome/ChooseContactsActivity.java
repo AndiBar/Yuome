@@ -22,13 +22,24 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.http.client.ClientProtocolException;
+
 public class ChooseContactsActivity extends ListActivity {
-    ArrayAdapter<String> mAdapter;
+    public static SimpleAdapter mAdapter;
+    public static ArrayList<HashMap<String, String>> friends_list = new ArrayList<HashMap<String,String>>();
      
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,42 +49,69 @@ public class ChooseContactsActivity extends ListActivity {
         
         Bundle data = getIntent().getExtras();
         ArrayList<Article> articles = (ArrayList) data.getParcelableArrayList("articles");
-
-        ArrayList<HashMap<String, String>> users_list = new ArrayList<HashMap<String,String>>();
-        SimpleAdapter mAdapter;
         
-        ArrayList<String> contacts = new ArrayList<String>();
+        Thread friends_thread = new FriendsThread();
+        friends_thread.start();
         
-        for(int index = 0; index < contacts.size(); index++){
-        	HashMap<String, String> depts = new HashMap<String, String>();
-        	depts.put("contact", "   " + contacts.get(index));
-        	users_list.add(depts);
+        try {
+        	long waitMillis = 10000;
+        	while (friends_thread.isAlive()) {
+        	   friends_thread.join(waitMillis);
+        	}
+        } catch (InterruptedException e) {
         }
         
         mAdapter = new SimpleAdapter(this,
-        		users_list,
+        		friends_list,
         		 R.layout.activity_choose_contacts_item,
-                 new String[] {"contact"},
-                 new int[] {R.id.contactCheckBox});
+                 new String[] {"username", "ID", "contactCheckBox"},
+                 new int[] {R.id.username, R.id.ID, R.id.contactCheckBox});
         
-        setListAdapter(mAdapter);	
+        setListAdapter(mAdapter);
+        
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.choose_contacts, menu);
         return true;
-      }
-      public boolean onOptionsItemSelected(MenuItem item) {
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
           switch (item.getItemId()) {
-          case R.id.action_addbuy:
-          	Intent intent = new Intent(this, MainActivity.class);
-              startActivity(intent);
-            break;
-          
-          default:
-            break;
+	          case R.id.action_addbuy:
+	        	getChosenContacts();
+	          	Intent intent = new Intent(this, MainActivity.class);
+	            startActivity(intent);
+	            break;
+	          
+	          default:
+	            break;
           }
-
-          return true;
-        } 
+	          return true;
+    }
+    public void getChosenContacts(){
+			ListView contacts_list = getListView();
+			SimpleAdapter contacts = (SimpleAdapter) contacts_list.getAdapter();
+			for(int i = 0; i < contacts.getCount(); i++){
+				View listItem = contacts.getView(i, null, contacts_list);
+				CheckBox check_box = (CheckBox) listItem.findViewById(R.id.contactCheckBox);
+				if(check_box.isChecked()){
+					TextView text_view = (TextView) listItem.findViewById(R.id.ID);
+					System.out.println(text_view.getText());
+				}
+				
+			}
+    }
+    public class FriendsThread extends Thread{
+    	  public void run(){
+  	       	try {
+  				friends_list = PHPConnector.getFriends();
+  			} catch (ClientProtocolException e) {
+  				// TODO Auto-generated catch block
+  				e.printStackTrace();
+  			} catch (IOException e) {
+  				// TODO Auto-generated catch block
+  				e.printStackTrace();
+  			}
+    	  }
+    }
 }
