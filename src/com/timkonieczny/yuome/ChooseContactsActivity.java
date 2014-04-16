@@ -23,7 +23,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListAdapter;
@@ -67,7 +70,23 @@ public class ChooseContactsActivity extends ListActivity {
                  new String[] {"username", "ID", "contactCheckBox"},
                  new int[] {R.id.username, R.id.ID, R.id.contactCheckBox});
         
-        setListAdapter(mAdapter);
+        ListView listView = getListView();
+        listView.setAdapter(mAdapter);
+        listView.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> adapter, View v, int position,
+					long arg3) {
+						View item = (View) adapter.getItemAtPosition(position);
+						CheckBox check_box = (CheckBox) item.findViewById(R.id.contactCheckBox);
+						System.out.println(position);
+						if (!check_box.isChecked()){
+							check_box.setChecked(true);
+						}
+			}	
+        });
+        
+        mAdapter.notifyDataSetChanged();
         
     }
     public boolean onCreateOptionsMenu(Menu menu) {
