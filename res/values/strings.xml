@@ -16,6 +16,7 @@
     <string name="drawer_close">Menü geschlossen</string>
     <string name="menu_icon">Hauptmenü</string>
     <string name="weiter">Weiter</string>
+    <string name="new_contacts">neuen Kontakt hinzuf\c3bcgen</string>
     
     <color name="green">#338A30</color>
     <color name="black">#000000</color>
