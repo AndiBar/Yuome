@@ -197,11 +197,29 @@ public class ManualInputActivity extends ListActivity implements OnItemSelectedL
 	}
 	
 	private void getItemList(String store){
+		System.out.println("getItemList");
+		final String Store=store;
+		new Thread(
+        		new Runnable(){
+        			public void run(){		//TODO: wirft immer noch Exception
+        				try{
+        					final String response = PHPConnector.getItemListResponse("http://andibar.dyndns.org/Yuome/search_item.php", Store);
+        					System.out.println("Response : " + response);
+        				}catch(Exception e){
+        					runOnUiThread(new Runnable() {
+        		                 public void run() {
+        		                     Toast.makeText(ManualInputActivity.this,"Connection failed", Toast.LENGTH_SHORT).show();
+        		                 }
+        		             });
+        				}
+        			}
+        		}
+        ).start();
+		
 	   	 try{
-			 final String response = PHPConnector.getItemListResponse("http://andibar.dyndns.org/Yuome/search_item.php", store);
-	         System.out.println("Response : " + response);
+			 
 	     }catch(Exception e){
-	         AlertDialogs.showAlert(this,"Connection Error",e.getMessage());
+	         
 		 }
    }
 }

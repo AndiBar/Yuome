@@ -47,12 +47,13 @@ public class PHPConnector {
 		httpclient.execute(httpget);
 	}
 	public static String getItemListResponse(String url, String store) throws ClientProtocolException, IOException{
+		httppost.getEntity().consumeContent();		//TODO: Welche Verbindung ist offen?
         httppost = new HttpPost(url);
         nameValuePairs = new ArrayList<NameValuePair>(1);
         nameValuePairs.add(new BasicNameValuePair("store",store));  
         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
-        response = httpclient.execute(httppost, responseHandler);	//TODO: Hier crasht es
+        response = httpclient.execute(httppost, responseHandler);
 
 		return response;
 	}
