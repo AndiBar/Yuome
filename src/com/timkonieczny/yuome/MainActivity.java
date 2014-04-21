@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,6 +27,9 @@ public class MainActivity extends Activity {
 	private ListView mMainMenu;
 	private String mFragmentName;
 	private String[] mMainMenuItems;
+	private int selectedMenu = 1;
+	
+
 
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)	//TODO
 	@Override
@@ -85,14 +89,23 @@ public class MainActivity extends Activity {
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-		if (savedInstanceState == null) { // ersten Screen auswählen
-			selectMenuItem(1);
+		
+		Intent intent = getIntent();
+		selectedMenu = intent.getIntExtra("selectedMenu", 1); // Menue aus voriger Activity beziehen, falls gesetzt
+		
+		if (savedInstanceState == null) { // ersten Screen auswÃ¤hlen
+			selectMenuItem(selectedMenu);		
 		}
-		mDrawerLayout.openDrawer(mMainMenu); // Beim Erstellen der Activity wird der Drawer geöffnet
+		
+		mDrawerLayout.openDrawer(mMainMenu); // Beim Erstellen der Activity wird der Drawer geÃ¶ffnet
 	}
+	
 
-	public boolean onOptionsItemSelected(MenuItem item) {			//Handler für das Öffnen des Drawers bei Drücken des Up-Buttons
+
+	
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {			//Handler fÃ¼r das Ã–ffnen des Drawers bei DrÃ¼cken des Up-Buttons
         if (mDrawerLayout.isDrawerVisible(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
             getActionBar().setTitle(mFragmentName);
@@ -100,7 +113,7 @@ public class MainActivity extends Activity {
             mDrawerLayout.openDrawer(GravityCompat.START);
             getActionBar().setTitle("Yuome");
         }
-        return true;
+        return false;
 	}
 	
 	@Override
@@ -117,9 +130,10 @@ public class MainActivity extends Activity {
 			selectMenuItem(position);
 		}
 	}
+	
 
 	private void selectMenuItem(int position) { // Auswahl der Fragments passend zum ListItem
-		if (position == 0) { // Eingabeauswahl wird geöffnet
+		if (position == 0) { // Eingabeauswahl wird geÃ¶ffnet
 			Fragment fragment = new InputFragment();
 			FragmentManager fragmentManager = getFragmentManager();
 			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -130,7 +144,7 @@ public class MainActivity extends Activity {
 			getActionBar().setTitle(mFragmentName);
 			mDrawerLayout.closeDrawer(mMainMenu);
 		}
-		if (position == 1) { // Schuldenübersicht
+		if (position == 1) { // SchuldenÃ¼bersicht
 			Fragment fragment = new SummaryFragment();
 			FragmentManager fragmentManager = getFragmentManager();
 			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -153,6 +167,7 @@ public class MainActivity extends Activity {
 			mDrawerLayout.closeDrawer(mMainMenu);
 		}
 		if (position == 3) { // Kontakte
+			selectedMenu = 3;
 			Fragment fragment = new ContactsFragment();
 			FragmentManager fragmentManager = getFragmentManager();
 			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -161,6 +176,7 @@ public class MainActivity extends Activity {
 			mFragmentName=mMainMenuItems[position];
 			getActionBar().setTitle(mFragmentName);
 			mDrawerLayout.closeDrawer(mMainMenu);
+			
 		}
 		if (position == 4) { // Kontoeinstellungen
 			Fragment fragment = new SettingsFragment();

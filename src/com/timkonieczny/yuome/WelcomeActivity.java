@@ -50,7 +50,7 @@ public class WelcomeActivity extends Activity {
     		new OnClickListener() {
 	            @Override
 	            public void onClick(View v) {
-	                dialog = ProgressDialog.show(WelcomeActivity.this, "","Login läuft", true);
+	                dialog = ProgressDialog.show(WelcomeActivity.this, "","Login lï¿½uft", true);
 	                new Thread(
 	                		new Runnable(){
 	                			public void run(){
@@ -99,7 +99,7 @@ public class WelcomeActivity extends Activity {
         WelcomeActivity.this.runOnUiThread(new Runnable() {
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(WelcomeActivity.this);
-                builder.setMessage("Username oder Passwort stimmt nicht überein.")
+                builder.setMessage("Username oder Passwort stimmt nicht ï¿½berein.")
                         .setCancelable(false)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
