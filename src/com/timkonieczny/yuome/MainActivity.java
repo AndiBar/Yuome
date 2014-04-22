@@ -47,8 +47,6 @@ public class MainActivity extends Activity {
 		width = size.x;
 		height = size.y;
 		
-		System.out.println(width+" "+height);
-		
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.DrawerLayout);
 		mMainMenu = (ListView)findViewById(R.id.MainMenu);
 		mMainMenuItems = getResources().getStringArray(R.array.main_menu);
