@@ -8,11 +8,13 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,6 +31,8 @@ public class MainActivity extends Activity {
 	private String[] mMainMenuItems;
 	private int selectedMenu = 1;
 	
+	public static int height, width;
+
 
 
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)	//TODO
@@ -36,6 +40,12 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		Display display = getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		width = size.x;
+		height = size.y;
 		
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.DrawerLayout);
 		mMainMenu = (ListView)findViewById(R.id.MainMenu);
