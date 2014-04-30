@@ -30,8 +30,8 @@ public class SummaryFragment extends Fragment {
         Bitmap bg = Bitmap.createBitmap(480, 800, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bg);
         canvas.drawRect(50, 50, 200, 200, paint);
-        LinearLayout ll = (LinearLayout) rootView.findViewById(R.id.rect);
-        ll.setBackgroundDrawable(new BitmapDrawable(bg));
+        //LinearLayout ll = (LinearLayout) rootView.findViewById(R.id.rect);
+        //ll.setBackgroundDrawable(new BitmapDrawable(bg));
         
         float debt=15.00f;		// TODO: Beispielwerte für Schulden und Guthaben
 		float credit=30.00f;

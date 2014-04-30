@@ -73,19 +73,18 @@ public class PHPConnector {
         }
 		return friends;
 	}
-	public static void addBuy(ArrayList<HashMap<String,String>> articles, ArrayList<HashMap<String,String>> contacts, String owner, String date, String store) throws ClientProtocolException, IOException{
+	public static void addBuy(ArrayList<HashMap<String,String>> articles, ArrayList<String> contacts, String store) throws ClientProtocolException, IOException{
 		httppost = new HttpPost("http://andibar.dyndns.org/Yuome/add_buy.php");
         nameValuePairs = new ArrayList<NameValuePair>();
+        nameValuePairs.add(new BasicNameValuePair("article_number",String.valueOf(articles.size())));
         for(int i = 0; i < articles.size(); i++){
         	nameValuePairs.add(new BasicNameValuePair("article" + i,articles.get(i).get("article")));
         	nameValuePairs.add(new BasicNameValuePair("price" + i,articles.get(i).get("price")));
         }
+        nameValuePairs.add(new BasicNameValuePair("user_number",String.valueOf(contacts.size())));
         for(int i = 0; i < contacts.size(); i++){
-        	nameValuePairs.add(new BasicNameValuePair("ID" + i,contacts.get(i).get("ID")));
-        	nameValuePairs.add(new BasicNameValuePair("username" + i,contacts.get(i).get("username")));
-        }
-        nameValuePairs.add(new BasicNameValuePair("owner_id",owner));  
-        nameValuePairs.add(new BasicNameValuePair("date",date));
+        	nameValuePairs.add(new BasicNameValuePair("ID" + i,contacts.get(i)));
+        }  
         nameValuePairs.add(new BasicNameValuePair("store",store));
 		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		ResponseHandler<String> responseHandler = new BasicResponseHandler();

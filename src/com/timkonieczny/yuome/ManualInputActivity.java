@@ -168,6 +168,7 @@ public class ManualInputActivity extends ListActivity implements OnItemSelectedL
         		parcellist.add(parcel);
         	}
         	articles.putParcelableArrayList("articles", parcellist);
+        	articles.putString("store", mTextView.getText().toString());
           	intent.putExtras(articles);
             startActivity(intent);
           break;

@@ -15,6 +15,9 @@ public class Article implements Parcelable{
     public String getArticle(){
     	return article;
     }
+    public String getPrice(){
+    	return price;
+    }
 
    // Parcelling part
    public Article(Parcel in){
