@@ -3,18 +3,47 @@
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-	<LinearLayout 
-	    android:orientation="vertical"
-	    android:layout_weight=".5"
+    
+    <LinearLayout
+        android:orientation="vertical"
+	    android:layout_weight="50"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
-	    android:id="@+id/left">
+	    android:gravity="center_horizontal">
+		<View 
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight=".5"
+		    android:id="@+id/left"/>
+		<TextView 
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+		    android:layout_weight=".5"
+			android:text="left"
+			android:textSize="30sp"
+			android:textStyle="bold"
+			android:id="@+id/left_text"/>
 	</LinearLayout>
 	<LinearLayout
 	    android:orientation="vertical"
-	    android:layout_weight=".5"
+	    android:layout_weight="50"
 	    android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-	    android:id="@+id/right">
+	    android:layout_height="fill_parent"
+	    android:gravity="center_horizontal">
+		<View
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight=".5"
+		    android:id="@+id/right"/>
+		<TextView 
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+		    android:layout_weight=".5"
+			android:text="right"
+			android:textSize="30sp"
+			android:textStyle="bold"
+			android:id="@+id/right_text"/>
 	</LinearLayout>
+	
+	
 </LinearLayout>
