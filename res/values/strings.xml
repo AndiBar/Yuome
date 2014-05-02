@@ -19,7 +19,6 @@
     <string name="new_contacts">neuen Kontakt hinzuf\c3bcgen</string>
     
     <color name="green">#338A30</color>
-    <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 
     <string-array name="main_menu">
@@ -33,5 +32,6 @@
     <string name="title_activity_camera">CameraActivity</string>
     <string name="title_manual_input_activity">ManualInputActivity</string>
     <string name="title_chose_contacts_activity"></string>
+    <color name="black">#000000</color>
 
 </resources>
