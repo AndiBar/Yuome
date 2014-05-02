@@ -97,11 +97,11 @@ public class SummaryFragment extends Fragment {
         	rightLayout.setBackground(new BitmapDrawable(this.getResources(),rightBitmap));
         };
         
-        TextView creditText = (TextView)rootView.findViewById(R.id.left_text);
-        TextView debtText = (TextView)rootView.findViewById(R.id.right_text);
+        //TextView creditText = (TextView)rootView.findViewById(R.id.left_text);
+        //TextView debtText = (TextView)rootView.findViewById(R.id.right_text);
         
-        creditText.setText((new DecimalFormat("0.00")).format(debt)+"€");
-        debtText.setText((new DecimalFormat("0.00")).format(credit)+"€");
+        //creditText.setText((new DecimalFormat("0.00")).format(debt)+"€");
+        //debtText.setText((new DecimalFormat("0.00")).format(credit)+"€");
         
 		return rootView;
 	}
