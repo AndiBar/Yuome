@@ -87,6 +87,7 @@ public class ChooseContactsActivity extends ListActivity {
 	            	HashMap<String,String> article_hash = new HashMap<String,String>();
 	            	article_hash.put("article",article.getArticle());
 	            	article_hash.put("price",article.getPrice());
+	            	article_hash.put("amount",article.getAmount());
 	        		article_list.add(article_hash);
 	        	}
 	            String store = data.getString("store");

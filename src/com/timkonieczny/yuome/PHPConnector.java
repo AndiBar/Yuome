@@ -80,6 +80,7 @@ public class PHPConnector {
         for(int i = 0; i < articles.size(); i++){
         	nameValuePairs.add(new BasicNameValuePair("article" + i,articles.get(i).get("article")));
         	nameValuePairs.add(new BasicNameValuePair("price" + i,articles.get(i).get("price")));
+        	nameValuePairs.add(new BasicNameValuePair("amount" + i,articles.get(i).get("amount")));
         }
         nameValuePairs.add(new BasicNameValuePair("user_number",String.valueOf(contacts.size())));
         for(int i = 0; i < contacts.size(); i++){

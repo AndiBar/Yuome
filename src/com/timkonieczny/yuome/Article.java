@@ -6,11 +6,13 @@ import android.os.Parcelable;
 public class Article implements Parcelable{
     private String article;
     private String price;
+    private String amount;
 
     // Constructor
-    public Article(String article, String price){
+    public Article(String article, String price, String amount){
         this.article = article;
         this.price = price;
+        this.amount = amount;
    }
     public String getArticle(){
     	return article;
@@ -18,14 +20,18 @@ public class Article implements Parcelable{
     public String getPrice(){
     	return price;
     }
+    public String getAmount(){
+    	return amount;
+    }
 
    // Parcelling part
    public Article(Parcel in){
-       String[] data = new String[2];
+       String[] data = new String[3];
 
        in.readStringArray(data);
        this.article = data[0];
        this.price = data[1];
+       this.amount = data[2];
    }
 
    public int describeContents(){
@@ -35,7 +41,7 @@ public class Article implements Parcelable{
    @Override
    public void writeToParcel(Parcel dest, int flags) {
        dest.writeStringArray(new String[] {this.article,
-                                           this.price,});
+                                           this.price,this.amount,});
    }
    public static Parcelable.Creator CREATOR = new Parcelable.Creator() {
        public Article createFromParcel(Parcel in) {

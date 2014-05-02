@@ -32,7 +32,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ManualInputActivity extends ListActivity implements OnItemSelectedListener{
+public class ManualInputActivity extends ListActivity {
     public static SimpleAdapter mAdapter;
     public static ArrayList<HashMap<String,String>> article_list = new ArrayList<HashMap<String,String>>();
     public static double balance_value;
@@ -56,27 +56,26 @@ public class ManualInputActivity extends ListActivity implements OnItemSelectedL
         mStoreSpinner = (Spinner) findViewById(R.id.store_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, mStores);
         mStoreSpinner.setAdapter(adapter);
-        mStoreSpinner.setOnItemSelectedListener(this);
+        //mStoreSpinner.setOnItemSelectedListener(this);
 
-        mItemsTextView = (AutoCompleteTextView) findViewById(R.id.add_item_textview);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, mItems);
-        mItemsTextView.setThreshold(2);
-        mItemsTextView.setAdapter(adapter);
+        //mItemsTextView = (AutoCompleteTextView) findViewById(R.id.add_item_textview);
+        //adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, mItems);
+        //mItemsTextView.setThreshold(2);
+        //mItemsTextView.setAdapter(adapter);
         
-		mTextView = (TextView) findViewById(R.id.text);
-        mListView = (ListView) findViewById(R.id.dynamic_list);
+		//mTextView = (TextView) findViewById(R.id.text);
+        //mListView = (ListView) findViewById(R.id.dynamic_list);
                 
 		balance_value = 0.0;
         
-        TextView text = (TextView) findViewById(R.id.text4);
+        TextView text = (TextView) findViewById(R.id.total);
         text.setText(String.valueOf(balance_value) + "€   ");
         
         mAdapter = new SimpleAdapter(this,
         		article_list,
         		 R.layout.row_articles,
-                 new String[] {"article", "price"},
-                 new int[] {R.id.text1,
-                         R.id.text2});
+                 new String[] {"article","amount", "price"},
+                 new int[] {R.id.row_title,R.id.row_amount,R.id.row_price});
 
     	setListAdapter(mAdapter);
 
@@ -114,9 +113,9 @@ public class ManualInputActivity extends ListActivity implements OnItemSelectedL
                                 	HashMap<String, String> article = new HashMap<String, String>();
                                     article = (HashMap<String, String>) mAdapter.getItem(position);
                                     article_list.remove(article);
-                                    balance_value = balance_value - Double.parseDouble(article.get("price"));
+                                    balance_value = balance_value - Double.parseDouble(article.get("price")) * Integer.parseInt(article.get("amount"));
                                     balance_value = Math.round(balance_value * 100) / 100.;
-                                    TextView text = (TextView) findViewById(R.id.text4);
+                                    TextView text = (TextView) findViewById(R.id.total);
                                     text.setText(String.valueOf(balance_value) + "€   ");
                                 }
                                mAdapter.notifyDataSetChanged();
@@ -128,16 +127,17 @@ public class ManualInputActivity extends ListActivity implements OnItemSelectedL
         listView.setOnScrollListener(touchListener.makeScrollListener());
     }
     
-    public static void addArticle(String title, String price, Activity activity){
+    public static void addArticle(String title, String price, String amount, Activity activity){
     	HashMap<String, String> depts = new HashMap<String, String>();
     	depts.put("article", title);
     	depts.put("price", price);
+    	depts.put("amount", amount);
     	article_list.add(depts);
 
-    	balance_value = balance_value + Double.parseDouble(price);
+    	balance_value = balance_value + Double.parseDouble(price) * Integer.parseInt(amount);
         balance_value = Math.round(balance_value * 100) / 100.;
         
-        TextView text = (TextView) activity.findViewById(R.id.text4);
+        TextView text = (TextView) activity.findViewById(R.id.total);
         text.setText(String.valueOf(balance_value) + "€   ");
     	mAdapter.notifyDataSetChanged();
     }
@@ -145,7 +145,7 @@ public class ManualInputActivity extends ListActivity implements OnItemSelectedL
     public static void deleteAllArticles(Activity activity){
     	article_list.removeAll(article_list);
     	balance_value = 0.0;
-        TextView text = (TextView) activity.findViewById(R.id.text4);
+        TextView text = (TextView) activity.findViewById(R.id.total);
         text.setText(String.valueOf(balance_value) + "€   ");
     	mAdapter.notifyDataSetChanged();
     }
@@ -164,11 +164,11 @@ public class ManualInputActivity extends ListActivity implements OnItemSelectedL
         	ArrayList parcellist = new ArrayList<Article>();
         	Bundle articles = new Bundle();
         	for(HashMap<String,String> article : article_list){
-        		Parcelable parcel = new Article(article.get("article"),article.get("price"));
+        		Parcelable parcel = new Article(article.get("article"),article.get("price"),article.get("amount"));
         		parcellist.add(parcel);
         	}
         	articles.putParcelableArrayList("articles", parcellist);
-        	articles.putString("store", mTextView.getText().toString());
+        	articles.putString("store", mStoreSpinner.getSelectedItem().toString());
           	intent.putExtras(articles);
             startActivity(intent);
           break;
@@ -185,17 +185,17 @@ public class ManualInputActivity extends ListActivity implements OnItemSelectedL
     	
     }
 
-	@Override
-	public void onItemSelected(AdapterView<?> arg0, View arg1, int pos, long arg3) {	//Auswertung des Spinners
-		mTextView.setText(mStores[pos]);
-		getItemList(mStores[pos]);
-	}
+	//@Override
+	//public void onItemSelected(AdapterView<?> arg0, View arg1, int pos, long arg3) {	//Auswertung des Spinners
+	//	mTextView.setText(mStores[pos]);
+	//	getItemList(mStores[pos]);
+	//}
 
-	@Override
-	public void onNothingSelected(AdapterView<?> arg0) {
+	//@Override
+	//public void onNothingSelected(AdapterView<?> arg0) {
 		// TODO Auto-generated method stub
 		
-	}
+	//}
 	
 	private void getItemList(String store){
 		System.out.println("getItemList");

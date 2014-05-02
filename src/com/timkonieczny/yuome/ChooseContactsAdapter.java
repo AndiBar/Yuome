@@ -42,8 +42,12 @@ public class ChooseContactsAdapter extends SimpleAdapter {
 			    @Override
 	        public void onClick(View v) {
 	            if (check_box.isChecked()) {
-	            System.out.println(data.get(position).get("ID"));
-	            checked_user_ids.add(data.get(position).get("ID"));
+	            	checked_user_ids.add(data.get(position).get("ID"));
+	            }
+	            else {
+	            	if(checked_user_ids.contains(data.get(position).get("ID"))){
+	            		checked_user_ids.remove(data.get(position).get("ID"));
+	            	}
 	            }
 	        }
 	    });

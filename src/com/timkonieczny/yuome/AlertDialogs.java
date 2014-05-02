@@ -58,7 +58,7 @@ public class AlertDialogs {
 			article[0] = title_text.getText();
 			article[1] = price_text.getText();
 			article[2] = number_text.getText();
-			ManualInputActivity.addArticle(article[0].toString(), article[1].toString(),activity);
+			ManualInputActivity.addArticle(article[0].toString(), article[1].toString(),article[2].toString(),activity);
 			alertDialog.dismiss();
 		  }
 		});
