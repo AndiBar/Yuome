@@ -58,7 +58,7 @@ public class SummaryFragment extends Fragment {
         System.out.println("h="+height);
 		
 		float debt=5.00f;		// TODO: Beispielwerte für Schulden und Guthaben
-		float credit=8.00f;
+		float credit=10.00f;
 		
 		float bottomEnd=height;
 		
@@ -99,9 +99,11 @@ public class SummaryFragment extends Fragment {
         
         TextView creditText = (TextView)rootView.findViewById(R.id.left_text);
         TextView debtText = (TextView)rootView.findViewById(R.id.right_text);
+        TextView totalText = (TextView)rootView.findViewById(R.id.total);
         
-        creditText.setText((new DecimalFormat("0.00")).format(debt)+"€");
-        debtText.setText((new DecimalFormat("0.00")).format(credit)+"€");
+        creditText.setText((new DecimalFormat("0.00")).format(credit)+"€");
+        debtText.setText((new DecimalFormat("0.00")).format(debt)+"€");
+        totalText.setText((new DecimalFormat("0.00")).format(credit-debt)+"€");
         
 		return rootView;
 	}
