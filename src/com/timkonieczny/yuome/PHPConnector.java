@@ -73,7 +73,7 @@ public class PHPConnector {
         }
 		return friends;
 	}
-	public static void addBuy(ArrayList<HashMap<String,String>> articles, ArrayList<String> contacts, String store) throws ClientProtocolException, IOException{
+	public static void addBuy(ArrayList<HashMap<String,String>> articles, ArrayList<String> contacts, String storeID, String date) throws ClientProtocolException, IOException{
 		httppost = new HttpPost("http://andibar.dyndns.org/Yuome/add_buy.php");
         nameValuePairs = new ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("article_number",String.valueOf(articles.size())));
@@ -86,10 +86,27 @@ public class PHPConnector {
         for(int i = 0; i < contacts.size(); i++){
         	nameValuePairs.add(new BasicNameValuePair("ID" + i,contacts.get(i)));
         }  
-        nameValuePairs.add(new BasicNameValuePair("store",store));
+        nameValuePairs.add(new BasicNameValuePair("storeID",storeID));
+        nameValuePairs.add(new BasicNameValuePair("date",date));
 		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		ResponseHandler<String> responseHandler = new BasicResponseHandler();
         response = httpclient.execute(httppost, responseHandler);
 	
+	}
+	public static ArrayList<HashMap<String,String>> getStores() throws ClientProtocolException, IOException{
+		httpget = new HttpGet("http://andibar.dyndns.org/Yuome/get_stores.php");
+		httpclient.execute(httpget);
+        ResponseHandler<String> responseHandler = new BasicResponseHandler();
+        response = httpclient.execute(httpget, responseHandler);
+        String[] stores_unformatted = response.split(",");
+        ArrayList<HashMap<String,String>> stores = new ArrayList<HashMap<String,String>>();
+        for(String store : stores_unformatted){
+        	HashMap stores_map = new HashMap<String, String>();
+        	String[] stores_array = store.split(":");
+        	stores_map.put("ID", stores_array[0]);
+        	stores_map.put("title", stores_array[1]);
+        	stores.add(stores_map);
+        }
+		return stores;
 	}
 }

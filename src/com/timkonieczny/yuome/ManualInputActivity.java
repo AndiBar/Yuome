@@ -1,10 +1,17 @@
 package com.timkonieczny.yuome;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+
+import org.apache.http.client.ClientProtocolException;
+
+import com.timkonieczny.yuome.ChooseContactsActivity.FriendsThread;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +20,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,8 +43,11 @@ import android.widget.Toast;
 public class ManualInputActivity extends ListActivity {
     public static SimpleAdapter mAdapter;
     public static ArrayList<HashMap<String,String>> article_list = new ArrayList<HashMap<String,String>>();
+    public ArrayList<HashMap<String,String>> stores = new ArrayList<HashMap<String,String>>();
     public static double balance_value;
+    public String date;
 
+    public static ProgressDialog dialog = null;
     public AlertDialogs dialogs;
     
     private TextView mTextView;
@@ -44,18 +55,37 @@ public class ManualInputActivity extends ListActivity {
     
     private AutoCompleteTextView mItemsTextView;
     private Spinner mStoreSpinner;
-
-    private String[] mItems = { "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten" };
-    private String[] mStores = { "Aldi", "REWE", "Penny", "Lidl", "real", "Sonstige" };
      
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual_input);
         setTitle("Artikel");
         
+        Time t = new Time(Time.getCurrentTimezone());
+        t.setToNow();
+        date = t.format("%Y.%m.%d");
+        
+        TextView date_view = (TextView) findViewById(R.id.date);
+        date_view.setText(t.format("%d.%m.%Y"));
+        
+        Thread stores_thread = new StoresThread();
+        stores_thread.start();
+        
+        try {
+        	long waitMillis = 10000;
+        	while (stores_thread.isAlive()) {
+        	   stores_thread.join(waitMillis);
+        	}
+        } catch (InterruptedException e) {
+        }
+        
         mStoreSpinner = (Spinner) findViewById(R.id.store_spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, mStores);
-        mStoreSpinner.setAdapter(adapter);
+        SimpleAdapter storeAdapter = new SimpleAdapter(this,
+        		stores,
+        		R.layout.store_spinner_item,
+                 new String[] {"title","ID"},
+                 new int[] {R.id.title, R.id.storeID});
+        mStoreSpinner.setAdapter(storeAdapter);
         //mStoreSpinner.setOnItemSelectedListener(this);
 
         //mItemsTextView = (AutoCompleteTextView) findViewById(R.id.add_item_textview);
@@ -160,6 +190,7 @@ public class ManualInputActivity extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch (item.getItemId()) {
         case R.id.action_addbuy:
+        	dialog = ProgressDialog.show(ManualInputActivity.this, "","Abrufen der Kontakte", true);
         	Intent intent = new Intent(this, ChooseContactsActivity.class);
         	ArrayList parcellist = new ArrayList<Article>();
         	Bundle articles = new Bundle();
@@ -168,7 +199,9 @@ public class ManualInputActivity extends ListActivity {
         		parcellist.add(parcel);
         	}
         	articles.putParcelableArrayList("articles", parcellist);
-        	articles.putString("store", mStoreSpinner.getSelectedItem().toString());
+        	HashMap<String,String> store_map = (HashMap<String, String>) mStoreSpinner.getSelectedItem();
+        	articles.putString("storeID", store_map.get("ID"));
+        	articles.putString("date", date);
           	intent.putExtras(articles);
             startActivity(intent);
           break;
@@ -222,5 +255,18 @@ public class ManualInputActivity extends ListActivity {
 	     }catch(Exception e){
 	         
 		 }
-   }
+    }
+	public class StoresThread extends Thread{
+  	  public void run(){
+	       	try {
+				stores = PHPConnector.getStores();
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+  	  }
+  }
 }
