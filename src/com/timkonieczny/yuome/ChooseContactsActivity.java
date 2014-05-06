@@ -17,6 +17,7 @@
 package com.timkonieczny.yuome;
 
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -44,12 +45,15 @@ import org.apache.http.client.ClientProtocolException;
 public class ChooseContactsActivity extends ListActivity {
     public static ChooseContactsAdapter mAdapter;
     public static ArrayList<HashMap<String, String>> friends_list = new ArrayList<HashMap<String,String>>();
+    public static ProgressDialog dialog = null;
      
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_contacts);
         
         setTitle("Kontakte");
+        
+        ManualInputActivity.dialog.dismiss();
         
         Thread friends_thread = new FriendsThread();
         friends_thread.start();
@@ -80,6 +84,7 @@ public class ChooseContactsActivity extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
           switch (item.getItemId()) {
 	          case R.id.action_addbuy:
+	        	dialog = ProgressDialog.show(ChooseContactsActivity.this, "","Einkauf wird verarbeitet", true);
 	        	final Bundle data = getIntent().getExtras();
 	        	final ArrayList<HashMap<String, String>> article_list = new ArrayList<HashMap<String,String>>();
 	            ArrayList<Article> articles = (ArrayList) data.getParcelableArrayList("articles");
@@ -90,12 +95,11 @@ public class ChooseContactsActivity extends ListActivity {
 	            	article_hash.put("amount",article.getAmount());
 	        		article_list.add(article_hash);
 	        	}
-	            String store = data.getString("store");
 	            new Thread(
 	            	new Runnable(){
 	            		public void run(){
 							try {
-								PHPConnector.addBuy(article_list, mAdapter.getCheckedUserIDs(), data.getString("store"));
+								PHPConnector.addBuy(article_list, mAdapter.getCheckedUserIDs(), data.getString("storeID"), data.getString("date"));
 							} catch (ClientProtocolException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();

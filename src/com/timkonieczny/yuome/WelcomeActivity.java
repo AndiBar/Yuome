@@ -50,7 +50,7 @@ public class WelcomeActivity extends Activity {
     		new OnClickListener() {
 	            @Override
 	            public void onClick(View v) {
-	                dialog = ProgressDialog.show(WelcomeActivity.this, "","Login lï¿½uft", true);
+	                dialog = ProgressDialog.show(WelcomeActivity.this, "","Login läuft", true);
 	                new Thread(
 	                		new Runnable(){
 	                			public void run(){
