@@ -41,7 +41,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/value"
+        android:id="@+id/receipts_store"
         android:layout_width="80dp"
         android:layout_height="fill_parent"
         android:layout_weight="0.92"

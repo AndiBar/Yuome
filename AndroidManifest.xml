@@ -66,13 +66,6 @@
             android:screenOrientation="portrait" >
         </activity>
         
-       	 <!-- Provides search suggestions for words and their definitions. -->
-        <provider android:name=".DictionaryProvider"
-                  android:authorities="com.timkonieczny.yuome.DictionaryProvider" />
-
-        <!-- Points to searchable activity so the whole app can invoke search. -->
-        <meta-data android:name="android.app.default_searchable"
-                   android:value=".SearchableDictionary" />
         <activity android:name="com.timkonieczny.yuome.ContactsNewActivity"></activity>
     </application>
 
