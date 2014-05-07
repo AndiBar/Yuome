@@ -99,7 +99,7 @@ public class ChooseContactsActivity extends ListActivity {
 	            	new Runnable(){
 	            		public void run(){
 							try {
-								PHPConnector.addBuy(article_list, mAdapter.getCheckedUserIDs(), data.getString("storeID"), data.getString("date"));
+								PHPConnector.addBuy(article_list, mAdapter.getCheckedUserIDs(), data.getString("storeID"), data.getString("date"), data.getDouble("total"));
 							} catch (ClientProtocolException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -110,7 +110,6 @@ public class ChooseContactsActivity extends ListActivity {
 	            		}
 	        		}
 	            ).start();
-
 	          	Intent intent = new Intent(this, MainActivity.class);
 	        	startActivity(intent);
 	            break;

@@ -44,7 +44,7 @@ public class ManualInputActivity extends ListActivity {
     public static SimpleAdapter mAdapter;
     public static ArrayList<HashMap<String,String>> article_list = new ArrayList<HashMap<String,String>>();
     public ArrayList<HashMap<String,String>> stores = new ArrayList<HashMap<String,String>>();
-    public static double balance_value;
+    public static double balance_value = 0.0;
     public String date;
 
     public static ProgressDialog dialog = null;
@@ -95,9 +95,7 @@ public class ManualInputActivity extends ListActivity {
         
 		//mTextView = (TextView) findViewById(R.id.text);
         //mListView = (ListView) findViewById(R.id.dynamic_list);
-                
-		balance_value = 0.0;
-        
+                        
         TextView text = (TextView) findViewById(R.id.total);
         text.setText(String.valueOf(balance_value) + "€   ");
         
@@ -157,19 +155,24 @@ public class ManualInputActivity extends ListActivity {
         listView.setOnScrollListener(touchListener.makeScrollListener());
     }
     
-    public static void addArticle(String title, String price, String amount, Activity activity){
-    	HashMap<String, String> depts = new HashMap<String, String>();
-    	depts.put("article", title);
-    	depts.put("price", price);
-    	depts.put("amount", amount);
-    	article_list.add(depts);
-
+    public static void addArticle(String title, String price, String amount, Activity activity) throws NumberFormatException, ArgumentNullException{
     	balance_value = balance_value + Double.parseDouble(price) * Integer.parseInt(amount);
         balance_value = Math.round(balance_value * 100) / 100.;
         
-        TextView text = (TextView) activity.findViewById(R.id.total);
-        text.setText(String.valueOf(balance_value) + "€   ");
-    	mAdapter.notifyDataSetChanged();
+        if(title.equals("")){
+        	throw new ArgumentNullException("Kein Artikelname angegeben.");
+        }
+        else{
+	        HashMap<String, String> depts = new HashMap<String, String>();
+	    	depts.put("article", title);
+	    	depts.put("price", price);
+	    	depts.put("amount", amount);
+	    	article_list.add(depts);
+	        
+	        TextView text = (TextView) activity.findViewById(R.id.total);
+	        text.setText(String.valueOf(balance_value) + "€   ");
+	    	mAdapter.notifyDataSetChanged();
+        }
     }
     
     public static void deleteAllArticles(Activity activity){
@@ -202,6 +205,7 @@ public class ManualInputActivity extends ListActivity {
         	HashMap<String,String> store_map = (HashMap<String, String>) mStoreSpinner.getSelectedItem();
         	articles.putString("storeID", store_map.get("ID"));
         	articles.putString("date", date);
+        	articles.putDouble("total", balance_value);
           	intent.putExtras(articles);
             startActivity(intent);
           break;
