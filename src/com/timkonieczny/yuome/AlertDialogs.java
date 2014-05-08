@@ -1,5 +1,7 @@
 package com.timkonieczny.yuome;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -13,11 +15,11 @@ import android.widget.EditText;
 public class AlertDialogs {
 	
 	public Activity activity;
-	public Editable[] article;
+	public String[] article;
 	
 	public AlertDialogs(Activity activity){
 		this.activity = activity;
-		this.article = new Editable[3];
+		this.article = new String[3];
 	}
 
 	public static void showAlert(final Activity ParentActivity, final String title, final String message){
@@ -55,11 +57,17 @@ public class AlertDialogs {
 
 		new_article_button.setOnClickListener(new OnClickListener() {
 		public void onClick(View view) {
-			article[0] = title_text.getText();
-			article[1] = price_text.getText();
-			article[2] = number_text.getText();
-			ManualInputActivity.addArticle(article[0].toString(), article[1].toString(),article[2].toString(),activity);
-			alertDialog.dismiss();
+			try{
+				article[0] = title_text.getText().toString();
+				article[1] = price_text.getText().toString();
+				article[2] = number_text.getText().toString();
+				ManualInputActivity.addArticle(article[0], article[1],article[2],activity);
+				alertDialog.dismiss();
+			}catch(NumberFormatException e){
+				showAlert(activity,"Error",e.getMessage());
+			} catch (ArgumentNullException e) {
+				showAlert(activity,"Error",e.getMessage());
+			}
 		  }
 		});
 		alertDialog.show();
@@ -67,7 +75,7 @@ public class AlertDialogs {
 	public String[] getArticle(){
 		String[] article_s = new String[3];
 		for(int i = 0; i < article.length; i++){
-			article_s[i] = article[i] == null ? "": article[i].toString();
+			article_s[i] = article[i] == null ? "": article[i];
 		}
 		return article_s;
 	}

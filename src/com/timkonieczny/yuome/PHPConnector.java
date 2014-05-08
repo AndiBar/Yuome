@@ -73,7 +73,10 @@ public class PHPConnector {
         }
 		return friends;
 	}
-	public static void addBuy(ArrayList<HashMap<String,String>> articles, ArrayList<String> contacts, String storeID, String date) throws ClientProtocolException, IOException{
+	public static void addBuy(ArrayList<HashMap<String,String>> articles, ArrayList<String> contacts, String storeID, String date, Double total) throws ClientProtocolException, IOException{
+		double debit_value = 0 - (total / (contacts.size() + 1));
+		debit_value = Math.round(debit_value * 100) / 100.;
+		double credit_value = total + debit_value;
 		httppost = new HttpPost("http://andibar.dyndns.org/Yuome/add_buy.php");
         nameValuePairs = new ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("article_number",String.valueOf(articles.size())));
@@ -88,6 +91,8 @@ public class PHPConnector {
         }  
         nameValuePairs.add(new BasicNameValuePair("storeID",storeID));
         nameValuePairs.add(new BasicNameValuePair("date",date));
+        nameValuePairs.add(new BasicNameValuePair("debit",String.valueOf(debit_value)));
+        nameValuePairs.add(new BasicNameValuePair("credit",String.valueOf(credit_value)));
 		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		ResponseHandler<String> responseHandler = new BasicResponseHandler();
         response = httpclient.execute(httppost, responseHandler);
