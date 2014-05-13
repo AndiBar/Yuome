@@ -241,7 +241,7 @@ public class ManualInputActivity extends ListActivity {
         		new Runnable(){
         			public void run(){		//TODO: wirft immer noch Exception
         				try{
-        					final String response = PHPConnector.getItemListResponse("http://andibar.dyndns.org/Yuome/search_item.php", Store);
+        					final String response = PHPConnector.getItemListResponse("search_item.php", Store);
         					System.out.println("Response : " + response);
         				}catch(Exception e){
         					runOnUiThread(new Runnable() {

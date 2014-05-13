@@ -1,6 +1,9 @@
 package com.timkonieczny.yuome;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
+
+import org.apache.http.client.ClientProtocolException;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
@@ -27,9 +30,32 @@ import android.widget.TextView;
 public class SummaryFragment extends Fragment {
 	
 	private int width, height;
+	public String balance;
 	
     public SummaryFragment(){
+    	new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				try {
+					balance = PHPConnector.getResponse("http://andibar.dyndns.org/Yuome/get_balance.php");
+					System.out.println(balance);
+				} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+		}}).start();
     	
+    	try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
 	@SuppressLint("NewApi")
@@ -103,7 +129,7 @@ public class SummaryFragment extends Fragment {
         
         creditText.setText((new DecimalFormat("0.00")).format(credit)+"€");
         debtText.setText((new DecimalFormat("0.00")).format(debt)+"€");
-        totalText.setText((new DecimalFormat("0.00")).format(credit-debt)+"€");
+        totalText.setText(balance+"€");
         
 		return rootView;
 	}

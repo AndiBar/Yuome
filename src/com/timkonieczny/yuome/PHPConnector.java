@@ -4,7 +4,9 @@ package com.timkonieczny.yuome;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -25,15 +27,16 @@ public class PHPConnector {
 	public static HttpPost httppost;
 	public static ArrayList<NameValuePair> nameValuePairs;
 	public static ResponseHandler<String> responseHandler;
+	public static String server = "http://andibar.dyndns.org/Yuome/";
 	
 	public static String getResponse(String url) throws ClientProtocolException, IOException{
-		httpget = new HttpGet(url);
+		httpget = new HttpGet(server + url);
 		responseHandler = new BasicResponseHandler();
 		response = httpclient.execute(httpget, responseHandler);
 		return response;
 	}
 	public static String getLoginResponse(String url, String user, String pass) throws ClientProtocolException, IOException{
-        httppost = new HttpPost(url);
+        httppost = new HttpPost(server + url);
         nameValuePairs = new ArrayList<NameValuePair>(2);
         nameValuePairs.add(new BasicNameValuePair("username",user));  
         nameValuePairs.add(new BasicNameValuePair("password",pass));
@@ -48,7 +51,7 @@ public class PHPConnector {
 	}
 	public static String getItemListResponse(String url, String store) throws ClientProtocolException, IOException{
 		httppost.getEntity().consumeContent();		//TODO: Welche Verbindung ist offen?
-        httppost = new HttpPost(url);
+        httppost = new HttpPost(server + url);
         nameValuePairs = new ArrayList<NameValuePair>(1);
         nameValuePairs.add(new BasicNameValuePair("store",store));  
         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
