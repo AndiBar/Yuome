@@ -5,6 +5,8 @@ import java.text.DecimalFormat;
 
 import org.apache.http.client.ClientProtocolException;
 
+import com.timkonieczny.yuome.ChooseContactsActivity.FriendsThread;
+
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
@@ -33,29 +35,18 @@ public class SummaryFragment extends Fragment {
 	public String balance;
 	
     public SummaryFragment(){
-    	new Thread(new Runnable(){
-
-			@Override
-			public void run() {
-				try {
-					balance = PHPConnector.getResponse("http://andibar.dyndns.org/Yuome/get_balance.php");
-					System.out.println(balance);
-				} catch (ClientProtocolException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-		}}).start();
     	
-    	try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	Thread balance_thread = new BalanceThread();
+        balance_thread.start();
+        
+        try {
+        	long waitMillis = 10000;
+        	while (balance_thread.isAlive()) {
+        	   balance_thread.join(waitMillis);
+        	}
+        } catch (InterruptedException e) {
+        	}
+		
     }
     
 	@SuppressLint("NewApi")
@@ -83,8 +74,8 @@ public class SummaryFragment extends Fragment {
         height -= actionBarHeight;
         System.out.println("h="+height);
 		
-		float debt=5.00f;		// TODO: Beispielwerte für Schulden und Guthaben
-		float credit=10.00f;
+		float debt = Float.parseFloat(balance.split(",")[1]);		// TODO: Beispielwerte für Schulden und Guthaben
+		float credit = Float.parseFloat(balance.split(",")[0]);
 		
 		float bottomEnd=height;
 		
@@ -96,6 +87,7 @@ public class SummaryFragment extends Fragment {
 		System.out.println("screenHeight="+height);
 		System.out.println("bottom="+bottomEnd);
 
+		System.out.println("Balance:" + balance);
 		
 		final View leftLayout = rootView.findViewById(R.id.left);
 		final View rightLayout =  rootView.findViewById(R.id.right);		
@@ -127,9 +119,10 @@ public class SummaryFragment extends Fragment {
         TextView debtText = (TextView)rootView.findViewById(R.id.right_text);
         TextView totalText = (TextView)rootView.findViewById(R.id.total);
         
-        creditText.setText((new DecimalFormat("0.00")).format(credit)+"€");
-        debtText.setText((new DecimalFormat("0.00")).format(debt)+"€");
-        totalText.setText(balance+"€");
+        creditText.setText(balance.split(",")[0]+"€");
+        debtText.setText(balance.split(",")[1]+"€");
+        Double balance_value = Math.round((credit-debt) * 100) / 100.;
+        totalText.setText(balance_value.toString()+"€");
         
 		return rootView;
 	}
@@ -144,6 +137,20 @@ public class SummaryFragment extends Fragment {
 			}
 		}else{
 			return (1-(0.1f*money1));
+		}
+	}
+	public class BalanceThread extends Thread{
+		
+		public void run() {
+			try {
+				balance = PHPConnector.getResponse("get_balance.php");
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }

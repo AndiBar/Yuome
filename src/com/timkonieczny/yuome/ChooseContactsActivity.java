@@ -64,7 +64,7 @@ public class ChooseContactsActivity extends ListActivity {
         	   friends_thread.join(waitMillis);
         	}
         } catch (InterruptedException e) {
-        }
+        	}
         
         mAdapter = new ChooseContactsAdapter(this,
         		friends_list,
