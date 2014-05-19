@@ -66,11 +66,13 @@ public class ChooseContactsActivity extends ListActivity {
         } catch (InterruptedException e) {
         	}
         
+        System.out.println(friends_list.get(0).get("title"));
+        
         mAdapter = new ChooseContactsAdapter(this,
         		friends_list,
         		 R.layout.activity_choose_contacts_item,
-                 new String[] {"username", "contactCheckBox"},
-                 new int[] {R.id.username, R.id.contactCheckBox});
+                 new String[] {"title", "contactCheckBox"},
+                 new int[] {R.id.title, R.id.contactCheckBox});
         
         ListView listView = getListView();
         setListAdapter(mAdapter);
@@ -122,7 +124,7 @@ public class ChooseContactsActivity extends ListActivity {
     public class FriendsThread extends Thread{
     	  public void run(){
   	       	try {
-  				friends_list = PHPConnector.getFriends();
+  				friends_list = PHPConnector.getData("get_friends.php");
   			} catch (ClientProtocolException e) {
   				// TODO Auto-generated catch block
   				e.printStackTrace();

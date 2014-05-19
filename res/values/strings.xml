@@ -32,6 +32,7 @@
     <string name="title_activity_camera">CameraActivity</string>
     <string name="title_manual_input_activity">ManualInputActivity</string>
     <string name="title_chose_contacts_activity"></string>
+    <string name="title_debts_activity"></string>
     <color name="black">#000000</color>
 
 </resources>

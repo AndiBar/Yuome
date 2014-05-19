@@ -65,6 +65,11 @@
             android:label="@string/title_chose_contacts_activity"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.timkonieczny.yuome.DebtsActivity"
+            android:label="@string/title_debts_activity"
+            android:screenOrientation="portrait" >
+        </activity>
         
         <activity android:name="com.timkonieczny.yuome.ContactsNewActivity"></activity>
     </application>

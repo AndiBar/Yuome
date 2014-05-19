@@ -60,22 +60,6 @@ public class PHPConnector {
 
 		return response;
 	}
-	public static ArrayList<HashMap<String,String>> getFriends() throws ClientProtocolException, IOException{
-		httpget = new HttpGet("http://andibar.dyndns.org/Yuome/get_friends.php");
-		httpclient.execute(httpget);
-        ResponseHandler<String> responseHandler = new BasicResponseHandler();
-        response = httpclient.execute(httpget, responseHandler);
-        String[] friends_unformatted = response.split(",");
-        ArrayList<HashMap<String,String>> friends = new ArrayList<HashMap<String,String>>();
-        for(String friend : friends_unformatted){
-        	HashMap friends_map = new HashMap<String, String>();
-        	String[] friends_array = friend.split(":");
-        	friends_map.put("ID", friends_array[0]);
-        	friends_map.put("username", friends_array[1]);
-        	friends.add(friends_map);
-        }
-		return friends;
-	}
 	public static void addBuy(ArrayList<HashMap<String,String>> articles, ArrayList<String> contacts, String storeID, String date, Double total) throws ClientProtocolException, IOException{
 		double debit_value = 0 - (total / (contacts.size() + 1));
 		debit_value = Math.round(debit_value * 100) / 100.;
@@ -101,20 +85,23 @@ public class PHPConnector {
         response = httpclient.execute(httppost, responseHandler);
 	
 	}
-	public static ArrayList<HashMap<String,String>> getStores() throws ClientProtocolException, IOException{
-		httpget = new HttpGet("http://andibar.dyndns.org/Yuome/get_stores.php");
+	public static ArrayList<HashMap<String,String>> getData(String url) throws ClientProtocolException, IOException{
+		httpget = new HttpGet(server + url);
 		httpclient.execute(httpget);
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
         response = httpclient.execute(httpget, responseHandler);
-        String[] stores_unformatted = response.split(",");
-        ArrayList<HashMap<String,String>> stores = new ArrayList<HashMap<String,String>>();
-        for(String store : stores_unformatted){
-        	HashMap stores_map = new HashMap<String, String>();
-        	String[] stores_array = store.split(":");
-        	stores_map.put("ID", stores_array[0]);
-        	stores_map.put("title", stores_array[1]);
-        	stores.add(stores_map);
+        System.out.println(response);
+        
+        String[] data_unformatted = response.split(",");
+        ArrayList<HashMap<String,String>> data = new ArrayList<HashMap<String,String>>();
+        for(String item : data_unformatted){
+        	HashMap data_map = new HashMap<String, String>();
+        	String[] data_array = item.split(":");
+        	data_map.put("ID", data_array[0]);
+        	data_map.put("title", data_array[1]);
+        	data.add(data_map);
         }
-		return stores;
+		return data;
 	}
+	
 }

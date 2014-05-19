@@ -31,7 +31,7 @@ public class WelcomeActivity extends Activity {
     HttpResponse response;
     HttpClient httpclient;
     List<NameValuePair> nameValuePairs;
-    ProgressDialog dialog = null;
+    static ProgressDialog dialog = null;
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
@@ -54,7 +54,7 @@ public class WelcomeActivity extends Activity {
 	                new Thread(
 	                		new Runnable(){
 	                			public void run(){
-	                				userLogin();
+	                				userLogin(editUsername.getText().toString(),editPassword.getText().toString(),WelcomeActivity.this);
 	                			}
 	                		}
 	                ).start();
@@ -63,36 +63,36 @@ public class WelcomeActivity extends Activity {
     	);
 	}
 
-	void userLogin(){
+	static void userLogin(String username, String password, final Activity activity){
 	   	 try{
-			 final String response = PHPConnector.getLoginResponse("check_for_user.php", editUsername.getText().toString().trim(), editPassword.getText().toString().trim());
+			 final String response = PHPConnector.getLoginResponse("check_for_user.php", username.toString().trim(), password.toString().trim());
 	         System.out.println("Response : " + response);
 	         dialog.dismiss();
-	         if(response.equalsIgnoreCase(editUsername.getText() + " has logged in successfully.")){
-	             runOnUiThread(new Runnable() {
+	         if(response.equalsIgnoreCase(username + " has logged in successfully.")){
+	        	 activity.runOnUiThread(new Runnable() {
 	                 public void run() {
-	                     Toast.makeText(WelcomeActivity.this,response, Toast.LENGTH_SHORT).show();
+	                     Toast.makeText(activity,response, Toast.LENGTH_SHORT).show();
 	                 }
 	             });
 	
-	             Intent intent = new Intent(this, MainActivity.class);
-	             startActivity(intent);
+	             Intent intent = new Intent(activity, MainActivity.class);
+	             activity.startActivity(intent);
 	         }
-	         else if(response.equalsIgnoreCase(editUsername.getText() + " already logged in.")){
-	             runOnUiThread(new Runnable() {
+	         else if(response.equalsIgnoreCase(username + " already logged in.")){
+	        	 activity.runOnUiThread(new Runnable() {
 	                 public void run() {
-	                     Toast.makeText(WelcomeActivity.this,response, Toast.LENGTH_SHORT).show();
+	                     Toast.makeText(activity,response, Toast.LENGTH_SHORT).show();
 	                 }
 	             });
-	             Intent intent = new Intent(this, MainActivity.class);
-	             startActivity(intent);
+	             Intent intent = new Intent(activity, MainActivity.class);
+	             activity.startActivity(intent);
 	         }else{
-	             AlertDialogs.showAlert(this,"Login Error","User not found or password incorrect.");
+	             AlertDialogs.showAlert(activity,"Login Error","User not found or password incorrect.");
 	         }
 	
 	     }catch(Exception e){
 	         dialog.dismiss();
-	         AlertDialogs.showAlert(this,"Connection Error",e.getMessage());
+	         AlertDialogs.showAlert(activity,"Connection Error",e.getMessage());
 		 }
     }
     public void showAlert(){

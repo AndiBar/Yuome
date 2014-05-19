@@ -263,7 +263,7 @@ public class ManualInputActivity extends ListActivity {
 	public class StoresThread extends Thread{
   	  public void run(){
 	       	try {
-				stores = PHPConnector.getStores();
+				stores = PHPConnector.getData("get_stores.php");
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -35,8 +35,8 @@ public class ChooseContactsAdapter extends SimpleAdapter {
             convertView = inflater.inflate(R.layout.activity_choose_contacts_item, null);
         }
         final CheckBox check_box = (CheckBox) convertView.findViewById(R.id.contactCheckBox);
-        final TextView user_view = (TextView) convertView.findViewById(R.id.username);
-        user_view.setText(data.get(position).get("username"));
+        final TextView user_view = (TextView) convertView.findViewById(R.id.title);
+        user_view.setText(data.get(position).get("title"));
       
 		check_box.setOnClickListener(new OnClickListener() {
 			    @Override

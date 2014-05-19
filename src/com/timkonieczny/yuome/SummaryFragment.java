@@ -10,6 +10,7 @@ import com.timkonieczny.yuome.ChooseContactsActivity.FriendsThread;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -22,6 +23,7 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 
@@ -118,6 +120,13 @@ public class SummaryFragment extends Fragment {
         TextView creditText = (TextView)rootView.findViewById(R.id.left_text);
         TextView debtText = (TextView)rootView.findViewById(R.id.right_text);
         TextView totalText = (TextView)rootView.findViewById(R.id.total);
+        
+        debtText.setOnClickListener(new OnClickListener(){
+        	public void onClick(View v){
+        		Intent intent = new Intent(getActivity(), DebtsActivity.class);
+	        	startActivity(intent);
+        	}
+        });
         
         creditText.setText(balance.split(",")[0]+"€");
         debtText.setText(balance.split(",")[1]+"€");
