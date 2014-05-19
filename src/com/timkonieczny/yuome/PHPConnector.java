@@ -91,4 +91,16 @@ public class PHPConnector {
         response = httpclient.execute(httppost, responseHandler);
 	
 	}
+	
+	
+	public static String addFriend(String friend) throws ClientProtocolException, IOException {
+		httppost = new HttpPost("http://andibar.dyndns.org/Yuome/add_friend.php");
+		nameValuePairs.add(new BasicNameValuePair("friend",friend));
+		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+        ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		response = httpclient.execute(httppost, responseHandler);
+		System.out.println(response);
+		return response;
+	}
 }
