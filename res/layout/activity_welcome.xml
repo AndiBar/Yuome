@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/Logo"
         android:layout_centerHorizontal="true"
+        android:text="Andi"
         android:hint="@string/username"
         android:textColorHint="#d6e7d5" />
 
@@ -33,6 +34,7 @@
         android:layout_below="@id/EditUsername"
         android:layout_centerHorizontal="true"
         android:hint="@string/password"
+        android:text="test"
         android:inputType="textPassword"
         android:textColorHint="#d6e7d5" />
 

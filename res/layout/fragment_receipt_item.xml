@@ -4,7 +4,7 @@
     android:orientation="horizontal" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.92"
         android:orientation="vertical" >
@@ -41,7 +41,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/value"
+        android:id="@+id/receipts_store"
         android:layout_width="80dp"
         android:layout_height="fill_parent"
         android:layout_weight="0.92"

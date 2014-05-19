@@ -55,7 +55,7 @@ public class SettingsFragment extends Fragment implements OnItemClickListener {
 			new Thread(new Runnable(){public void run(){
 				String username = "";
 				try{
-					username = PHPConnector.getResponse("http://andibar.dyndns.org/Yuome/check_for_user.php");
+					username = PHPConnector.getResponse("check_for_user.php");
 					String user = username.split(" ")[0];
 					String already = username.split(" ")[1];
 					if(!already.equals("already")){

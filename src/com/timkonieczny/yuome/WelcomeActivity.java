@@ -50,7 +50,7 @@ public class WelcomeActivity extends Activity {
     		new OnClickListener() {
 	            @Override
 	            public void onClick(View v) {
-	                dialog = ProgressDialog.show(WelcomeActivity.this, "","Login lï¿½uft", true);
+	                dialog = ProgressDialog.show(WelcomeActivity.this, "","Login läuft", true);
 	                new Thread(
 	                		new Runnable(){
 	                			public void run(){
@@ -65,7 +65,7 @@ public class WelcomeActivity extends Activity {
 
 	void userLogin(){
 	   	 try{
-			 final String response = PHPConnector.getLoginResponse("http://andibar.dyndns.org/Yuome/check_for_user.php", editUsername.getText().toString().trim(), editPassword.getText().toString().trim());
+			 final String response = PHPConnector.getLoginResponse("check_for_user.php", editUsername.getText().toString().trim(), editPassword.getText().toString().trim());
 	         System.out.println("Response : " + response);
 	         dialog.dismiss();
 	         if(response.equalsIgnoreCase(editUsername.getText() + " has logged in successfully.")){

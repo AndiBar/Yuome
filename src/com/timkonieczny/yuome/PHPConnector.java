@@ -4,7 +4,9 @@ package com.timkonieczny.yuome;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -25,15 +27,17 @@ public class PHPConnector {
 	public static HttpPost httppost;
 	public static ArrayList<NameValuePair> nameValuePairs;
 	public static ResponseHandler<String> responseHandler;
+	public static String server = "http://andibar.dyndns.org/Yuome/";
 	
 	public static String getResponse(String url) throws ClientProtocolException, IOException{
-		httpget = new HttpGet(url);
+		httpget = new HttpGet(server + url);
 		responseHandler = new BasicResponseHandler();
 		response = httpclient.execute(httpget, responseHandler);
 		return response;
 	}
+	
 	public static String getLoginResponse(String url, String user, String pass) throws ClientProtocolException, IOException{
-        httppost = new HttpPost(url);
+        httppost = new HttpPost(server + url);
         nameValuePairs = new ArrayList<NameValuePair>(2);
         nameValuePairs.add(new BasicNameValuePair("username",user));  
         nameValuePairs.add(new BasicNameValuePair("password",pass));
@@ -47,12 +51,13 @@ public class PHPConnector {
 		httpclient.execute(httpget);
 	}
 	public static String getItemListResponse(String url, String store) throws ClientProtocolException, IOException{
-        httppost = new HttpPost(url);
+		httppost.getEntity().consumeContent();		//TODO: Welche Verbindung ist offen?
+        httppost = new HttpPost(server + url);
         nameValuePairs = new ArrayList<NameValuePair>(1);
         nameValuePairs.add(new BasicNameValuePair("store",store));  
         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
-        response = httpclient.execute(httppost, responseHandler);	//TODO: Hier crasht es
+        response = httpclient.execute(httppost, responseHandler);
 
 		return response;
 	}
@@ -72,20 +77,26 @@ public class PHPConnector {
         }
 		return friends;
 	}
-	public static void addBuy(ArrayList<HashMap<String,String>> articles, ArrayList<HashMap<String,String>> contacts, String owner, String date, String store) throws ClientProtocolException, IOException{
+	public static void addBuy(ArrayList<HashMap<String,String>> articles, ArrayList<String> contacts, String storeID, String date, Double total) throws ClientProtocolException, IOException{
+		double debit_value = 0 - (total / (contacts.size() + 1));
+		debit_value = Math.round(debit_value * 100) / 100.;
+		double credit_value = total + debit_value;
 		httppost = new HttpPost("http://andibar.dyndns.org/Yuome/add_buy.php");
         nameValuePairs = new ArrayList<NameValuePair>();
+        nameValuePairs.add(new BasicNameValuePair("article_number",String.valueOf(articles.size())));
         for(int i = 0; i < articles.size(); i++){
         	nameValuePairs.add(new BasicNameValuePair("article" + i,articles.get(i).get("article")));
         	nameValuePairs.add(new BasicNameValuePair("price" + i,articles.get(i).get("price")));
+        	nameValuePairs.add(new BasicNameValuePair("amount" + i,articles.get(i).get("amount")));
         }
+        nameValuePairs.add(new BasicNameValuePair("user_number",String.valueOf(contacts.size())));
         for(int i = 0; i < contacts.size(); i++){
-        	nameValuePairs.add(new BasicNameValuePair("ID" + i,contacts.get(i).get("ID")));
-        	nameValuePairs.add(new BasicNameValuePair("username" + i,contacts.get(i).get("username")));
-        }
-        nameValuePairs.add(new BasicNameValuePair("owner_id",owner));  
+        	nameValuePairs.add(new BasicNameValuePair("ID" + i,contacts.get(i)));
+        }  
+        nameValuePairs.add(new BasicNameValuePair("storeID",storeID));
         nameValuePairs.add(new BasicNameValuePair("date",date));
-        nameValuePairs.add(new BasicNameValuePair("store",store));
+        nameValuePairs.add(new BasicNameValuePair("debit",String.valueOf(debit_value)));
+        nameValuePairs.add(new BasicNameValuePair("credit",String.valueOf(credit_value)));
 		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		ResponseHandler<String> responseHandler = new BasicResponseHandler();
         response = httpclient.execute(httppost, responseHandler);
@@ -101,6 +112,29 @@ public class PHPConnector {
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
 		response = httpclient.execute(httppost, responseHandler);
 		System.out.println(response);
+	}
+	
+	public static ArrayList<HashMap<String,String>> getStores() throws ClientProtocolException, IOException{
+		httpget = new HttpGet("http://andibar.dyndns.org/Yuome/get_stores.php");
+		httpclient.execute(httpget);
+        ResponseHandler<String> responseHandler = new BasicResponseHandler();
+        response = httpclient.execute(httpget, responseHandler);
+        String[] stores_unformatted = response.split(",");
+        ArrayList<HashMap<String,String>> stores = new ArrayList<HashMap<String,String>>();
+        for(String store : stores_unformatted){
+        	HashMap stores_map = new HashMap<String, String>();
+        	String[] stores_array = store.split(":");
+        	stores_map.put("ID", stores_array[0]);
+        	stores_map.put("title", stores_array[1]);
+        	stores.add(stores_map);
+        }
+		return stores;
+	}
+	
+	public static String getReceiptsFromUser() throws ClientProtocolException, IOException{
+		httpget = new HttpGet(new String("http://andibar.dyndns.org/Yuome/get_user_receipts.php"));	//TODO: Geht nicht?
+		responseHandler = new BasicResponseHandler();
+		response = httpclient.execute(httpget, responseHandler);
 		return response;
 	}
 }

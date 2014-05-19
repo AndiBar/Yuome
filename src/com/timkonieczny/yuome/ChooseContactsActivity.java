@@ -17,13 +17,18 @@
 package com.timkonieczny.yuome;
 
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListAdapter;
@@ -38,8 +43,9 @@ import java.util.HashMap;
 import org.apache.http.client.ClientProtocolException;
 
 public class ChooseContactsActivity extends ListActivity {
-    public static SimpleAdapter mAdapter;
+    public static ChooseContactsAdapter mAdapter;
     public static ArrayList<HashMap<String, String>> friends_list = new ArrayList<HashMap<String,String>>();
+    public static ProgressDialog dialog = null;
      
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +53,7 @@ public class ChooseContactsActivity extends ListActivity {
         
         setTitle("Kontakte");
         
-        Bundle data = getIntent().getExtras();
-        ArrayList<Article> articles = (ArrayList) data.getParcelableArrayList("articles");
+        ManualInputActivity.dialog.dismiss();
         
         Thread friends_thread = new FriendsThread();
         friends_thread.start();
@@ -59,14 +64,15 @@ public class ChooseContactsActivity extends ListActivity {
         	   friends_thread.join(waitMillis);
         	}
         } catch (InterruptedException e) {
-        }
+        	}
         
-        mAdapter = new SimpleAdapter(this,
+        mAdapter = new ChooseContactsAdapter(this,
         		friends_list,
         		 R.layout.activity_choose_contacts_item,
-                 new String[] {"username", "ID", "contactCheckBox"},
-                 new int[] {R.id.username, R.id.ID, R.id.contactCheckBox});
+                 new String[] {"username", "contactCheckBox"},
+                 new int[] {R.id.username, R.id.contactCheckBox});
         
+        ListView listView = getListView();
         setListAdapter(mAdapter);
         
     }
@@ -78,28 +84,40 @@ public class ChooseContactsActivity extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
           switch (item.getItemId()) {
 	          case R.id.action_addbuy:
-	        	getChosenContacts();
+	        	dialog = ProgressDialog.show(ChooseContactsActivity.this, "","Einkauf wird verarbeitet", true);
+	        	final Bundle data = getIntent().getExtras();
+	        	final ArrayList<HashMap<String, String>> article_list = new ArrayList<HashMap<String,String>>();
+	            ArrayList<Article> articles = (ArrayList) data.getParcelableArrayList("articles");
+	            for(Article article : articles){
+	            	HashMap<String,String> article_hash = new HashMap<String,String>();
+	            	article_hash.put("article",article.getArticle());
+	            	article_hash.put("price",article.getPrice());
+	            	article_hash.put("amount",article.getAmount());
+	        		article_list.add(article_hash);
+	        	}
+	            new Thread(
+	            	new Runnable(){
+	            		public void run(){
+							try {
+								PHPConnector.addBuy(article_list, mAdapter.getCheckedUserIDs(), data.getString("storeID"), data.getString("date"), data.getDouble("total"));
+							} catch (ClientProtocolException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+	            		}
+	        		}
+	            ).start();
 	          	Intent intent = new Intent(this, MainActivity.class);
-	            startActivity(intent);
+	        	startActivity(intent);
 	            break;
 	          
 	          default:
 	            break;
           }
 	          return true;
-    }
-    public void getChosenContacts(){
-			ListView contacts_list = getListView();
-			SimpleAdapter contacts = (SimpleAdapter) contacts_list.getAdapter();
-			for(int i = 0; i < contacts.getCount(); i++){
-				View listItem = contacts.getView(i, null, contacts_list);
-				CheckBox check_box = (CheckBox) listItem.findViewById(R.id.contactCheckBox);
-				if(check_box.isChecked()){
-					TextView text_view = (TextView) listItem.findViewById(R.id.ID);
-					System.out.println(text_view.getText());
-				}
-				
-			}
     }
     public class FriendsThread extends Thread{
     	  public void run(){
