@@ -128,6 +128,13 @@ public class SummaryFragment extends Fragment {
         	}
         });
         
+        creditText.setOnClickListener(new OnClickListener(){
+        	public void onClick(View v){
+        		Intent intent = new Intent(getActivity(), CreditsActivity.class);
+	        	startActivity(intent);
+        	}
+        });
+        
         creditText.setText(balance.split(",")[0]+"€");
         debtText.setText(balance.split(",")[1]+"€");
         Double balance_value = Math.round((credit-debt) * 100) / 100.;

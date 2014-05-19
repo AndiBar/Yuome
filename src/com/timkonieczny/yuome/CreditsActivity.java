@@ -30,33 +30,34 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 
-public class DebtsActivity extends ListActivity {
+public class CreditsActivity extends ListActivity {
     
 	public static SimpleAdapter mAdapter;
-	public ArrayList<HashMap<String,String>> debts_list = new ArrayList<HashMap<String,String>>();
+	public ArrayList<HashMap<String,String>> credits_list = new ArrayList<HashMap<String,String>>();
 	
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_balance);
         
-        setTitle("Meine Schulden");
+        setTitle("Meine Kredite");
         
-        Thread debt_thread = new DebtThread();
-        debt_thread.start();
+        Thread credit_thread = new CreditThread();
+        credit_thread.start();
         
         try {
         	long waitMillis = 10000;
-        	while (debt_thread.isAlive()) {
-        	   debt_thread.join(waitMillis);
+        	while (credit_thread.isAlive()) {
+        	   credit_thread.join(waitMillis);
         	}
         } catch (InterruptedException e) {
         	}
         
         mAdapter = new SimpleAdapter(this,
-        		debts_list,
-        		 R.layout.row_debts,
+        		credits_list,
+        		 R.layout.row_credits,
                  new String[] {"username", "balance"},
                  new int[] {R.id.row_title,R.id.row_balance});
 
@@ -73,11 +74,11 @@ public class DebtsActivity extends ListActivity {
         return true;
     }
     
-    public class DebtThread extends Thread{
+    public class CreditThread extends Thread{
     	
     	public void run(){
     		try {
-    			debts_list = PHPConnector.getBalance("get_debts.php");
+    			credits_list = PHPConnector.getBalance("get_credits.php");
     		} catch (ClientProtocolException e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();

@@ -115,6 +115,26 @@ public class PHPConnector {
         }
 		return data;
 	}
+	public static ArrayList<HashMap<String,String>> getBalance(String url) throws ClientProtocolException, IOException{
+		httpget = new HttpGet(server + url);
+		httpclient.execute(httpget);
+        ResponseHandler<String> responseHandler = new BasicResponseHandler();
+        response = httpclient.execute(httpget, responseHandler);
+        System.out.println(response);
+        
+        String[] data_unformatted = response.split(",");
+        ArrayList<HashMap<String,String>> balance = new ArrayList<HashMap<String,String>>();
+        for(String item : data_unformatted){
+        	HashMap data_map = new HashMap<String, String>();
+        	String[] balance_array = item.split(":");
+        	String[] data_array = balance_array[1].split("#");
+        	data_map.put("ID", balance_array[0]);
+        	data_map.put("balance", data_array[0]);
+        	data_map.put("username", data_array[1]);
+        	balance.add(data_map);
+        }
+		return balance;
+	}
 	
 	public static String getReceiptsFromUser() throws ClientProtocolException, IOException{
 		httpget = new HttpGet(new String("http://andibar.dyndns.org/Yuome/get_user_receipts.php"));	//TODO: Geht nicht?

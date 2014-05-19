@@ -70,6 +70,11 @@
             android:label="@string/title_debts_activity"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.timkonieczny.yuome.CreditsActivity"
+            android:label="@string/title_credits_activity"
+            android:screenOrientation="portrait" >
+        </activity>
         
         <activity android:name="com.timkonieczny.yuome.ContactsNewActivity"></activity>
     </application>
