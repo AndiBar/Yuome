@@ -112,6 +112,7 @@ public class PHPConnector {
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
 		response = httpclient.execute(httppost, responseHandler);
 		System.out.println(response);
+		return(response);
 	}
 	
 	public static ArrayList<HashMap<String,String>> getStores() throws ClientProtocolException, IOException{
