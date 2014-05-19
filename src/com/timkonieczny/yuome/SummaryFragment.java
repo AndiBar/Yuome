@@ -131,7 +131,7 @@ public class SummaryFragment extends Fragment {
 		
 		if(money1>=10.00f){
 			if(money1>=money2){
-				return 0.0f;		// eig 0		
+				return 0.0f;	
 			}else{
 				return (1-(money1/money2));
 			}

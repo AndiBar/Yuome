@@ -35,6 +35,7 @@ public class PHPConnector {
 		response = httpclient.execute(httpget, responseHandler);
 		return response;
 	}
+	
 	public static String getLoginResponse(String url, String user, String pass) throws ClientProtocolException, IOException{
         httppost = new HttpPost(server + url);
         nameValuePairs = new ArrayList<NameValuePair>(2);
@@ -116,5 +117,12 @@ public class PHPConnector {
         	stores.add(stores_map);
         }
 		return stores;
+	}
+	
+	public static String getReceiptsFromUser() throws ClientProtocolException, IOException{
+		httpget = new HttpGet(new String("http://andibar.dyndns.org/Yuome/get_user_receipts.php"));	//TODO: Geht nicht?
+		responseHandler = new BasicResponseHandler();
+		response = httpclient.execute(httpget, responseHandler);
+		return response;
 	}
 }
