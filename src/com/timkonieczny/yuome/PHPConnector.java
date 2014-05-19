@@ -35,6 +35,7 @@ public class PHPConnector {
 		response = httpclient.execute(httpget, responseHandler);
 		return response;
 	}
+	
 	public static String getLoginResponse(String url, String user, String pass) throws ClientProtocolException, IOException{
         httppost = new HttpPost(server + url);
         nameValuePairs = new ArrayList<NameValuePair>(2);
@@ -84,7 +85,18 @@ public class PHPConnector {
 		ResponseHandler<String> responseHandler = new BasicResponseHandler();
         response = httpclient.execute(httppost, responseHandler);
 	
+	}	
+	public static String addFriend(String friend) throws ClientProtocolException, IOException {
+		httppost = new HttpPost("http://andibar.dyndns.org/Yuome/add_friend.php");
+		nameValuePairs.add(new BasicNameValuePair("friend",friend));
+		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+        ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		response = httpclient.execute(httppost, responseHandler);
+		System.out.println(response);
+		return(response);
 	}
+	
 	public static ArrayList<HashMap<String,String>> getData(String url) throws ClientProtocolException, IOException{
 		httpget = new HttpGet(server + url);
 		httpclient.execute(httpget);
@@ -104,4 +116,10 @@ public class PHPConnector {
 		return data;
 	}
 	
+	public static String getReceiptsFromUser() throws ClientProtocolException, IOException{
+		httpget = new HttpGet(new String("http://andibar.dyndns.org/Yuome/get_user_receipts.php"));	//TODO: Geht nicht?
+		responseHandler = new BasicResponseHandler();
+		response = httpclient.execute(httpget, responseHandler);
+		return response;
+	}
 }

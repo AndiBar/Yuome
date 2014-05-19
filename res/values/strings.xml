@@ -32,7 +32,11 @@
     <string name="title_activity_camera">CameraActivity</string>
     <string name="title_manual_input_activity">ManualInputActivity</string>
     <string name="title_chose_contacts_activity"></string>
+<<<<<<< HEAD
     <string name="title_debts_activity"></string>
+=======
+    <string name="contacts_new_textfield_username">Nutzername oder E-Mail eingeben</string>
+>>>>>>> 5da7e69f21ae3cf5cb89f1167dc6887a9b44a4c8
     <color name="black">#000000</color>
 
 </resources>
