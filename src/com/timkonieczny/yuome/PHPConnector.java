@@ -122,16 +122,19 @@ public class PHPConnector {
         response = httpclient.execute(httpget, responseHandler);
         System.out.println(response);
         
-        String[] data_unformatted = response.split(",");
         ArrayList<HashMap<String,String>> balance = new ArrayList<HashMap<String,String>>();
-        for(String item : data_unformatted){
-        	HashMap data_map = new HashMap<String, String>();
-        	String[] balance_array = item.split(":");
-        	String[] data_array = balance_array[1].split("#");
-        	data_map.put("ID", balance_array[0]);
-        	data_map.put("balance", data_array[0]);
-        	data_map.put("username", data_array[1]);
-        	balance.add(data_map);
+        
+        if(!response.equals("no debts found.")){
+	        String[] data_unformatted = response.split(",");
+	        for(String item : data_unformatted){
+	        	HashMap data_map = new HashMap<String, String>();
+	        	String[] balance_array = item.split(":");
+	        	String[] data_array = balance_array[1].split("#");
+	        	data_map.put("ID", balance_array[0]);
+	        	data_map.put("balance", data_array[0]);
+	        	data_map.put("username", data_array[1]);
+	        	balance.add(data_map);
+	        }
         }
 		return balance;
 	}

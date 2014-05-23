@@ -2,10 +2,13 @@ package com.timkonieczny.yuome;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.http.client.ClientProtocolException;
 
 import com.timkonieczny.yuome.ChooseContactsActivity.FriendsThread;
+import com.timkonieczny.yuome.CreditsActivity.CreditThread;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
@@ -35,20 +38,38 @@ public class SummaryFragment extends Fragment {
 	
 	private int width, height;
 	public String balance;
+	private float debit;
+	private float credit;
+	ArrayList<HashMap<String, String>> debts_list;
+	ArrayList<HashMap<String, String>> credits_list;
 	
     public SummaryFragment(){
     	
-    	Thread balance_thread = new BalanceThread();
-        balance_thread.start();
+    	debit = 0f;
+    	credit = 0f;
+    	debts_list = new ArrayList<HashMap<String, String>>();
+    	credits_list = new ArrayList<HashMap<String, String>>();
+    	
+    	Thread debt_thread = new DebtThread();
+        debt_thread.start();
         
         try {
         	long waitMillis = 10000;
-        	while (balance_thread.isAlive()) {
-        	   balance_thread.join(waitMillis);
+        	while (debt_thread.isAlive()) {
+        	   debt_thread.join(waitMillis);
         	}
         } catch (InterruptedException e) {
         	}
-		
+        Thread credit_thread = new CreditThread();
+        credit_thread.start();
+        
+        try {
+        	long waitMillis = 10000;
+        	while (credit_thread.isAlive()) {
+        	   credit_thread.join(waitMillis);
+        	}
+        } catch (InterruptedException e) {
+        	}
     }
     
 	@SuppressLint("NewApi")
@@ -75,14 +96,19 @@ public class SummaryFragment extends Fragment {
 
         height -= actionBarHeight;
         System.out.println("h="+height);
-		
-		float debt = Float.parseFloat(balance.split(",")[1]);		// TODO: Beispielwerte für Schulden und Guthaben
-		float credit = Float.parseFloat(balance.split(",")[0]);
+        
+        for(HashMap debt : debts_list){
+        	debit = debit + Float.parseFloat(debt.get("balance").toString());
+        }
+        
+        for(HashMap credt : credits_list){
+        	credit = credit + Float.parseFloat(credt.get("balance").toString());
+        }
 		
 		float bottomEnd=height;
 		
-		float debtTopEnd = calculateDiagram(debt, credit);
-		float creditTopEnd = calculateDiagram(credit, debt);
+		float debtTopEnd = calculateDiagram(debit, credit);
+		float creditTopEnd = calculateDiagram(credit, debit);
 		
 		System.out.println("debtTop="+debtTopEnd);
 		System.out.println("creditTop="+creditTopEnd);		
@@ -135,10 +161,16 @@ public class SummaryFragment extends Fragment {
         	}
         });
         
-        creditText.setText(balance.split(",")[0]+"€");
-        debtText.setText(balance.split(",")[1]+"€");
-        Double balance_value = Math.round((credit-debt) * 100) / 100.;
+        creditText.setText(credit+"€");
+        debtText.setText(debit+"€");
+        Double balance_value = Math.round((credit-debit) * 100) / 100.;
         totalText.setText(balance_value.toString()+"€");
+        if(balance_value >= 0){
+        	totalText.setTextColor(Color.parseColor("#15ff2b"));
+        }
+        else{
+        	totalText.setTextColor(Color.parseColor("#CD5C5C"));
+        }
         
 		return rootView;
 	}
@@ -155,18 +187,32 @@ public class SummaryFragment extends Fragment {
 			return (1-(0.1f*money1));
 		}
 	}
-	public class BalanceThread extends Thread{
-		
-		public void run() {
-			try {
-				balance = PHPConnector.getResponse("get_balance.php");
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
+	public class DebtThread extends Thread{
+    	
+    	public void run(){
+    		try {
+    			debts_list = PHPConnector.getBalance("get_debts.php");
+    		} catch (ClientProtocolException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+    	}
+    }
+	public class CreditThread extends Thread{
+    	
+    	public void run(){
+    		try {
+    			credits_list = PHPConnector.getBalance("get_credits.php");
+    		} catch (ClientProtocolException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+    	}
+    }
 }
