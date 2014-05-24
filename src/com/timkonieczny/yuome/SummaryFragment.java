@@ -8,7 +8,6 @@ import java.util.HashMap;
 import org.apache.http.client.ClientProtocolException;
 
 import com.timkonieczny.yuome.ChooseContactsActivity.FriendsThread;
-import com.timkonieczny.yuome.CreditsActivity.CreditThread;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
@@ -21,6 +20,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
@@ -150,6 +150,14 @@ public class SummaryFragment extends Fragment {
         debtText.setOnClickListener(new OnClickListener(){
         	public void onClick(View v){
         		Intent intent = new Intent(getActivity(), DebtsActivity.class);
+        		ArrayList parcellist = new ArrayList<Article>();
+            	Bundle debts = new Bundle();
+            	for(HashMap<String,String> debt : debts_list){
+            		Parcelable parcel = new Article(debt.get("ID"),debt.get("balance"),debt.get("username"));
+            		parcellist.add(parcel);
+            	}
+            	debts.putParcelableArrayList("articles", parcellist);
+              	intent.putExtras(debts);
 	        	startActivity(intent);
         	}
         });
@@ -157,6 +165,14 @@ public class SummaryFragment extends Fragment {
         creditText.setOnClickListener(new OnClickListener(){
         	public void onClick(View v){
         		Intent intent = new Intent(getActivity(), CreditsActivity.class);
+        		ArrayList parcellist = new ArrayList<Article>();
+            	Bundle credits = new Bundle();
+            	for(HashMap<String,String> credit : credits_list){
+            		Parcelable parcel = new Article(credit.get("ID"),credit.get("balance"),credit.get("username"));
+            		parcellist.add(parcel);
+            	}
+            	credits.putParcelableArrayList("articles", parcellist);
+              	intent.putExtras(credits);
 	        	startActivity(intent);
         	}
         });
@@ -171,6 +187,7 @@ public class SummaryFragment extends Fragment {
         else{
         	totalText.setTextColor(Color.parseColor("#CD5C5C"));
         }
+        MainActivity.dialog.dismiss();
         
 		return rootView;
 	}

@@ -44,16 +44,15 @@ public class CreditsActivity extends ListActivity {
         
         setTitle("Meine Kredite");
         
-        Thread credit_thread = new CreditThread();
-        credit_thread.start();
-        
-        try {
-        	long waitMillis = 10000;
-        	while (credit_thread.isAlive()) {
-        	   credit_thread.join(waitMillis);
-        	}
-        } catch (InterruptedException e) {
-        	}
+        final Bundle data = getIntent().getExtras();
+        ArrayList<Article> credits = (ArrayList) data.getParcelableArrayList("articles");
+        for(Article credit : credits){
+        	HashMap<String,String> credit_hash = new HashMap<String,String>();
+        	credit_hash.put("ID",credit.getArticle());
+        	credit_hash.put("balance",credit.getPrice());
+        	credit_hash.put("username",credit.getAmount());
+    		credits_list.add(credit_hash);
+    	}
         
         mAdapter = new SimpleAdapter(this,
         		credits_list,
@@ -72,20 +71,5 @@ public class CreditsActivity extends ListActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.choose_contacts, menu);
         return true;
-    }
-    
-    public class CreditThread extends Thread{
-    	
-    	public void run(){
-    		try {
-    			credits_list = PHPConnector.getBalance("get_credits.php");
-    		} catch (ClientProtocolException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}
-    	}
     }
 }

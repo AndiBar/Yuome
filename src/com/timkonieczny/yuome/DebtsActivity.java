@@ -43,16 +43,15 @@ public class DebtsActivity extends ListActivity {
         
         setTitle("Meine Schulden");
         
-        Thread debt_thread = new DebtThread();
-        debt_thread.start();
-        
-        try {
-        	long waitMillis = 10000;
-        	while (debt_thread.isAlive()) {
-        	   debt_thread.join(waitMillis);
-        	}
-        } catch (InterruptedException e) {
-        	}
+        final Bundle data = getIntent().getExtras();
+        ArrayList<Article> debts = (ArrayList) data.getParcelableArrayList("articles");
+        for(Article debt : debts){
+        	HashMap<String,String> debt_hash = new HashMap<String,String>();
+        	debt_hash.put("ID",debt.getArticle());
+        	debt_hash.put("balance",debt.getPrice());
+        	debt_hash.put("username",debt.getAmount());
+    		debts_list.add(debt_hash);
+    	}
         
         mAdapter = new SimpleAdapter(this,
         		debts_list,
@@ -71,20 +70,5 @@ public class DebtsActivity extends ListActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.choose_contacts, menu);
         return true;
-    }
-    
-    public class DebtThread extends Thread{
-    	
-    	public void run(){
-    		try {
-    			debts_list = PHPConnector.getBalance("get_debts.php");
-    		} catch (ClientProtocolException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}
-    	}
     }
 }

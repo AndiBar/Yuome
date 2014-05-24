@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
@@ -30,6 +31,7 @@ public class MainActivity extends Activity {
 	private String mFragmentName;
 	private String[] mMainMenuItems;
 	private int selectedMenu = 1;
+	public static ProgressDialog dialog = null;
 	
 	public static int height, width;
 
@@ -155,6 +157,7 @@ public class MainActivity extends Activity {
 			mDrawerLayout.closeDrawer(mMainMenu);
 		}
 		if (position == 1) { // Schuldenübersicht
+			dialog = ProgressDialog.show(MainActivity.this, "","Daten werden geladen...", true);
 			Fragment fragment = new SummaryFragment();
 			FragmentManager fragmentManager = getFragmentManager();
 			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
