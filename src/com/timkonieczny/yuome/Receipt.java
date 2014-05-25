@@ -2,14 +2,19 @@ package com.timkonieczny.yuome;
 
 public class Receipt {
 
-	private String date, shop, names, sum;
+	private String id, date, shop, names, sum;
 	
-	public Receipt(String date, String shop, String names, String sum) {
+	public Receipt(String id, String date, String shop, String names, String sum) {
 		super();
 		this.date = date;
 		this.shop = shop;
 		this.names = names;
 		this.sum = sum;
+		this.id = id;
+	}
+	
+	public String getId(){
+		return id;
 	}
 	
 	public String getDate() {
