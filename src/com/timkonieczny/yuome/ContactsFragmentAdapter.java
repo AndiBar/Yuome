@@ -37,7 +37,7 @@ public class ContactsFragmentAdapter extends SimpleAdapter {
         //final CheckBox check_box = (CheckBox) convertView.findViewById(R.id.contactCheckBox);
         final TextView user_view = (TextView) convertView.findViewById(R.id.title);
         user_view.setText(data.get(position).get("title"));
-      
+      /*
 		user_view.setOnClickListener(new OnClickListener() {
 			    @Override
 	        public void onClick(View v) {
@@ -46,9 +46,9 @@ public class ContactsFragmentAdapter extends SimpleAdapter {
 	            	checked_user_ids.remove(data.get(position).get("ID"));
 	            }
 	        }
-	    });
+	    }); */
 	       
-	    return convertView;
+	    return convertView; 
     }
 	public ArrayList<String> getCheckedUserIDs(){
 		return checked_user_ids;
