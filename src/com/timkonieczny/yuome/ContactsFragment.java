@@ -6,13 +6,11 @@ import java.util.HashMap;
 
 import org.apache.http.client.ClientProtocolException;
 
-import com.timkonieczny.yuome.ChooseContactsActivity.FriendsThread;
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ListFragment;
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,8 +22,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class ContactsFragment extends ListFragment {
     public static ArrayList<HashMap<String, String>> friends_list = new ArrayList<HashMap<String,String>>();
@@ -55,20 +51,18 @@ public class ContactsFragment extends ListFragment {
                  new String[] {"title"},
                  new int[] {R.id.title});
         
-        ListView listView = getListView();
-        setListAdapter(mAdapter);
+       ListView listView = getListView();
+       setListAdapter(mAdapter);
        //listView.setClickable(true);
        listView.setFocusableInTouchMode(false);
        listView.setFocusable(false);
-        listView.setOnItemClickListener(new OnItemClickListener() {
+       listView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            	
-            	Log.i("ContactsFragment", "[onListItemClick] Selected Position "+ position + "ID: " + id);
-            	
+            	SaveValue.setSelectedFriendName(friends_list.get(position).get("title"));
+            	Log.i("ContactsFragment", "Friend: " + friends_list.get(position).get("title"));
     			Fragment fragment = new ContactsDetailFragment();
     			FragmentManager fragmentManager = getFragmentManager();
     			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-    			getActivity().getActionBar().setTitle("Kontakt Details");
             }
         });
 	}
