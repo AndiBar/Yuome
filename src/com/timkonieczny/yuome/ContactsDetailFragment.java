@@ -1,5 +1,9 @@
 package com.timkonieczny.yuome;
 
+import java.io.IOException;
+
+import org.apache.http.client.ClientProtocolException;
+
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,8 +17,23 @@ public class ContactsDetailFragment extends Fragment{
 		setHasOptionsMenu(true);	
 		View rootView = inflater.inflate(R.layout.fragment_contacts_detail, container, false);
 		
-		getActivity().getActionBar().setTitle(SaveValue.getSelectedFriendName());
-
+		final String friend = SaveValue.getSelectedFriendName();
+		
+		getActivity().getActionBar().setTitle(friend);
+		
+		new Thread(new Runnable(){
+			@Override
+			public void run() {
+	        	try {
+	        		PHPConnector.getDebt(friend);
+	        	} catch (ClientProtocolException e) {
+	        		e.printStackTrace();
+	        	} catch (IOException e) {
+	        		e.printStackTrace();
+	        	}
+			}
+		}).start();
+		
 		return rootView;
 	}
 	

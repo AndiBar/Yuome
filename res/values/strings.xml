@@ -12,18 +12,18 @@
     <string name="title_activity_signup">Registrieren</string>
     <string name="repeat_password">Passwort wiederholen</string>
     <string name="logo">Yuome logo</string>
-    <string name="drawer_open">Menü offen</string>
-    <string name="drawer_close">Menü geschlossen</string>
-    <string name="menu_icon">Hauptmenü</string>
+    <string name="drawer_open">Men\u00fc offen</string>
+    <string name="drawer_close">Men\u00fc geschlossen</string>
+    <string name="menu_icon">Hauptmen\u00fc</string>
     <string name="weiter">Weiter</string>
-    <string name="new_contacts">neuen Kontakt hinzuf\c3bcgen</string>
+    <string name="new_contacts">neuen Kontakt hinzuf\u00fcgen</string>
     
     <color name="green">#338A30</color>
     <color name="white">#FFFFFF</color>
 
     <string-array name="main_menu">
-        <item>Einkauf hinzufügen</item>
-        <item>Meine Übersicht</item>
+        <item>Einkauf hinzuf\u00fcgen</item>
+        <item>Meine \u00dcbersicht</item>
         <item>Meine Kassenzettel</item>
         <item>Kontakte</item>
         <item>Einstellungen</item>
@@ -35,6 +35,7 @@
     <string name="title_debts_activity"></string>
     <string name="title_credits_activity"></string>
     <string name="contacts_new_textfield_username">Nutzername oder E-Mail eingeben</string>
+    <string name="serverURL">http://andibar.dyndns.org/Yuome/</string>
     <color name="black">#000000</color>
 
 </resources>

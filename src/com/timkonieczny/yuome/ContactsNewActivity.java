@@ -24,7 +24,7 @@ public class ContactsNewActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts_new);
-        setTitle("Neuen Kontakt erstellen");
+        setTitle(R.string.new_contacts);
         
         EditText usernameTextfield = (EditText)findViewById(R.id.contacts_new_enterusername);
         usernameTextfield.addTextChangedListener(new TextWatcher(){
