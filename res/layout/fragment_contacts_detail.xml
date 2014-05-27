@@ -9,22 +9,21 @@
 	    android:layout_width="0dp"
 	    android:layout_height="0dp"
 	    android:layout_centerInParent="true"/>
-    
-    <RelativeLayout 
-        android:layout_width="fill_parent"
+
+    <Button
+        android:id="@+id/deleteAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="168dp"
+        android:text="@string/contact_delete" />
+
+    <TextView
+        android:id="@+id/debts"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-	    android:layout_alignBottom="@id/vertical_center_point"
-        android:id="@+id/top_layout">		
-		<View
-		    android:id="@+id/center_point"
-		    android:layout_width="0dp"
-		    android:layout_height="0dp"
-		    android:layout_centerInParent="true"/>
-		
-
-		
-    </RelativeLayout>
-    
+        android:layout_marginTop="14dp"
+        android:text="Schuldenstand ist toll jaja" />
 
 </RelativeLayout>

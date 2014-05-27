@@ -161,7 +161,7 @@ public class PHPConnector {
 		return response;
 	}
 	
-	public static double[] getDebt (String friend) throws ClientProtocolException, IOException {
+	public static double getDebt (String friend) throws ClientProtocolException, IOException {
 		httppost = new HttpPost(server + "get_friend_detail.php");
 		nameValuePairs.add(new BasicNameValuePair("friend",friend));
 		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
@@ -169,13 +169,9 @@ public class PHPConnector {
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
 		response = httpclient.execute(httppost, responseHandler);
 		System.out.println("Response: " + response);
-		
-        String[] data_unformatted = response.split(",");
-        double formatted[] = new double[2];
         
-        formatted[0] = Double.parseDouble(data_unformatted[0]);
-        formatted[1] = Double.parseDouble(data_unformatted[1]);
-        
-		return(formatted);
+        double debts = Double.parseDouble(response);
+        System.out.println("Double response: " + debts);
+		return(debts);
 	}
 }

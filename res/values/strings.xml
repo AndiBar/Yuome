@@ -37,5 +37,9 @@
     <string name="contacts_new_textfield_username">Nutzername oder E-Mail eingeben</string>
     <string name="serverURL">http://andibar.dyndns.org/Yuome/</string>
     <color name="black">#000000</color>
+    <string name="inDept">Du schuldest </string>
+    <string name="owing">Du bekommst von </string>
+    <string name="beEeven">Euer Schuldenstand ist ausgeglichen.</string>
+    <string name="contact_delete">Kontakt l\u00f6schen</string>
 
 </resources>
