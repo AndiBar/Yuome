@@ -41,5 +41,8 @@
     <string name="owing">Du bekommst von </string>
     <string name="beEeven">Euer Schuldenstand ist ausgeglichen.</string>
     <string name="contact_delete">Kontakt l\u00f6schen</string>
+    <string name="contact_delete_error">L\u00f6schen fehlgeschlagen</string>
+    <string name="contact_delete_error_description">Der Schuldenstand deines Freundes ist nicht ausgeglichen.</string>
+    <string name="contact_delete_success">Kontakt wurde gel\u00f6scht</string>
 
 </resources>

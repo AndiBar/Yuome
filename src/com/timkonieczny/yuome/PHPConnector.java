@@ -174,4 +174,14 @@ public class PHPConnector {
         System.out.println("Double response: " + debts);
 		return(debts);
 	}
+	
+	public static void deleteFriend (String friend) throws ClientProtocolException, IOException {
+		httppost = new HttpPost(server + "delete_friend.php");
+		nameValuePairs.add(new BasicNameValuePair("friend",friend));
+		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+        ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		response = httpclient.execute(httppost, responseHandler);
+		System.out.println("Response: " + response);
+	}
 }
