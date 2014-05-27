@@ -67,12 +67,12 @@ public class ReceiptsFragment extends ListFragment implements OnItemClickListene
 				public void run(){
 					try {				//TODO: Wirft Exception
 							receiptString=PHPConnector.getReceiptsFromUser();
-							Log.d("receiptString",receiptString);
+//							Log.d("receiptString",receiptString);
 							
 					        String[] receiptData = receiptString.split(":");
-					        for(String i: receiptData){
-					        	Log.d("receiptData",i);
-					        }
+//					        for(String i: receiptData){
+//					        	Log.d("receiptData",i);
+//					        }
 							
 							ReceiptsFragment.receiptsList = new ArrayList<Receipt>();
 //							ReceiptsFragment.receiptsList.add(new Receipt("01.01.2014","Aldi","Erik, Andi","15,63"));

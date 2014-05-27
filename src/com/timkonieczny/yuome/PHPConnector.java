@@ -147,13 +147,12 @@ public class PHPConnector {
 	}
 	
 	public static String getArticles(String id) throws ClientProtocolException, IOException{
-		nameValuePairs = new ArrayList<NameValuePair>(2);
+		nameValuePairs = new ArrayList<NameValuePair>(1);
         nameValuePairs.add(new BasicNameValuePair("id",id));  
+        httppost = new HttpPost("http://andibar.dyndns.org/Yuome/get_articles.php");
         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-		
-		httpget = new HttpGet(new String("http://andibar.dyndns.org/Yuome/get_articles.php"));
 		responseHandler = new BasicResponseHandler();
-		response = httpclient.execute(httpget, responseHandler);
+		response = httpclient.execute(httppost, responseHandler);
 		return response;
 	}
 }
