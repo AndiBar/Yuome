@@ -161,15 +161,21 @@ public class PHPConnector {
 		return response;
 	}
 	
-	public static String getDebt (String friend) throws ClientProtocolException, IOException {
-		nameValuePairs = new ArrayList<NameValuePair>(2);
-        nameValuePairs.add(new BasicNameValuePair("friend",friend));  
-        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+	public static double[] getDebt (String friend) throws ClientProtocolException, IOException {
+		httppost = new HttpPost(server + "get_friend_detail.php");
+		nameValuePairs.add(new BasicNameValuePair("friend",friend));
+		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+        ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		response = httpclient.execute(httppost, responseHandler);
+		System.out.println("Response: " + response);
 		
-		httpget = new HttpGet(new String( "http://andibar.dyndns.org/Yuome/get_debt.php"));
-		responseHandler = new BasicResponseHandler();
-		response = httpclient.execute(httpget, responseHandler);
-		
-		return response;
+        String[] data_unformatted = response.split(",");
+        double formatted[] = new double[2];
+        
+        formatted[0] = Double.parseDouble(data_unformatted[0]);
+        formatted[1] = Double.parseDouble(data_unformatted[1]);
+        
+		return(formatted);
 	}
 }

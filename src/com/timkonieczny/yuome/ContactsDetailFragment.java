@@ -20,7 +20,7 @@ public class ContactsDetailFragment extends Fragment{
 		final String friend = SaveValue.getSelectedFriendName();
 		
 		getActivity().getActionBar().setTitle(friend);
-		
+		System.out.println("Contact Details Fragment name: " + friend);
 		new Thread(new Runnable(){
 			@Override
 			public void run() {
