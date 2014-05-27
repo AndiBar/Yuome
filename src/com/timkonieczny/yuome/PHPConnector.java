@@ -153,9 +153,19 @@ public class PHPConnector {
 	}	
 	
 	public static String getReceiptsFromUser() throws ClientProtocolException, IOException{
-		httpget = new HttpGet(new String("http://andibar.dyndns.org/Yuome/get_user_receipts.php"));	//TODO: Geht nicht?
+		httpget = new HttpGet(new String("http://andibar.dyndns.org/Yuome/get_user_receipts.php"));
 		responseHandler = new BasicResponseHandler();
 		response = httpclient.execute(httpget, responseHandler);
+		return response;
+	}
+	
+	public static String getArticles(String id) throws ClientProtocolException, IOException{
+		nameValuePairs = new ArrayList<NameValuePair>(1);
+        nameValuePairs.add(new BasicNameValuePair("id",id));  
+        httppost = new HttpPost("http://andibar.dyndns.org/Yuome/get_articles.php");
+        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		responseHandler = new BasicResponseHandler();
+		response = httpclient.execute(httppost, responseHandler);
 		return response;
 	}
 }
