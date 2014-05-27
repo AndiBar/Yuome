@@ -52,15 +52,7 @@
         android:layout_toRightOf="@id/LoginButton"
         android:layout_below="@id/EditPassword"
         android:onClick="userSignup"
-        android:text="@string/signup" />
-    
-    <Button
-        android:id="@+id/DebugButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/SignupButton"
-        android:onClick="debug"
-        android:text="Server down" />    
+        android:text="@string/signup" />  
 
     <TextView
         android:id="@+id/debug"

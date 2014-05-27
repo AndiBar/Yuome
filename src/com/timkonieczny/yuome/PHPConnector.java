@@ -138,6 +138,19 @@ public class PHPConnector {
         }
 		return balance;
 	}
+	public static void updateBalance(ArrayList<HashMap<String,String>> debts_changed, String url) throws ClientProtocolException, IOException{
+		httppost = new HttpPost(server + url);
+        nameValuePairs = new ArrayList<NameValuePair>();
+        nameValuePairs.add(new BasicNameValuePair("debts_number",String.valueOf(debts_changed.size())));
+        for(int i = 0; i < debts_changed.size(); i++){
+        	nameValuePairs.add(new BasicNameValuePair("ID" + i,debts_changed.get(i).get("ID")));
+        	nameValuePairs.add(new BasicNameValuePair("balance" + i,debts_changed.get(i).get("balance")));
+        }
+		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		ResponseHandler<String> responseHandler = new BasicResponseHandler();
+        response = httpclient.execute(httppost, responseHandler);
+	
+	}	
 	
 	public static String getReceiptsFromUser() throws ClientProtocolException, IOException{
 		httpget = new HttpGet(new String("http://andibar.dyndns.org/Yuome/get_user_receipts.php"));	//TODO: Geht nicht?

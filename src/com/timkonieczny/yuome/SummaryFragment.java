@@ -11,6 +11,7 @@ import com.timkonieczny.yuome.ChooseContactsActivity.FriendsThread;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -42,6 +43,7 @@ public class SummaryFragment extends Fragment {
 	private float credit;
 	ArrayList<HashMap<String, String>> debts_list;
 	ArrayList<HashMap<String, String>> credits_list;
+	public static ProgressDialog dialog = null;
 	
     public SummaryFragment(){
     	
@@ -70,6 +72,7 @@ public class SummaryFragment extends Fragment {
         	}
         } catch (InterruptedException e) {
         	}
+    	
     }
     
 	@SuppressLint("NewApi")
@@ -79,6 +82,7 @@ public class SummaryFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_summary, container, false);
 		
 		Context context = getActivity();
+        
         Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
@@ -98,11 +102,11 @@ public class SummaryFragment extends Fragment {
         System.out.println("h="+height);
         
         for(HashMap debt : debts_list){
-        	debit = debit + Float.parseFloat(debt.get("balance").toString());
+        	debit = (float) (Math.round((debit + Double.parseDouble(debt.get("balance").toString())) * 100) / 100.);
         }
         
         for(HashMap credt : credits_list){
-        	credit = credit + Float.parseFloat(credt.get("balance").toString());
+        	credit = (float) (Math.round((credit + Double.parseDouble(credt.get("balance").toString())) * 100) / 100.);
         }
 		
 		float bottomEnd=height;
@@ -187,7 +191,6 @@ public class SummaryFragment extends Fragment {
         else{
         	totalText.setTextColor(Color.parseColor("#CD5C5C"));
         }
-        MainActivity.dialog.dismiss();
         
 		return rootView;
 	}

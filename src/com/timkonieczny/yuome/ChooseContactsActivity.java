@@ -46,6 +46,8 @@ public class ChooseContactsActivity extends ListActivity {
     public static ChooseContactsAdapter mAdapter;
     public static ArrayList<HashMap<String, String>> friends_list = new ArrayList<HashMap<String,String>>();
     public static ProgressDialog dialog = null;
+    public Bundle data;
+    public ArrayList<HashMap<String, String>> article_list;
      
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,8 +89,8 @@ public class ChooseContactsActivity extends ListActivity {
           switch (item.getItemId()) {
 	          case R.id.action_addbuy:
 	        	dialog = ProgressDialog.show(ChooseContactsActivity.this, "","Einkauf wird verarbeitet", true);
-	        	final Bundle data = getIntent().getExtras();
-	        	final ArrayList<HashMap<String, String>> article_list = new ArrayList<HashMap<String,String>>();
+	        	data = getIntent().getExtras();
+	        	article_list = new ArrayList<HashMap<String,String>>();
 	            ArrayList<Article> articles = (ArrayList) data.getParcelableArrayList("articles");
 	            for(Article article : articles){
 	            	HashMap<String,String> article_hash = new HashMap<String,String>();
@@ -97,21 +99,16 @@ public class ChooseContactsActivity extends ListActivity {
 	            	article_hash.put("amount",article.getAmount());
 	        		article_list.add(article_hash);
 	        	}
-	            new Thread(
-	            	new Runnable(){
-	            		public void run(){
-							try {
-								PHPConnector.addBuy(article_list, mAdapter.getCheckedUserIDs(), data.getString("storeID"), data.getString("date"), data.getDouble("total"));
-							} catch (ClientProtocolException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-	            		}
-	        		}
-	            ).start();
+	            Thread add_buy_thread = new AddBuyThread();
+	            add_buy_thread.start();
+	            
+	            try {
+	            	long waitMillis = 10000;
+	            	while (add_buy_thread.isAlive()) {
+	            	   add_buy_thread.join(waitMillis);
+	            	}
+	            } catch (InterruptedException e) {
+	            	}
 	          	Intent intent = new Intent(this, MainActivity.class);
 	        	startActivity(intent);
 	            break;
@@ -133,5 +130,18 @@ public class ChooseContactsActivity extends ListActivity {
   				e.printStackTrace();
   			}
     	  }
+    }
+    public class AddBuyThread extends Thread{
+    	public void run(){
+    		try {
+				PHPConnector.addBuy(article_list, mAdapter.getCheckedUserIDs(), data.getString("storeID"), data.getString("date"), data.getDouble("total"));
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
     }
 }

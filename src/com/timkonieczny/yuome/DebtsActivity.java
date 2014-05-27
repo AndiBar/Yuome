@@ -23,19 +23,44 @@ import java.util.HashMap;
 import org.apache.http.client.ClientProtocolException;
 
 import com.timkonieczny.yuome.ChooseContactsActivity.FriendsThread;
+import com.timkonieczny.yuome.SummaryFragment.DebtThread;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
+import android.app.ActionBar.LayoutParams;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 
-public class DebtsActivity extends ListActivity {
+public class DebtsActivity extends ListActivity implements OnItemClickListener, OnClickListener{
     
 	public static SimpleAdapter mAdapter;
 	public ArrayList<HashMap<String,String>> debts_list = new ArrayList<HashMap<String,String>>();
+	public ArrayList<HashMap<String,String>> debts_changed = new ArrayList<HashMap<String,String>>();
+	private PopupWindow popupMessage;
+	private int selected_debt;
 	
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,11 +89,150 @@ public class DebtsActivity extends ListActivity {
     	mAdapter.notifyDataSetChanged();
 
         ListView listView = getListView();
+        
+        listView.setOnItemClickListener(this);
+        
+        LinearLayout layoutOfPopup = new LinearLayout(this);
+        
+        popupMessage = new PopupWindow(layoutOfPopup, LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View popupLayout = inflater.inflate(R.layout.popup_debts, layoutOfPopup);
+        
+        popupMessage.setContentView(popupLayout);
+        
+        Button button = (Button) popupLayout.findViewById(R.id.popup_button);
+        button.setOnClickListener(this);
        
     }
+    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
+		selected_debt = arg2;
+		final int selected = arg2;
+		RadioButton radio_button2 = (RadioButton) popupMessage.getContentView().findViewById(R.id.radioButton2);
+		radio_button2.setOnClickListener(new OnClickListener(){
+			public void onClick(View v){
+				AlertDialog.Builder alert = new AlertDialog.Builder(DebtsActivity.this);
+
+				alert.setTitle("Teilbetrag");
+				alert.setMessage("Bitte Teilbetrag von " + debts_list.get(selected).get("balance") + "€ angeben:");
+
+				final EditText input = new EditText(DebtsActivity.this);
+				alert.setView(input);
+
+				alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+				  
+				  TextView amount_view = (TextView) popupMessage.getContentView().findViewById(R.id.amount_text);
+				  try{
+					  Double new_balance = Math.round((Double.parseDouble(debts_list.get(selected).get("balance")) - Double.parseDouble(input.getText().toString())) * 100) / 100.;
+					  if(new_balance >= 0 && Double.parseDouble(input.getText().toString()) >= 0){
+						  amount_view.setText(input.getText());
+					  }
+					  else{
+						  AlertDialogs.showAlert(DebtsActivity.this, "Error", "Eingabe ist fehlerhaft.");
+					  }
+				  }catch(NumberFormatException e){
+					  AlertDialogs.showAlert(DebtsActivity.this, "Error", e.getMessage());
+				  }
+				}
+				});
+
+				alert.show();
+			}
+		});
+    	if(popupMessage.isShowing()){
+			popupMessage.dismiss();
+		}
+		popupMessage.showAsDropDown(arg1);
+		
+	}
+    public void onClick(View v) {
+		RadioButton radio_button1 = (RadioButton) popupMessage.getContentView().findViewById(R.id.radioButton1);
+		if(radio_button1.isChecked()){
+			HashMap<String,String> debt_adapter = (HashMap<String, String>) mAdapter.getItem(selected_debt);
+			HashMap<String,String> debt_hash = debts_list.get(selected_debt);
+			if(debt_hash.get("ID") == debt_adapter.get("ID")){
+				debt_hash.put("balance", "0");
+				debts_list.remove(selected_debt);
+				debts_list.add(debt_hash);
+				debts_changed.add(debt_hash);
+			}
+		}
+		mAdapter.notifyDataSetChanged();
+        radio_button1.setChecked(false);
+        RadioButton radio_button2 = (RadioButton) popupMessage.getContentView().findViewById(R.id.radioButton2);
+        if(radio_button2.isChecked()){
+        	TextView amount_view = (TextView) popupMessage.getContentView().findViewById(R.id.amount_text);
+        	HashMap<String,String> debt_adapter = (HashMap<String, String>) mAdapter.getItem(selected_debt);
+			HashMap<String,String> debt_hash = debts_list.get(selected_debt);
+			String balance = debt_hash.get("balance");
+			Double new_balance = Math.round((Double.parseDouble(balance) - Double.parseDouble(amount_view.getText().toString())) * 100) / 100.;
+			if(debt_hash.get("ID") == debt_adapter.get("ID")){
+				debt_hash.put("balance", new_balance.toString());
+				debts_list.remove(selected_debt);
+				debts_list.add(debt_hash);
+				debts_changed.add(debt_hash);
+			}
+        }
+        radio_button2.setChecked(false);
+		popupMessage.dismiss();
+		// TODO Auto-generated method stub
+		
+	}
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.choose_contacts, menu);
         return true;
     }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+	          case R.id.action_addbuy:
+        			runOnUiThread(new Runnable() {
+        	            public void run() {
+        					new AlertDialog.Builder(DebtsActivity.this)
+        					.setTitle("Speichern")
+        					.setMessage("Änderungen speichern?")
+        					.setIcon(android.R.drawable.ic_dialog_alert)
+        					.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+        		
+        				    public void onClick(DialogInterface dialog, int whichButton) {
+        				    	Thread update_debt_thread = new updateDebtThread();
+        				        update_debt_thread.start();
+        				        
+        				        try {
+        				        	long waitMillis = 10000;
+        				        	while (update_debt_thread.isAlive()) {
+        				        	   update_debt_thread.join(waitMillis);
+        				        	}
+        				        } catch (InterruptedException e) {
+        				        	}
+        					        Toast.makeText(DebtsActivity.this, "Änderungen gespeichert.", Toast.LENGTH_SHORT).show();
+        					        Intent intent = new Intent(DebtsActivity.this, MainActivity.class);
+        				            startActivity(intent);
+        				    }})
+        				 .setNegativeButton(android.R.string.no, null).show();
+        	            }
+        			});
+	            break;
+	          
+	          default:
+	            break;
+        }
+	          return true;
+    }
+    public class updateDebtThread extends Thread{
+    	public void run(){
+    		try {
+				PHPConnector.updateBalance(debts_changed, "update_debts.php");
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+  	  	}
+    }
+    
 }
+

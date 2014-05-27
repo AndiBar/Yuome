@@ -44,13 +44,12 @@ public class WelcomeActivity extends Activity {
 		loginButton = (Button)findViewById(R.id.LoginButton);
         editUsername = (EditText)findViewById(R.id.EditUsername);
         editPassword= (EditText)findViewById(R.id.EditPassword);
-        debugText = (TextView)findViewById(R.id.debug);
 
         loginButton.setOnClickListener(
     		new OnClickListener() {
 	            @Override
 	            public void onClick(View v) {
-	                dialog = ProgressDialog.show(WelcomeActivity.this, "","Login l‰uft", true);
+	                dialog = ProgressDialog.show(WelcomeActivity.this, "","Login l√§uft", true);
 	                new Thread(
 	                		new Runnable(){
 	                			public void run(){
@@ -113,11 +112,6 @@ public class WelcomeActivity extends Activity {
 
     public void userSignup(View view){
         Intent intent = new Intent(this, SignupActivity.class);
-        startActivity(intent);
-    }
-    
-    public void debug(View view){	//TODO
-        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 }
