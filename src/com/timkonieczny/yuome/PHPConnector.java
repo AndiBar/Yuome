@@ -47,7 +47,7 @@ public class PHPConnector {
 		return response;
 	}
 	public static void logOff() throws ClientProtocolException, IOException{
-		httpget = new HttpGet("http://andibar.dyndns.org/Yuome/log_off.php");
+		httpget = new HttpGet(server + "log_off.php");
 		httpclient.execute(httpget);
 	}
 	public static String getItemListResponse(String url, String store) throws ClientProtocolException, IOException{
@@ -62,10 +62,10 @@ public class PHPConnector {
 		return response;
 	}
 	public static void addBuy(ArrayList<HashMap<String,String>> articles, ArrayList<String> contacts, String storeID, String date, Double total) throws ClientProtocolException, IOException{
-		double debit_value = 0 - (total / (contacts.size() + 1));
+		double debit_value = 0 - (total / (contacts.size()));
 		debit_value = Math.round(debit_value * 100) / 100.;
 		double credit_value = total + debit_value;
-		httppost = new HttpPost("http://andibar.dyndns.org/Yuome/add_buy.php");
+		httppost = new HttpPost(server + "add_buy.php");
         nameValuePairs = new ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("article_number",String.valueOf(articles.size())));
         for(int i = 0; i < articles.size(); i++){
@@ -87,7 +87,7 @@ public class PHPConnector {
 	
 	}	
 	public static String addFriend(String friend) throws ClientProtocolException, IOException {
-		httppost = new HttpPost("http://andibar.dyndns.org/Yuome/add_friend.php");
+		httppost = new HttpPost(server + "add_friend.php");
 		nameValuePairs.add(new BasicNameValuePair("friend",friend));
 		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
@@ -115,17 +115,21 @@ public class PHPConnector {
         }
 		return data;
 	}
-	public static ArrayList<HashMap<String,String>> getBalance(String url) throws ClientProtocolException, IOException{
+	public static ArrayList<HashMap<String,String>> getBalance(String url) throws ClientProtocolException, IOException, NotLoggedInException{
 		httpget = new HttpGet(server + url);
 		httpclient.execute(httpget);
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
         response = httpclient.execute(httpget, responseHandler);
-        System.out.println(response);
-        
+        System.out.println(response); 
         ArrayList<HashMap<String,String>> balance = new ArrayList<HashMap<String,String>>();
         
-        if(!response.equals("no debts found.")){
-	        String[] data_unformatted = response.split(",");
+        if(response.equals("no debts found.")){
+        }
+        else if(response.equals("not logged in.")){
+        	throw new NotLoggedInException("Bitte erneut anmelden.");
+        }
+        else{
+        	String[] data_unformatted = response.split(",");
 	        for(String item : data_unformatted){
 	        	HashMap data_map = new HashMap<String, String>();
 	        	String[] balance_array = item.split(":");
@@ -135,7 +139,7 @@ public class PHPConnector {
 	        	data_map.put("username", data_array[1]);
 	        	balance.add(data_map);
 	        }
-        }
+	    }
 		return balance;
 	}
 	public static void updateBalance(ArrayList<HashMap<String,String>> debts_changed, String url) throws ClientProtocolException, IOException{
@@ -153,7 +157,7 @@ public class PHPConnector {
 	}	
 	
 	public static String getReceiptsFromUser() throws ClientProtocolException, IOException{
-		httpget = new HttpGet(new String("http://andibar.dyndns.org/Yuome/get_user_receipts.php"));
+		httpget = new HttpGet(new String(server + "get_user_receipts.php"));
 		responseHandler = new BasicResponseHandler();
 		response = httpclient.execute(httpget, responseHandler);
 		return response;
@@ -162,7 +166,7 @@ public class PHPConnector {
 	public static String getArticles(String id) throws ClientProtocolException, IOException{
 		nameValuePairs = new ArrayList<NameValuePair>(1);
         nameValuePairs.add(new BasicNameValuePair("id",id));  
-        httppost = new HttpPost("http://andibar.dyndns.org/Yuome/get_articles.php");
+        httppost = new HttpPost(server + "get_articles.php");
         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		responseHandler = new BasicResponseHandler();
 		response = httpclient.execute(httppost, responseHandler);

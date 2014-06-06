@@ -21,6 +21,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -44,6 +45,7 @@ public class SummaryFragment extends Fragment {
 	ArrayList<HashMap<String, String>> debts_list;
 	ArrayList<HashMap<String, String>> credits_list;
 	public static ProgressDialog dialog = null;
+	private boolean notLoggedIn = false;
 	
     public SummaryFragment(){
     	
@@ -79,6 +81,10 @@ public class SummaryFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
+		if(notLoggedIn){
+        	AlertDialogs.showLoginAgainAlert(getActivity());
+        }
+		
 		View rootView = inflater.inflate(R.layout.fragment_summary, container, false);
 		
 		Context context = getActivity();
@@ -113,13 +119,6 @@ public class SummaryFragment extends Fragment {
 		
 		float debtTopEnd = calculateDiagram(debit, credit);
 		float creditTopEnd = calculateDiagram(credit, debit);
-		
-		System.out.println("debtTop="+debtTopEnd);
-		System.out.println("creditTop="+creditTopEnd);		
-		System.out.println("screenHeight="+height);
-		System.out.println("bottom="+bottomEnd);
-
-		System.out.println("Balance:" + balance);
 		
 		final View leftLayout = rootView.findViewById(R.id.left);
 		final View rightLayout =  rootView.findViewById(R.id.right);		
@@ -218,6 +217,9 @@ public class SummaryFragment extends Fragment {
     		} catch (IOException e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
+    		} catch (NotLoggedInException e) {
+			// TODO Auto-generated catch block
+    			notLoggedIn = true;
     		}
     	}
     }
@@ -232,7 +234,10 @@ public class SummaryFragment extends Fragment {
     		} catch (IOException e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
-    		}
+    		} catch (NotLoggedInException e) {
+    			// TODO Auto-generated catch block
+    			notLoggedIn = true;	
+        	}
     	}
-    }
+	}
 }

@@ -61,6 +61,7 @@ public class DebtsActivity extends ListActivity implements OnItemClickListener, 
 	public ArrayList<HashMap<String,String>> debts_changed = new ArrayList<HashMap<String,String>>();
 	private PopupWindow popupMessage;
 	private int selected_debt;
+	private Double partial_amount;
 	
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,7 +109,11 @@ public class DebtsActivity extends ListActivity implements OnItemClickListener, 
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
 		selected_debt = arg2;
 		final int selected = arg2;
+		final RadioButton radio_button1 = (RadioButton) popupMessage.getContentView().findViewById(R.id.radioButton1);
+		radio_button1.setChecked(true);
 		RadioButton radio_button2 = (RadioButton) popupMessage.getContentView().findViewById(R.id.radioButton2);
+		TextView amount_view = (TextView) popupMessage.getContentView().findViewById(R.id.amount_text);
+		amount_view.setText("+" + debts_list.get(selected).get("balance") + "€");
 		radio_button2.setOnClickListener(new OnClickListener(){
 			public void onClick(View v){
 				AlertDialog.Builder alert = new AlertDialog.Builder(DebtsActivity.this);
@@ -122,17 +127,23 @@ public class DebtsActivity extends ListActivity implements OnItemClickListener, 
 				alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 				  
+				  RadioButton radio_button2 = (RadioButton) popupMessage.getContentView().findViewById(R.id.radioButton2);
 				  TextView amount_view = (TextView) popupMessage.getContentView().findViewById(R.id.amount_text);
 				  try{
 					  Double new_balance = Math.round((Double.parseDouble(debts_list.get(selected).get("balance")) - Double.parseDouble(input.getText().toString())) * 100) / 100.;
 					  if(new_balance >= 0 && Double.parseDouble(input.getText().toString()) >= 0){
-						  amount_view.setText(input.getText());
+						  amount_view.setText("+" + input.getText() + "€");
+						  partial_amount = Double.parseDouble(input.getText().toString());
 					  }
 					  else{
 						  AlertDialogs.showAlert(DebtsActivity.this, "Error", "Eingabe ist fehlerhaft.");
+						  radio_button2.setChecked(false);
+						  radio_button1.setChecked(true);
 					  }
 				  }catch(NumberFormatException e){
 					  AlertDialogs.showAlert(DebtsActivity.this, "Error", e.getMessage());
+					  radio_button2.setChecked(false);
+					  radio_button1.setChecked(true);
 				  }
 				}
 				});
@@ -153,8 +164,7 @@ public class DebtsActivity extends ListActivity implements OnItemClickListener, 
 			HashMap<String,String> debt_hash = debts_list.get(selected_debt);
 			if(debt_hash.get("ID") == debt_adapter.get("ID")){
 				debt_hash.put("balance", "0");
-				debts_list.remove(selected_debt);
-				debts_list.add(debt_hash);
+				debts_list.set(selected_debt, debt_hash);
 				debts_changed.add(debt_hash);
 			}
 		}
@@ -162,15 +172,13 @@ public class DebtsActivity extends ListActivity implements OnItemClickListener, 
         radio_button1.setChecked(false);
         RadioButton radio_button2 = (RadioButton) popupMessage.getContentView().findViewById(R.id.radioButton2);
         if(radio_button2.isChecked()){
-        	TextView amount_view = (TextView) popupMessage.getContentView().findViewById(R.id.amount_text);
         	HashMap<String,String> debt_adapter = (HashMap<String, String>) mAdapter.getItem(selected_debt);
 			HashMap<String,String> debt_hash = debts_list.get(selected_debt);
 			String balance = debt_hash.get("balance");
-			Double new_balance = Math.round((Double.parseDouble(balance) - Double.parseDouble(amount_view.getText().toString())) * 100) / 100.;
+			Double new_balance = Math.round((Double.parseDouble(balance) - partial_amount) * 100) / 100.;
 			if(debt_hash.get("ID") == debt_adapter.get("ID")){
 				debt_hash.put("balance", new_balance.toString());
-				debts_list.remove(selected_debt);
-				debts_list.add(debt_hash);
+				debts_list.set(selected_debt, debt_hash);
 				debts_changed.add(debt_hash);
 			}
         }

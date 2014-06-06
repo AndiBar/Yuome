@@ -5,6 +5,7 @@ import java.io.IOException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +17,12 @@ public class AlertDialogs {
 	
 	public Activity activity;
 	public String[] article;
+	static AlertDialog alert;
 	
 	public AlertDialogs(Activity activity){
 		this.activity = activity;
 		this.article = new String[3];
 	}
-
 	public static void showAlert(final Activity ParentActivity, final String title, final String message){
         ParentActivity.runOnUiThread(new Runnable() {
             public void run() {
@@ -34,6 +35,24 @@ public class AlertDialogs {
                             }
                         });
                 AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
+    }
+	public static void showLoginAgainAlert(final Activity ParentActivity){
+        ParentActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ParentActivity);
+                builder.setTitle("Sitzung abgelaufen");
+                builder.setMessage("Bitte erneut anmelden.")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            	Intent intent = new Intent(ParentActivity, WelcomeActivity.class);
+                                ParentActivity.startActivity(intent);
+                            }
+                        });
+                alert = builder.create();
                 alert.show();
             }
         });

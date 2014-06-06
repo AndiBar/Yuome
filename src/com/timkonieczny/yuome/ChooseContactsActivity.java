@@ -68,7 +68,11 @@ public class ChooseContactsActivity extends ListActivity {
         } catch (InterruptedException e) {
         	}
         
-        System.out.println(friends_list.get(0).get("title"));
+        HashMap<String,String> owner = new HashMap<String,String>();
+        owner.put("title", "Ich");
+        owner.put("ID", "0");
+        friends_list.add(friends_list.get(0));
+        friends_list.set(0,owner);
         
         mAdapter = new ChooseContactsAdapter(this,
         		friends_list,
@@ -134,6 +138,9 @@ public class ChooseContactsActivity extends ListActivity {
     public class AddBuyThread extends Thread{
     	public void run(){
     		try {
+    			for(String userid : mAdapter.getCheckedUserIDs()){
+    				System.out.println("Test" + userid);
+    			}
 				PHPConnector.addBuy(article_list, mAdapter.getCheckedUserIDs(), data.getString("storeID"), data.getString("date"), data.getDouble("total"));
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block
