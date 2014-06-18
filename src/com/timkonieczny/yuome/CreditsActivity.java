@@ -167,7 +167,6 @@ public class CreditsActivity extends ListActivity implements OnItemClickListener
 			}
 		}
 		mAdapter.notifyDataSetChanged();
-        radio_button1.setChecked(false);
         RadioButton radio_button2 = (RadioButton) popupMessage.getContentView().findViewById(R.id.radioButton2);
         if(radio_button2.isChecked()){
         	HashMap<String,String> debt_adapter = (HashMap<String, String>) mAdapter.getItem(selected_debt);

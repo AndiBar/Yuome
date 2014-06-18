@@ -138,9 +138,6 @@ public class ChooseContactsActivity extends ListActivity {
     public class AddBuyThread extends Thread{
     	public void run(){
     		try {
-    			for(String userid : mAdapter.getCheckedUserIDs()){
-    				System.out.println("Test" + userid);
-    			}
 				PHPConnector.addBuy(article_list, mAdapter.getCheckedUserIDs(), data.getString("storeID"), data.getString("date"), data.getDouble("total"));
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block

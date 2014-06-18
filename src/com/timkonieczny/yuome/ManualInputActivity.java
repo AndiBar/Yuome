@@ -3,6 +3,7 @@ package com.timkonieczny.yuome;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 
 import org.apache.http.client.ClientProtocolException;
@@ -78,6 +79,7 @@ public class ManualInputActivity extends ListActivity {
         	}
         } catch (InterruptedException e) {
         }
+        Collections.sort(stores, new MapComparator("title"));
         
         mStoreSpinner = (Spinner) findViewById(R.id.store_spinner);
         SimpleAdapter storeAdapter = new SimpleAdapter(this,
