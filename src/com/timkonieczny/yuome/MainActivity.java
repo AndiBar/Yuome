@@ -169,6 +169,7 @@ public class MainActivity extends Activity {
 		}
 		if (position == 2) { // Meine Kassenzettel
 			Fragment fragment = new ReceiptsFragment();
+//			fragment.receiptsList;
 			FragmentManager fragmentManager = getFragmentManager();
 			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 

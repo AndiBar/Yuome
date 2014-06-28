@@ -20,6 +20,7 @@ public class ReceiptAdapter extends ArrayAdapter<Receipt> {
 			
 			this.context = context;
 			this.itemsArrayList = itemsArrayList;
+//			this.itemsArrayList.clear();
 		}
 		
 		@Override

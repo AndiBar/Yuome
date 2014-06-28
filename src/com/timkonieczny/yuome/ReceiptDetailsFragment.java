@@ -39,6 +39,7 @@ public class ReceiptDetailsFragment extends ListFragment { // jeweils eine Klass
 //						        for(String i: articleData){
 //						        	Log.d("receiptData",i);
 //						        }
+						        articlesList.clear();
 						        for(int i=0;i<articleData.length;i+=3){
 									ReceiptDetailsFragment.articlesList.add(new Article(articleData[i+1], articleData[i+2],articleData[i]));
 								}
