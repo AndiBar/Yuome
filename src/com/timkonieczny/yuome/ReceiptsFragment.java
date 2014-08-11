@@ -8,6 +8,7 @@ import org.apache.http.client.ClientProtocolException;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,6 +59,11 @@ public class ReceiptsFragment extends ListFragment implements OnItemClickListene
 		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
 		getActivity().getActionBar().setTitle("Details");
+		
+		
+//		Intent intent = new Intent(getActivity(), ReceiptDetailsActivity.class);
+//		intent.putExtra("message", myMessage);
+//		startActivity(intent);
     }
 	
 	private ArrayList<Receipt> fillReceiptsList(){	// TODO: ggf. Vorhandene Einkäufe beim ersten Start der App herunterladen
@@ -67,12 +73,12 @@ public class ReceiptsFragment extends ListFragment implements OnItemClickListene
 				public void run(){
 					try {				//TODO: Wirft Exception
 							receiptString=PHPConnector.getReceiptsFromUser();
-//							Log.d("receiptString",receiptString);
+							System.out.println("receiptString: "+receiptString);
 							
 					        String[] receiptData = receiptString.split(":");
-//					        for(String i: receiptData){
-//					        	Log.d("receiptData",i);
-//					        }
+					        for(String i: receiptData){
+					        	System.out.println("receiptData: "+i);
+					        }
 							
 							ReceiptsFragment.receiptsList = new ArrayList<Receipt>();
 //							ReceiptsFragment.receiptsList.add(new Receipt("01.01.2014","Aldi","Erik, Andi","15,63"));
@@ -105,4 +111,6 @@ public class ReceiptsFragment extends ListFragment implements OnItemClickListene
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
 }

@@ -11,6 +11,8 @@ import org.apache.http.client.ClientProtocolException;
 import com.timkonieczny.yuome.ChooseContactsActivity.FriendsThread;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
@@ -22,6 +24,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -275,4 +278,21 @@ public class ManualInputActivity extends ListActivity {
 			}
   	  }
   }
+	
+	public void onBackPressed(){
+		Log.d("ManualInputActivity", "BackButton pressed");
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra("drawerPosition", 0);
+		startActivity(intent);
+		
+//		Fragment fragment = new SummaryFragment();
+//		FragmentManager fragmentManager = getFragmentManager();
+//		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+		// update selected item and title, then close the drawer
+//		mMainMenu.setItemChecked(position, true);
+//		mFragmentName=mMainMenuItems[position];
+//		getActionBar().setTitle(mFragmentName);
+//		mDrawerLayout.closeDrawer(mMainMenu);
+	}
 }

@@ -6,14 +6,16 @@ import java.util.ArrayList;
 import org.apache.http.client.ClientProtocolException;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ReceiptDetailsFragment extends ListFragment { // jeweils eine Klasse für jedes Fragment erstellen
+public class ReceiptDetailsFragment extends ListFragment {
 	
 	public String articlesString, id;
 	public static ArrayList<Article> articlesList = new ArrayList<Article>();
@@ -67,4 +69,23 @@ public class ReceiptDetailsFragment extends ListFragment { // jeweils eine Klass
 		
 		return rootView;
 	}
+	
+	public void onBackPressed(){
+		Log.d("ReceiptDetailsFragment", "BackButton pressed");
+		Fragment fragment = new ReceiptsFragment();
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+            	Log.d("ReceiptDetailsFragment", "BackButton pressed");
+        		Fragment fragment = new ReceiptsFragment();
+        		FragmentManager fragmentManager = getFragmentManager();
+        		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                return true;
+    }
+            return false;
+}
 }

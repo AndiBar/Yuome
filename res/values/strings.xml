@@ -17,7 +17,7 @@
     <string name="menu_icon">Hauptmenü</string>
     <string name="weiter">Weiter</string>
     <string name="new_contacts">neuen Kontakt hinzuf\c3bcgen</string>
-    
+
     <color name="green">#338A30</color>
     <color name="white">#FFFFFF</color>
 
@@ -35,6 +35,9 @@
     <string name="title_debts_activity"></string>
     <string name="title_credits_activity"></string>
     <string name="contacts_new_textfield_username">Nutzername oder E-Mail eingeben</string>
+
     <color name="black">#000000</color>
+
+    <string name="title_activity_receipt_details">Details</string>
 
 </resources>

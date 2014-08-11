@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
@@ -108,7 +109,13 @@ public class MainActivity extends Activity {
 			selectMenuItem(selectedMenu);		
 		}
 		
-		mDrawerLayout.openDrawer(mMainMenu); // Beim Erstellen der Activity wird der Drawer geöffnet
+		if(getIntent().getExtras()!=null){	// zu öffnendes Fragment wenn in einer anderen Activity der Back-Button gedrückt wird
+			int drawerPosition = getIntent().getExtras().getInt("drawerPosition");
+			Log.d("MainActivity", "DrawerPosition: "+drawerPosition);
+			openInputFragment(drawerPosition);
+		}else{
+			mDrawerLayout.openDrawer(mMainMenu); // Beim Erstellen der Activity wird der Drawer geöffnet (wird nicht geöffnet, wenn woanders Back gedrückt wird)
+		}
 	}
 	
 
@@ -145,61 +152,78 @@ public class MainActivity extends Activity {
 
 	private void selectMenuItem(int position) { // Auswahl der Fragments passend zum ListItem
 		if (position == 0) { // Eingabeauswahl wird geöffnet
-			Fragment fragment = new InputFragment();
-			FragmentManager fragmentManager = getFragmentManager();
-			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-			
-			// update selected item and title, then close the drawer
-			mMainMenu.setItemChecked(position, true);
-			mFragmentName=mMainMenuItems[position];
-			getActionBar().setTitle(mFragmentName);
+			openInputFragment(position);
 			mDrawerLayout.closeDrawer(mMainMenu);
 		}
 		if (position == 1) { // Schuldenübersicht
-			Fragment fragment = new SummaryFragment();
-			FragmentManager fragmentManager = getFragmentManager();
-			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-			// update selected item and title, then close the drawer
-			mMainMenu.setItemChecked(position, true);
-			mFragmentName=mMainMenuItems[position];
-			getActionBar().setTitle(mFragmentName);
+			openSummaryFragment(position);
 			mDrawerLayout.closeDrawer(mMainMenu);
-
 		}
 		if (position == 2) { // Meine Kassenzettel
-			Fragment fragment = new ReceiptsFragment();
-//			fragment.receiptsList;
-			FragmentManager fragmentManager = getFragmentManager();
-			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-			mMainMenu.setItemChecked(position, true);
-			mFragmentName=mMainMenuItems[position];
-			getActionBar().setTitle(mFragmentName);
+			openReceiptsFragment(position);
 			mDrawerLayout.closeDrawer(mMainMenu);
 		}
 		if (position == 3) { // Kontakte
-			selectedMenu = 3;
-			Fragment fragment = new ContactsFragment();
-			FragmentManager fragmentManager = getFragmentManager();
-			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-			mMainMenu.setItemChecked(position, true);
-			mFragmentName=mMainMenuItems[position];
-			getActionBar().setTitle(mFragmentName);
+			openContactsFragment(position);
 			mDrawerLayout.closeDrawer(mMainMenu);
-			
 		}
 		if (position == 4) { // Kontoeinstellungen
-			Fragment fragment = new SettingsFragment();
-			FragmentManager fragmentManager = getFragmentManager();
-			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-			mMainMenu.setItemChecked(position, true);
-			mFragmentName=mMainMenuItems[position];
-			getActionBar().setTitle(mFragmentName);
+			openSettingsFragment(position);
 			mDrawerLayout.closeDrawer(mMainMenu);
 		}
+	}
+	
+	private void openInputFragment(int position){
+		Fragment fragment = new InputFragment();
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+		
+		// update selected item and title, then close the drawer
+		mMainMenu.setItemChecked(position, true);
+		mFragmentName=mMainMenuItems[position];
+		getActionBar().setTitle(mFragmentName);
+	}
+	
+	private void openSummaryFragment(int position){
+		Fragment fragment = new SummaryFragment();
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+		// update selected item and title, then close the drawer
+		mMainMenu.setItemChecked(position, true);
+		mFragmentName=mMainMenuItems[position];
+		getActionBar().setTitle(mFragmentName);
+	}
+	
+	private void openReceiptsFragment(int position){
+		Fragment fragment = new ReceiptsFragment();
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+		mMainMenu.setItemChecked(position, true);
+		mFragmentName=mMainMenuItems[position];
+		getActionBar().setTitle(mFragmentName);
+	}
+	
+	private void openContactsFragment(int position){
+		selectedMenu = 3;
+		Fragment fragment = new ContactsFragment();
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+		mMainMenu.setItemChecked(position, true);
+		mFragmentName=mMainMenuItems[position];
+		getActionBar().setTitle(mFragmentName);
+	}
+	
+	private void openSettingsFragment(int position){
+		Fragment fragment = new SettingsFragment();
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+		mMainMenu.setItemChecked(position, true);
+		mFragmentName=mMainMenuItems[position];
+		getActionBar().setTitle(mFragmentName);
 	}
 
 	/**
