@@ -54,14 +54,15 @@ public class MainActivity extends Activity {
 		mMainMenuItems = getResources().getStringArray(R.array.main_menu);
 		mFragmentName = mMainMenuItems[1];
 		
-		mMenuItems = new DrawerMenuItem[5];
+		mMenuItems = new DrawerMenuItem[6];
 		
 		mMenuIcons = new int[]{
 			R.drawable.ic_action_camera,
 			R.drawable.summary,
 			R.drawable.receipts,
 			R.drawable.ic_action_group,
-			R.drawable.ic_action_settings
+			R.drawable.ic_action_settings,
+			R.drawable.ic_action_about
 		};
 		
 		for(int i=0; i<mMenuItems.length;i++){
@@ -171,6 +172,10 @@ public class MainActivity extends Activity {
 			openSettingsFragment(position);
 			mDrawerLayout.closeDrawer(mMainMenu);
 		}
+		if (position == 5) { // Notifications
+			openNotificationsFragment(position);
+			mDrawerLayout.closeDrawer(mMainMenu);
+		}
 	}
 	
 	private void openInputFragment(int position){
@@ -218,6 +223,16 @@ public class MainActivity extends Activity {
 	
 	private void openSettingsFragment(int position){
 		Fragment fragment = new SettingsFragment();
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+		mMainMenu.setItemChecked(position, true);
+		mFragmentName=mMainMenuItems[position];
+		getActionBar().setTitle(mFragmentName);
+	}
+	
+	private void openNotificationsFragment(int position){
+		Fragment fragment = new NotificationsFragment();
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
