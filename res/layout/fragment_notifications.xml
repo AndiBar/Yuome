@@ -1,4 +1,20 @@
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/settings"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"/>
+<LinearLayout
+    android:background="#e5e5e5"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListView
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10dp"
+        android:id="@+id/myList"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="1dip">
+    </ListView>
+
+</LinearLayout>

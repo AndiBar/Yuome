@@ -18,6 +18,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+
+import android.util.Log;
 
 public class PHPConnector {
 	
@@ -170,6 +173,14 @@ public class PHPConnector {
         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		responseHandler = new BasicResponseHandler();
 		response = httpclient.execute(httppost, responseHandler);
+		return response;
+	}
+	
+	
+	public static String getNotifications() throws ClientProtocolException, IOException{
+		httpget = new HttpGet(new String(server + "get_notifications.php"));
+		responseHandler = new BasicResponseHandler();
+		response = httpclient.execute(httpget, responseHandler);	//crash...
 		return response;
 	}
 }
