@@ -34,14 +34,12 @@ public class NotificationAdapter extends ArrayAdapter<NotificationRowItem> {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.notification_list_row, null);
             holder = new ViewHolder();
-            holder.image = (ImageView) convertView.findViewById(R.id.list_image);
             holder.title = (TextView) convertView.findViewById(R.id.title);
             holder.description = (TextView) convertView.findViewById(R.id.description);
             convertView.setTag(holder);
-        } else
+        }else{
             holder = (ViewHolder) convertView.getTag();
-
-        holder.image.setImageResource(rowItem.getImageId());
+        }
         holder.title.setText(rowItem.getTitle());
         holder.description.setText(rowItem.getDesc());
 
