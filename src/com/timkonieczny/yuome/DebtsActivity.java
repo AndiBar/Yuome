@@ -23,7 +23,7 @@ import java.util.HashMap;
 import org.apache.http.client.ClientProtocolException;
 
 import com.timkonieczny.yuome.ChooseContactsActivity.FriendsThread;
-import com.timkonieczny.yuome.SummaryFragment.DebtThread;
+//import com.timkonieczny.yuome.SummaryFragment.DebtThread;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;

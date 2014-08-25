@@ -27,7 +27,6 @@
         <item>Meine Kassenzettel</item>
         <item>Kontakte</item>
         <item>Einstellungen</item>
-        <item>Benachrichtigungen</item>
     </string-array>
 
     <string name="title_activity_camera">CameraActivity</string>
