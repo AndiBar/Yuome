@@ -10,6 +10,7 @@ import org.apache.http.client.ClientProtocolException;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,6 +18,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -25,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -186,9 +189,39 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
 	        
 	        	        
 	        // Set the adapter on the ListView
-	        SummaryAdapter adapter = new SummaryAdapter(getActivity(), R.layout.notification_list_row, rowItems);
+	        SummaryAdapter adapter = new SummaryAdapter(getActivity(), R.layout.notification_list_row, rowItems, debts_list, credits_list);
 	        lv.setAdapter(adapter);
-
+//	        
+//	        getActivity().findViewById(R.id.left_text).setOnClickListener(new OnClickListener(){
+//	        	public void onClick(View v){
+//	        		Intent intent = new Intent(getActivity(), CreditsActivity.class);
+//	        		ArrayList parcellist = new ArrayList<Article>();
+//	            	Bundle credits = new Bundle();
+//	            	for(HashMap<String,String> credit : credits_list){
+//	            		Parcelable parcel = new Article(credit.get("ID"),credit.get("balance"),credit.get("username"));
+//	            		parcellist.add(parcel);
+//	            	}
+//	            	credits.putParcelableArrayList("articles", parcellist);
+//	              	intent.putExtras(credits);
+//		        	startActivity(intent);
+//	        	}
+//	        });
+//	        
+//	        getActivity().findViewById(R.id.right_text).setOnClickListener(new OnClickListener(){
+//	        	public void onClick(View v){
+//	        		Intent intent = new Intent(getActivity(), DebtsActivity.class);
+//	        		ArrayList parcellist = new ArrayList<Article>();
+//	            	Bundle debts = new Bundle();
+//	            	for(HashMap<String,String> debt : debts_list){
+//	            		Parcelable parcel = new Article(debt.get("ID"),debt.get("balance"),debt.get("username"));
+//	            		parcellist.add(parcel);
+//	            	}
+//	            	debts.putParcelableArrayList("articles", parcellist);
+//	              	intent.putExtras(debts);
+//		        	startActivity(intent);
+//	        	}
+//	        });
+	        
 		return rootView;
 	}
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {		

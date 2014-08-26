@@ -116,6 +116,8 @@ public class MainActivity extends Activity {
 		}else{
 			mDrawerLayout.openDrawer(mMainMenu); // Beim Erstellen der Activity wird der Drawer geöffnet (wird nicht geöffnet, wenn woanders Back gedrückt wird)
 		}
+		
+//		WelcomeActivity.dialog.dismiss();
 	}
 	
 

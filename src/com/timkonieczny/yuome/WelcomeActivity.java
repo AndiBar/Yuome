@@ -31,7 +31,7 @@ public class WelcomeActivity extends Activity {
     HttpResponse response;
     HttpClient httpclient;
     List<NameValuePair> nameValuePairs;
-    static ProgressDialog dialog = null;
+    protected static ProgressDialog dialog = null;
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
@@ -66,7 +66,7 @@ public class WelcomeActivity extends Activity {
 	   	 try{
 			 final String response = PHPConnector.getLoginResponse("check_for_user.php", username.toString().trim(), password.toString().trim());
 	         System.out.println("Response : " + response);
-	         dialog.dismiss();
+//	         dialog.dismiss();
 	         if(response.equalsIgnoreCase(username + " has logged in successfully.")){
 	        	 activity.runOnUiThread(new Runnable() {
 	                 public void run() {
