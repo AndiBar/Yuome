@@ -3,18 +3,13 @@ package com.timkonieczny.yuome;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -94,36 +89,6 @@ public class SummaryAdapter extends ArrayAdapter<SummaryRowItem>{
 	        holder.title.setText(rowItem.getTitle());
 	        holder.description.setText(rowItem.getDesc());
         }
-        
-//        holder.rightText.setOnClickListener(new OnClickListener(){
-//        	public void onClick(View v){
-//        		Intent intent = new Intent((MainActivity)context, DebtsActivity.class);
-//        		ArrayList parcellist = new ArrayList<Article>();
-//            	Bundle debts = new Bundle();
-//            	for(HashMap<String,String> debt : debts_list){
-//            		Parcelable parcel = new Article(debt.get("ID"),debt.get("balance"),debt.get("username"));
-//            		parcellist.add(parcel);
-//            	}
-//            	debts.putParcelableArrayList("articles", parcellist);
-//              	intent.putExtras(debts);
-//	        	context.startActivity(intent);
-//        	}
-//        });
-//        
-//        holder.leftText.setOnClickListener(new OnClickListener(){
-//        	public void onClick(View v){
-//        		Intent intent = new Intent((MainActivity)context, CreditsActivity.class);
-//        		ArrayList parcellist = new ArrayList<Article>();
-//            	Bundle credits = new Bundle();
-//            	for(HashMap<String,String> credit : credits_list){
-//            		Parcelable parcel = new Article(credit.get("ID"),credit.get("balance"),credit.get("username"));
-//            		parcellist.add(parcel);
-//            	}
-//            	credits.putParcelableArrayList("articles", parcellist);
-//              	intent.putExtras(credits);
-//	        	context.startActivity(intent);
-//        	}
-//        });
         
         WelcomeActivity.dialog.dismiss();
 	    Log.d("SummaryFragment","ProgressDialog dismissed");

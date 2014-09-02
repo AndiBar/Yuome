@@ -9,34 +9,20 @@ import org.apache.http.client.ClientProtocolException;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class SummaryFragment extends Fragment implements OnItemClickListener {
 
 	// TODO: PHP-Anbindung...
 	protected String notificationString;
+	protected ArrayList<String[]> stringList = new ArrayList<String[]>();
 	private Thread notificationThread;
 	private int width, height;
 	public String balance;
@@ -102,18 +88,12 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
 								notificationString=PHPConnector.getNotifications();
 								System.out.println("notificationString: "+notificationString);
 								
-//						        String[] receiptData = notificationString.split(":");
-//						        for(String i: receiptData){
-//						        	System.out.println("receiptData: "+i);
-//						        }
-//								
-//								ReceiptsFragment.receiptsList = new ArrayList<Receipt>();
-////								ReceiptsFragment.receiptsList.add(new Receipt("01.01.2014","Aldi","Erik, Andi","15,63"));
-//								
-//								for(int i=0;i<receiptData.length;i+=6){
-//									ReceiptsFragment.receiptsList.add(new Receipt(receiptData[i], receiptData[i+4],receiptData[i+3],receiptData[i+2],receiptData[i+1]));
-//								}
+								String[] notificationData1 = notificationString.split(";");
 								
+								for(int i=0;i<notificationData1.length;i++){
+									System.out.println("notificationData1: "+notificationData1[i]);
+									stringList.add(notificationData1[i].split(":"));
+								}
 							} catch (ClientProtocolException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -134,26 +114,13 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
 				e.printStackTrace();
 			}
 			
-			int debugtype = 0;	//Testdaten
-			String debugdate = "2014-08-18";
-			float debugtotal = 12.95f;
-			String debugstore = "REWE";
-			String debugowner = "Andreas Helms";
-			
-			String[][] notifications = new String[][]{
-					new String[]{String.valueOf(debugtype),debugowner,debugdate,debugstore,String.valueOf(debugtotal)},	//Testdaten
-					new String[]{"1","Erik Harbeck"},
-					new String[]{"2","Andreas Helms","5,63","0,00"}
-			};
-//			String[] notification = new String[]{String.valueOf(debugtype),debugowner,debugdate,debugstore,String.valueOf(debugtotal)};
 			
 			ListView lv = (ListView) rootView.findViewById(R.id.myList);
 	        rowItems = new ArrayList<SummaryRowItem>();
 
 	        //Populate the List
 	        SummaryRowItem item=new SummaryRowItem("placeholder", "placeholder");
-//	        item.setDebitDrawable(new BitmapDrawable(this.getResources(),leftBitmap));
-//	        item.setCreditDrawable(new BitmapDrawable(this.getResources(),rightBitmap));
+
 	        item.setCredit(credit);
 	        item.setDebit(debit);
 		        if(credit>debit){
@@ -172,55 +139,29 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
 	        
 	        item.setTotal(value.toString());
 	        rowItems.add(item);
-	        item=new SummaryRowItem("placeholder", "placeholder");
-	        for (int i = 0; i < notifications.length; i++) {
-	        	switch(notifications[i][0]){
-	        	case "0":
-	        		item = new SummaryRowItem("Neue Rechnung von "+notifications[i][1]+", "+notifications[i][4]+"€", notifications[i][3]+" vom "+notifications[i][2]+".");
-	        		break;
-	        	case "1":
-	        		item = new SummaryRowItem("Neuer Kontakt", notifications[i][1]);
-	        		break;
-	        	case "2":
-	        		item = new SummaryRowItem(notifications[i][1]+" hat "+notifications[i][2]+"€ erhalten.", "Offener Betrag: "+notifications[i][3]+"€.");
-	        	}
-	            rowItems.add(item);
-	        }
 	        
+	        
+	        if(stringList!=null){
+
+				for(int i=0;i<stringList.size();i++){
+				
+		        	switch(stringList.get(i)[0]){
+			        	case "0":
+			        		item = new SummaryRowItem("Neue Rechnung von "+stringList.get(i)[1]+", "+stringList.get(i)[4]+"€", stringList.get(i)[3]+" vom "+stringList.get(i)[2]+".");
+			        		break;
+			        	case "1":
+			        		item = new SummaryRowItem("Neuer Kontakt", stringList.get(i)[1]);
+			        		break;
+			        	case "2":
+			        		item = new SummaryRowItem(stringList.get(i)[1]+" hat "+stringList.get(i)[2]+"€ erhalten.", "Offener Betrag: "+stringList.get(i)[3]+"€.");
+		        	}
+		            rowItems.add(item);
+				}
+	        }
 	        	        
 	        // Set the adapter on the ListView
 	        SummaryAdapter adapter = new SummaryAdapter(getActivity(), R.layout.notification_list_row, rowItems, debts_list, credits_list);
 	        lv.setAdapter(adapter);
-//	        
-//	        getActivity().findViewById(R.id.left_text).setOnClickListener(new OnClickListener(){
-//	        	public void onClick(View v){
-//	        		Intent intent = new Intent(getActivity(), CreditsActivity.class);
-//	        		ArrayList parcellist = new ArrayList<Article>();
-//	            	Bundle credits = new Bundle();
-//	            	for(HashMap<String,String> credit : credits_list){
-//	            		Parcelable parcel = new Article(credit.get("ID"),credit.get("balance"),credit.get("username"));
-//	            		parcellist.add(parcel);
-//	            	}
-//	            	credits.putParcelableArrayList("articles", parcellist);
-//	              	intent.putExtras(credits);
-//		        	startActivity(intent);
-//	        	}
-//	        });
-//	        
-//	        getActivity().findViewById(R.id.right_text).setOnClickListener(new OnClickListener(){
-//	        	public void onClick(View v){
-//	        		Intent intent = new Intent(getActivity(), DebtsActivity.class);
-//	        		ArrayList parcellist = new ArrayList<Article>();
-//	            	Bundle debts = new Bundle();
-//	            	for(HashMap<String,String> debt : debts_list){
-//	            		Parcelable parcel = new Article(debt.get("ID"),debt.get("balance"),debt.get("username"));
-//	            		parcellist.add(parcel);
-//	            	}
-//	            	debts.putParcelableArrayList("articles", parcellist);
-//	              	intent.putExtras(debts);
-//		        	startActivity(intent);
-//	        	}
-//	        });
 	        
 		return rootView;
 	}
