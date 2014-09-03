@@ -2,26 +2,16 @@ package com.timkonieczny.yuome;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 
 import org.apache.http.client.ClientProtocolException;
 
-import com.timkonieczny.yuome.ChooseContactsActivity.FriendsThread;
-
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.format.Time;
 import android.util.Log;
@@ -30,16 +20,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.SimpleAdapter;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -246,7 +230,7 @@ public class ManualInputActivity extends ListActivity {
         		new Runnable(){
         			public void run(){		//TODO: wirft immer noch Exception
         				try{
-        					final String response = PHPConnector.getItemListResponse("search_item.php", Store);
+        					final String response = PHPConnector.getItemListResponse(Store);
         					System.out.println("Response : " + response);
         				}catch(Exception e){
         					runOnUiThread(new Runnable() {

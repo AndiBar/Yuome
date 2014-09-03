@@ -5,8 +5,6 @@ import java.io.IOException;
 import org.apache.http.client.ClientProtocolException;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -64,7 +62,7 @@ public class ContactsNewActivity extends Activity {
 						@Override
 						public void run() {
 				        	try {
-				        		PHPConnector.addFriend(username);
+				        		System.out.println(PHPConnector.addFriend(username));
 				        	} catch (ClientProtocolException e) {
 				        		e.printStackTrace();
 				        	} catch (IOException e) {

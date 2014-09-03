@@ -230,7 +230,7 @@ public class DebtsActivity extends ListActivity implements OnItemClickListener, 
     public class updateDebtThread extends Thread{
     	public void run(){
     		try {
-				PHPConnector.updateBalance(debts_changed, "update_debts.php");
+				PHPConnector.updateBalance(debts_changed,"update_debts.php");
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
