@@ -17,6 +17,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,6 +34,7 @@ public class MainActivity extends Activity {
 	private String mFragmentName;
 	private String[] mMainMenuItems;
 	private int selectedMenu = 1;
+//	protected static MenuItem receiptOwner;
 	
 	public static int height, width;
 
@@ -126,12 +129,14 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {			//Handler für das Öffnen des Drawers bei Drücken des Up-Buttons
-        if (mDrawerLayout.isDrawerVisible(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-            getActionBar().setTitle(mFragmentName);
-        } else {
-            mDrawerLayout.openDrawer(GravityCompat.START);
-            getActionBar().setTitle("Yuome");
+        if(item.getItemId()==android.R.id.home){
+			if (mDrawerLayout.isDrawerVisible(GravityCompat.START)) {
+	            mDrawerLayout.closeDrawer(GravityCompat.START);
+	            getActionBar().setTitle(mFragmentName);
+	        } else {
+	            mDrawerLayout.openDrawer(GravityCompat.START);
+	            getActionBar().setTitle("Yuome");
+	        }
         }
         return false;
 	}
@@ -246,4 +251,14 @@ public class MainActivity extends Activity {
 		// Pass any configuration change to the drawer toggle
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
+	
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//	    // Inflate the menu items for use in the action bar
+//	    MenuInflater inflater = getMenuInflater();
+//	    inflater.inflate(R.menu.receipt_owner, menu);
+//	    receiptOwner = menu.findItem(R.id.action_money_received);
+//	    receiptOwner.setVisible(false);
+//	    return super.onCreateOptionsMenu(menu);
+//	}
 }

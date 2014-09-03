@@ -3,16 +3,26 @@ package com.timkonieczny.yuome;
 public class Receipt {
 
 	private String id, date, shop, names, sum;
+	private boolean isOwner;
 	
-	public Receipt(String id, String date, String shop, String names, String sum) {
+	public Receipt(String id, String date, String shop, String names, String sum, boolean isOwner) {
 		super();
 		this.date = date;
 		this.shop = shop;
 		this.names = names;
 		this.sum = sum;
 		this.id = id;
+		this.isOwner = isOwner;
 	}
 	
+	public boolean isOwner() {
+		return isOwner;
+	}
+
+	public void setOwner(boolean isOwner) {
+		this.isOwner = isOwner;
+	}
+
 	public String getId(){
 		return id;
 	}

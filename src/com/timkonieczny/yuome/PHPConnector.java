@@ -204,4 +204,19 @@ public class PHPConnector {
         }
 		return data;
 	}
+	
+	public static String setPaid(ArrayList<String> people) throws ClientProtocolException, IOException{
+		nameValuePairs = new ArrayList<NameValuePair>();
+        for(int i = 0; i < people.size(); i++){
+        	nameValuePairs.add(new BasicNameValuePair("person" + i,people.get(i)));
+        }
+		httppost = new HttpPost(server+"set_paid.php");		//TODO: php schreiben
+		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		System.out.println("alles ok");
+		httpResponse = httpclient.execute(httppost);
+		entity = httpResponse.getEntity();
+		stringResponse = EntityUtils.toString(entity,"UTF-8");
+		entity.consumeContent();
+		return stringResponse;
+	}
 }
