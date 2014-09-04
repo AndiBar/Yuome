@@ -15,10 +15,15 @@ import android.os.Bundle;
 public class MoneyReceivedDialogFragment extends DialogFragment {
     
 	String[] people;
+	String receiptId, owner;
+	float total;
 	public boolean[] checkedPerson;
 	
-	public MoneyReceivedDialogFragment(String[] people) {
+	public MoneyReceivedDialogFragment(String[] people, String receiptId, float total) {
+		owner = people[0];
 		this.people = Arrays.copyOfRange(people, 1, people.length);	//erster Name ist der Owner, der wird weggelassen
+		this.receiptId = receiptId;
+		this.total = total;
 		checkedPerson = new boolean[this.people.length];
 		for(boolean b:checkedPerson){
 			b=false;
@@ -48,7 +53,7 @@ public class MoneyReceivedDialogFragment extends DialogFragment {
                										checkedPeople.add(people[i]);
                									}
                								}
-               								PHPConnector.setPaid(checkedPeople);
+               								PHPConnector.setPaid(owner,checkedPeople,receiptId, total);
                								
                							} catch (ClientProtocolException e) {
                								// TODO Auto-generated catch block

@@ -25,6 +25,7 @@ public class ReceiptDetailsFragment extends ListFragment {
 	public static ArrayList<Article> articlesList = new ArrayList<Article>();
 	private MoneyReceivedDialogFragment dialog;
 	private String[] people;
+	private float total=0;	//Betrag pro Person
 	
 	public ReceiptDetailsFragment() {
 		// Empty constructor required for fragment subclasses
@@ -55,10 +56,14 @@ public class ReceiptDetailsFragment extends ListFragment {
 //						        for(String i: articleData){
 //						        	Log.d("receiptData",i);
 //						        }
+						        
+						        
 						        articlesList.clear();
 						        for(int i=0;i<articleData.length;i+=3){
 									ReceiptDetailsFragment.articlesList.add(new Article(articleData[i+1], articleData[i+2],articleData[i]));
+									total+=Float.parseFloat(articleData[2])*Integer.parseInt(articleData[0]);
 								}
+						        total /= people.length;
 								
 							} catch (ClientProtocolException e) {
 								// TODO Auto-generated catch block
@@ -109,7 +114,7 @@ public class ReceiptDetailsFragment extends ListFragment {
 	    inflater.inflate(R.menu.receipt_owner, menu);
 	    if(isOwner){
 	    	menu.findItem(R.id.action_money_received).setVisible(true);
-	    	dialog = new MoneyReceivedDialogFragment(people);
+	    	dialog = new MoneyReceivedDialogFragment(people, id, total);
 	    }else{
 	    	menu.findItem(R.id.action_money_received).setVisible(false);
 	    }

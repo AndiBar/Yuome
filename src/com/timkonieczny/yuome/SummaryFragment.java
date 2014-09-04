@@ -153,7 +153,7 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
 			        		item = new SummaryRowItem("Neuer Kontakt", stringList.get(i)[1]);
 			        		break;
 			        	case "2":
-			        		item = new SummaryRowItem(stringList.get(i)[1]+" hat "+stringList.get(i)[2]+"€ erhalten.", "Offener Betrag: "+stringList.get(i)[3]+"€.");
+			        		item = new SummaryRowItem(stringList.get(i)[2]+" hat "+stringList.get(i)[4]+"€ von dir erhalten.", "Die Rechnung vom "+stringList.get(i)[1]+" ("+stringList.get(i)[3]+") ist beglichen.");
 		        	}
 		            rowItems.add(item);
 				}
