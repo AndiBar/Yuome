@@ -17,6 +17,7 @@ public class AlertDialogs {
 	
 	public Activity activity;
 	public String[] article;
+	public String store;
 	static AlertDialog alert;
 	
 	public AlertDialogs(Activity activity){
@@ -114,5 +115,33 @@ public class AlertDialogs {
 			 .setNegativeButton(android.R.string.no, null).show();
            }
 		});
+	}
+	public void newStoreDialog(){
+		AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+		final AlertDialog alertDialog = alert.create();
+		
+		alertDialog.setTitle("Neues Geschäft");
+
+        LayoutInflater factory = LayoutInflater.from(activity);            
+        final View new_store = factory.inflate(R.layout.popup_new_store, null);
+
+		// Set an EditText view to get user input 
+		alertDialog.setView(new_store);
+
+		Button new_store_button = (Button) new_store.findViewById(R.id.new_store_button);
+		final EditText title_text = (EditText) new_store.findViewById(R.id.title);
+
+		new_store_button.setOnClickListener(new OnClickListener() {
+		public void onClick(View view) {
+			try{
+				store = title_text.getText().toString();
+				ManualInputActivity.addStore(store);
+				alertDialog.dismiss();
+			}catch(NumberFormatException e){
+				showAlert(activity,"Error",e.getMessage());
+			}
+		  }
+		});
+		alertDialog.show();
 	}
 }

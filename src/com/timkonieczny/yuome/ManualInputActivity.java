@@ -10,6 +10,7 @@ import org.apache.http.client.ClientProtocolException;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -20,20 +21,25 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class ManualInputActivity extends ListActivity {
     public static SimpleAdapter mAdapter;
+    public static SimpleAdapter storeAdapter;
     public static ArrayList<HashMap<String,String>> article_list = new ArrayList<HashMap<String,String>>();
-    public ArrayList<HashMap<String,String>> stores = new ArrayList<HashMap<String,String>>();
+    public static ArrayList<HashMap<String,String>> stores = new ArrayList<HashMap<String,String>>();
     public static double balance_value = 0.0;
     public String date;
+    public static Spinner mStoreSpinner;
 
     public static ProgressDialog dialog = null;
     public AlertDialogs dialogs;
@@ -41,13 +47,15 @@ public class ManualInputActivity extends ListActivity {
     private TextView mTextView;
     private ListView mListView;
     
+    private static Context context;
+    
     private AutoCompleteTextView mItemsTextView;
-    private Spinner mStoreSpinner;
      
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual_input);
         setTitle("Artikel");
+        context = getApplicationContext();
         
         Time t = new Time(Time.getCurrentTimezone());
         t.setToNow();
@@ -66,24 +74,37 @@ public class ManualInputActivity extends ListActivity {
         	}
         } catch (InterruptedException e) {
         }
+        
         Collections.sort(stores, new MapComparator("title"));
         
+        HashMap<String,String> other_store = new HashMap<String,String>();
+        other_store.put("ID","0");
+        other_store.put("title","Sonstige");
+        stores.add(other_store);
+        
         mStoreSpinner = (Spinner) findViewById(R.id.store_spinner);
-        SimpleAdapter storeAdapter = new SimpleAdapter(this,
+        storeAdapter = new SimpleAdapter(this,
         		stores,
         		R.layout.store_spinner_item,
                  new String[] {"title","ID"},
                  new int[] {R.id.title, R.id.storeID});
         mStoreSpinner.setAdapter(storeAdapter);
-        //mStoreSpinner.setOnItemSelectedListener(this);
-
-        //mItemsTextView = (AutoCompleteTextView) findViewById(R.id.add_item_textview);
-        //adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, mItems);
-        //mItemsTextView.setThreshold(2);
-        //mItemsTextView.setAdapter(adapter);
         
-		//mTextView = (TextView) findViewById(R.id.text);
-        //mListView = (ListView) findViewById(R.id.dynamic_list);
+        mStoreSpinner.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				if(arg2 == mStoreSpinner.getCount()-1){
+					dialogs.newStoreDialog();
+				}	
+			}
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
+			}	
+        });
                         
         TextView text = (TextView) findViewById(R.id.total);
         text.setText(String.valueOf(balance_value) + "€   ");
@@ -162,6 +183,54 @@ public class ManualInputActivity extends ListActivity {
 	        text.setText(String.valueOf(balance_value) + "€   ");
 	    	mAdapter.notifyDataSetChanged();
         }
+    }
+    
+    public static void addStore(String title){
+    	  Thread add_store_thread = new AddStoreThread(title);
+          add_store_thread.start();
+          try {
+          	long waitMillis = 10000;
+          	while (add_store_thread.isAlive()) {
+          	   add_store_thread.join(waitMillis);
+          	}
+          } catch (InterruptedException e) {
+          }
+         
+          Thread stores_thread = new StoresThread();
+          stores_thread.start();
+          
+          try {
+          	long waitMillis = 10000;
+          	while (stores_thread.isAlive()) {
+          	   stores_thread.join(waitMillis);
+          	}
+          } catch (InterruptedException e) {
+          }
+          
+          Collections.sort(stores, new MapComparator("title"));
+          
+          HashMap<String,String> other_store = new HashMap<String,String>();
+          other_store.put("ID","0");
+          other_store.put("title","Sonstige");
+          stores.add(other_store);
+          
+          storeAdapter = new SimpleAdapter(context,
+          		stores,
+          		R.layout.store_spinner_item,
+                   new String[] {"title","ID"},
+                   new int[] {R.id.title, R.id.storeID});
+          
+          mStoreSpinner.setAdapter(storeAdapter);
+          
+          Integer position = 0;
+          
+          for(int i = 0; i < stores.size(); i++){
+        	  if(stores.get(i).get("title").equals(title)){
+        		  position = i;
+        	  }
+          }
+          
+          mStoreSpinner.setSelection(position);
     }
     
     public static void deleteAllArticles(Activity activity){
@@ -249,20 +318,7 @@ public class ManualInputActivity extends ListActivity {
 	         
 		 }
     }
-	public class StoresThread extends Thread{
-  	  public void run(){
-	       	try {
-				stores = PHPConnector.getData("get_stores.php");
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-  	  }
-  }
-	
+		
 	public void onBackPressed(){
 		Log.d("ManualInputActivity", "BackButton pressed");
 		Intent intent = new Intent(this, MainActivity.class);
@@ -279,4 +335,39 @@ public class ManualInputActivity extends ListActivity {
 //		getActionBar().setTitle(mFragmentName);
 //		mDrawerLayout.closeDrawer(mMainMenu);
 	}
+}
+
+class AddStoreThread extends Thread{
+	
+	  private String title;
+    
+	  public AddStoreThread(String title){
+  	  this.title = title;
+    }
+	
+	  public void run(){
+	       	try {
+				PHPConnector.addStore(title);
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	  }
+}
+
+class StoresThread extends Thread{
+	  public void run(){
+	       	try {
+				ManualInputActivity.stores = PHPConnector.getData("get_stores.php");
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	  }
 }

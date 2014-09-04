@@ -223,4 +223,16 @@ public class PHPConnector {
 		System.out.println(stringResponse);
 		return stringResponse;
 	}
+	
+	public static String addStore(String store) throws ClientProtocolException, IOException {
+		nameValuePairs = new ArrayList<NameValuePair>(1);
+		nameValuePairs.add(new BasicNameValuePair("store",store));
+		httppost = new HttpPost(server + "add_store.php");
+        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		httpResponse = httpclient.execute(httppost);
+		entity = httpResponse.getEntity();
+		stringResponse = EntityUtils.toString(entity,"UTF-8");
+		entity.consumeContent();
+		return(stringResponse);
+	}
 }
