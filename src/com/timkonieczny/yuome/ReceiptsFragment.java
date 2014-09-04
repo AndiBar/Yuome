@@ -22,7 +22,7 @@ public class ReceiptsFragment extends ListFragment implements OnItemClickListene
 	protected String userID, receiptString;
 	public static ArrayList<Receipt> receiptsList;
 	private Thread receiptsThread;
-	private String[][] people;
+	private String[][] people, sharePaid;
 	
 	public ReceiptsFragment() {
 		// Empty constructor required for fragment subclasses
@@ -60,6 +60,18 @@ public class ReceiptsFragment extends ListFragment implements OnItemClickListene
         
         
         bundle.putStringArray("people", people[position]);
+        //bundle.putStringArray("share_paid", sharePaid[position]);
+        
+        boolean[] sharePaidBool = new boolean[sharePaid[position].length];
+        for(int i=0; i<sharePaidBool.length; i++){
+        	if(sharePaid[position][i].equals("1")){
+        		sharePaidBool[i]=true;
+        	}else{
+        		sharePaidBool[i]=false;
+        	}
+        }
+        
+        bundle.putBooleanArray("share_paid", sharePaidBool);
         
         Fragment fragment = new ReceiptDetailsFragment();
         fragment.setArguments(bundle);
@@ -92,12 +104,14 @@ public class ReceiptsFragment extends ListFragment implements OnItemClickListene
 								int j=0;
 								
 								people=new String[receiptData.length][];
+								sharePaid=new String[receiptData.length][];
 								
 								for(int i=0;i<receiptData.length;i+=7){
 									
 									people[j] = receiptData[i+2].split(", ");
+									sharePaid[j] = receiptData[i+6].split(", ");
 									
-									if(receiptData[i+6].equals("isOwner")){	//Owner ist der erste der Liste an Personen
+									if(receiptData[i+5].equals("isOwner")){	//Owner ist der erste der Liste an Personen
 										isOwner = true;
 									}else{
 										isOwner = false;

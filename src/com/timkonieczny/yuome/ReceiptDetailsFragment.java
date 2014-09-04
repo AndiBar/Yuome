@@ -5,9 +5,11 @@ import java.util.ArrayList;
 
 import org.apache.http.client.ClientProtocolException;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ListFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -25,6 +27,7 @@ public class ReceiptDetailsFragment extends ListFragment {
 	public static ArrayList<Article> articlesList = new ArrayList<Article>();
 	private MoneyReceivedDialogFragment dialog;
 	private String[] people;
+	private boolean[] sharePaid;
 	private float total=0;	//Betrag pro Person
 	
 	public ReceiptDetailsFragment() {
@@ -38,6 +41,11 @@ public class ReceiptDetailsFragment extends ListFragment {
 		id=this.getArguments().getString("message");
 		isOwner=this.getArguments().getBoolean("isOwner");
 		people=this.getArguments().getStringArray("people");
+		sharePaid=this.getArguments().getBooleanArray("share_paid");
+		
+		for(int i=0;i<sharePaid.length;i++){
+			System.out.println("sharePaid="+sharePaid[i]);
+		}
 		
 //		if(isOwner){
 //			MainActivity.receiptOwner.setVisible(true);
@@ -114,7 +122,7 @@ public class ReceiptDetailsFragment extends ListFragment {
 	    inflater.inflate(R.menu.receipt_owner, menu);
 	    if(isOwner){
 	    	menu.findItem(R.id.action_money_received).setVisible(true);
-	    	dialog = new MoneyReceivedDialogFragment(people, id, total);
+	    	dialog = new MoneyReceivedDialogFragment(people, id, total, sharePaid);
 	    }else{
 	    	menu.findItem(R.id.action_money_received).setVisible(false);
 	    }
@@ -126,6 +134,7 @@ public class ReceiptDetailsFragment extends ListFragment {
 		switch(item.getItemId()){
 		case R.id.action_money_received:
 			System.out.println("click!");
+			
 			dialog.show(getFragmentManager(), "ok");
 			return true;
 		default:
