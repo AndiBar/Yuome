@@ -10,7 +10,10 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,7 +96,13 @@ public class SettingsFragment extends Fragment implements OnItemClickListener {
 			    	}}).start();
 				        Toast.makeText(getActivity(), "Erfolgreich abgemeldet.", Toast.LENGTH_SHORT).show();
 				        Intent intent = new Intent(getActivity(), WelcomeActivity.class);
-			            startActivity(intent);
+				        
+				        Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
+				        editor.clear();
+				        editor.commit();
+				        //TODO: SharedPreferences einzeln löschen? Per Getter holen und nicht-static-Variable übergeben?
+			            
+				        startActivity(intent);
 			    }})
 			 .setNegativeButton(android.R.string.no, null).show();
             }
