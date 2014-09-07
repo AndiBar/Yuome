@@ -6,14 +6,17 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -32,15 +35,39 @@ public class WelcomeActivity extends Activity {
     HttpClient httpclient;
     List<NameValuePair> nameValuePairs;
     protected static ProgressDialog dialog = null;
+    private static Context context;
 
+//    public WelcomeActivity(){
+//    	Log.d("WelcomeActivity","constructor");
+//    }
+    
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		context=getApplicationContext();
+		
+		if(HandleSharedPreference.getUserCredentials(this, "username").length()==0){
+			Log.d("WelcomeActivity","no SharedPreference");
+		}else{
+			Log.d("WelcomeActivity","SharedPreference saved");
+			Log.d("WelcomeActivity","Username="+HandleSharedPreference.getUserCredentials(this, "username")+" Password="+HandleSharedPreference.getUserCredentials(this, "password"));
+			dialog = ProgressDialog.show(WelcomeActivity.this, "","Login läuft", true);
+			new Thread(
+					new Runnable(){
+						public void run(){
+							userLogin(HandleSharedPreference.getUserCredentials(context, "username"),HandleSharedPreference.getUserCredentials(context, "password"),WelcomeActivity.this);
+						}
+					}
+			).start();
+		}
+		
 		setTheme(android.R.style.Theme_Holo_NoActionBar);
 		setContentView(R.layout.activity_welcome);
 		
+		
+
 		loginButton = (Button)findViewById(R.id.LoginButton);
         editUsername = (EditText)findViewById(R.id.EditUsername);
         editPassword= (EditText)findViewById(R.id.EditPassword);
@@ -73,7 +100,9 @@ public class WelcomeActivity extends Activity {
 	                     Toast.makeText(activity,response, Toast.LENGTH_SHORT).show();
 	                 }
 	             });
-	
+	        	 
+	        	 HandleSharedPreference.setUserCredentials(context, username, password);	//	username und pw werden gespeichert, damit beim nächsten Mal kein Login notwendig ist
+	        	 
 	             Intent intent = new Intent(activity, MainActivity.class);
 	             activity.startActivity(intent);
 	         }
@@ -86,6 +115,7 @@ public class WelcomeActivity extends Activity {
 	             Intent intent = new Intent(activity, MainActivity.class);
 	             activity.startActivity(intent);
 	         }else{
+	        	 dialog.dismiss();
 	             AlertDialogs.showAlert(activity,"Login Error","User not found or password incorrect.");
 	         }
 	
@@ -94,6 +124,7 @@ public class WelcomeActivity extends Activity {
 	         AlertDialogs.showAlert(activity,"Connection Error",e.getMessage());
 		 }
     }
+	
     public void showAlert(){
         WelcomeActivity.this.runOnUiThread(new Runnable() {
             public void run() {
