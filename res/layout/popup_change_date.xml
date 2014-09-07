@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/border"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="303dp"
+        android:gravity="center_vertical|left"
+        android:orientation="horizontal" >
+
+        <CalendarView
+            android:id="@+id/calendar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <View style="@style/Divider" />
+
+    <Button
+        android:id="@+id/change_date_button"
+        android:layout_width="166dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_custom"
+        android:gravity="center_vertical|left" />
+
+</LinearLayout>

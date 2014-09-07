@@ -1,12 +1,14 @@
 package com.timkonieczny.yuome;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
-
 import org.apache.http.client.ClientProtocolException;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -38,16 +40,19 @@ public class ManualInputActivity extends ListActivity {
     public static ArrayList<HashMap<String,String>> article_list = new ArrayList<HashMap<String,String>>();
     public static ArrayList<HashMap<String,String>> stores = new ArrayList<HashMap<String,String>>();
     public static double balance_value = 0.0;
-    public String date;
+    public static String date;
+    public static Time time;
     public static Spinner mStoreSpinner;
 
     public static ProgressDialog dialog = null;
-    public AlertDialogs dialogs;
+    public static AlertDialogs dialogs;
+    public static TextView date_view;
     
     private TextView mTextView;
     private ListView mListView;
     
     private static Context context;
+    private static Activity activity;
     
     private AutoCompleteTextView mItemsTextView;
      
@@ -56,13 +61,23 @@ public class ManualInputActivity extends ListActivity {
         setContentView(R.layout.activity_manual_input);
         setTitle("Artikel");
         context = getApplicationContext();
+        activity = this;
         
-        Time t = new Time(Time.getCurrentTimezone());
-        t.setToNow();
-        date = t.format("%Y.%m.%d");
+        time = new Time(Time.getCurrentTimezone());
+        time.setToNow();
+        date = time.format("%Y.%m.%d");
         
-        TextView date_view = (TextView) findViewById(R.id.date);
-        date_view.setText(t.format("%d.%m.%Y"));
+        date_view = (TextView) findViewById(R.id.date);
+        date_view.setText(time.format("%d.%m.%Y"));
+        
+        date_view.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				dialogs.changeDateDialog();	
+			}
+        	
+        });
         
         Thread stores_thread = new StoresThread();
         stores_thread.start();
@@ -96,6 +111,7 @@ public class ManualInputActivity extends ListActivity {
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
 				if(arg2 == mStoreSpinner.getCount()-1){
+					mStoreSpinner.setSelection(0);
 					dialogs.newStoreDialog();
 				}	
 			}
@@ -231,6 +247,20 @@ public class ManualInputActivity extends ListActivity {
           }
           
           mStoreSpinner.setSelection(position);
+    }
+    
+    @SuppressLint("SimpleDateFormat")
+	public static void changeDate(Calendar new_date){
+    	SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+    	if(time.toMillis(true) >= new_date.getTimeInMillis()){
+    		date_view.setText(format.format(new Date(new_date.getTimeInMillis())).toString());
+	    	SimpleDateFormat int_format = new SimpleDateFormat("yyyy-MM-dd");
+	    	date = int_format.format(new Date(new_date.getTimeInMillis()));
+	    	System.out.println("erfolg");
+    	}
+    	else{
+    		AlertDialogs.showAlert(activity, "Fehler", "Das angegebene Datum ist später als das aktuelle Datum.");
+    	}
     }
     
     public static void deleteAllArticles(Activity activity){

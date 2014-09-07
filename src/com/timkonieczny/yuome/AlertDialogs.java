@@ -1,6 +1,9 @@
 package com.timkonieczny.yuome;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.CalendarView.OnDateChangeListener;
 import android.widget.EditText;
 
 public class AlertDialogs {
@@ -18,6 +23,8 @@ public class AlertDialogs {
 	public Activity activity;
 	public String[] article;
 	public String store;
+	public String date;
+	public Calendar new_date;
 	static AlertDialog alert;
 	
 	public AlertDialogs(Activity activity){
@@ -136,6 +143,44 @@ public class AlertDialogs {
 			try{
 				store = title_text.getText().toString();
 				ManualInputActivity.addStore(store);
+				alertDialog.dismiss();
+			}catch(NumberFormatException e){
+				showAlert(activity,"Error",e.getMessage());
+			}
+		  }
+		});
+		alertDialog.show();
+	}
+	
+	public void changeDateDialog(){
+		AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+		final AlertDialog alertDialog = alert.create();
+		
+		alertDialog.setTitle("Datum auswählen");
+
+        LayoutInflater factory = LayoutInflater.from(activity);            
+        final View new_store = factory.inflate(R.layout.popup_change_date, null);
+
+		// Set an EditText view to get user input 
+		alertDialog.setView(new_store);
+
+		Button new_store_button = (Button) new_store.findViewById(R.id.change_date_button);
+		CalendarView calendar = (CalendarView) new_store.findViewById(R.id.calendar);
+
+		calendar.setOnDateChangeListener(new OnDateChangeListener(){
+
+		public void onSelectedDayChange(CalendarView view, int year, int month, int day){
+
+			new_date = Calendar.getInstance();
+			new_date.set(year, month, day, 0, 0);
+		}
+		});
+
+		new_store_button.setOnClickListener(new OnClickListener() {
+		public void onClick(View view) {
+			try{
+				//store = title_text.getText().toString();
+				ManualInputActivity.changeDate(new_date);
 				alertDialog.dismiss();
 			}catch(NumberFormatException e){
 				showAlert(activity,"Error",e.getMessage());
