@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.ListView;
 public class InputFragment extends Fragment implements OnItemClickListener {
 
 	private ListView settings;
+	private static ProgressDialog dialog = null;
 
 	public InputFragment() {
 		// Empty constructor required for fragment subclasses
@@ -47,6 +49,7 @@ public class InputFragment extends Fragment implements OnItemClickListener {
 			Intent intent = new Intent(getActivity(), CameraActivity.class);
         	startActivity(intent);
 		}else if(arg2 == 1){
+			dialog = ProgressDialog.show(getActivity(), "","Daten werden geladen", true);
 			Intent intent = new Intent(getActivity(), ManualInputActivity.class);
         	startActivity(intent);
 		}

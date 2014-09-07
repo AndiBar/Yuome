@@ -8,6 +8,7 @@ import org.apache.http.client.ClientProtocolException;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 public class SettingsFragment extends Fragment implements OnItemClickListener {
 
 	private ListView settings;
+	private static ProgressDialog dialog = null;
 
 	public SettingsFragment() {
 		// Empty constructor required for fragment subclasses
@@ -55,6 +57,7 @@ public class SettingsFragment extends Fragment implements OnItemClickListener {
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
 		
 		if(arg2 == 2){
+			dialog = ProgressDialog.show(getActivity(), "","Daten werden geladen", true);
 			new Thread(new Runnable(){public void run(){
 				String username = "";
 				try{
@@ -63,6 +66,7 @@ public class SettingsFragment extends Fragment implements OnItemClickListener {
 					String already = username.split(" ")[1];
 					if(!already.equals("already")){
 						AlertDialogs.showAlert(getActivity(), "Error", "Fehler beim abmelden. Benutzer bereits abgemeldet?");
+						dialog.dismiss();
 					}else{
 						showLogoutMessage(user);
 					}
@@ -76,6 +80,7 @@ public class SettingsFragment extends Fragment implements OnItemClickListener {
 		final String username = user;
 		getActivity().runOnUiThread(new Runnable() {
             public void run() {
+            	dialog.dismiss();
 				new AlertDialog.Builder(getActivity())
 				.setTitle("Abmelden")
 				.setMessage(username + " wirklich abmelden?")

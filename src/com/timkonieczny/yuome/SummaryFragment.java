@@ -9,6 +9,7 @@ import org.apache.http.client.ClientProtocolException;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
 	ArrayList<HashMap<String, String>> debts_list;
 	ArrayList<HashMap<String, String>> credits_list;
 	private boolean notLoggedIn = false;
+	public static ProgressDialog dialog = null;
 	
 	private List<SummaryRowItem> rowItems;
 
@@ -66,8 +68,6 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
 	@SuppressLint("NewApi")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-		
 		
 		View rootView = inflater.inflate(R.layout.fragment_summary, container, false);
         
@@ -201,7 +201,7 @@ public class DebtThread extends Thread{
     			e.printStackTrace();
     		} catch (NotLoggedInException e) {
     			// TODO Auto-generated catch block
-    			notLoggedIn = true;	
+    			notLoggedIn = true;
         	}
     	}
 	}
