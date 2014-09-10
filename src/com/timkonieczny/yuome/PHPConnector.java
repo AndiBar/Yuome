@@ -4,6 +4,7 @@ package com.timkonieczny.yuome;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -16,6 +17,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+
+import android.util.Log;
 
 public class PHPConnector {
 	
@@ -101,13 +104,13 @@ public class PHPConnector {
 		nameValuePairs = new ArrayList<NameValuePair>(1);
 		nameValuePairs.add(new BasicNameValuePair("friend",friend));
 		httppost = new HttpPost(server + "add_friend.php");
-		//httppost.getEntity().consumeContent();
         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		httpResponse = httpclient.execute(httppost);
 		entity = httpResponse.getEntity();
 		stringResponse = EntityUtils.toString(entity,"UTF-8");
+		System.out.println("stringResponse="+stringResponse);
 		entity.consumeContent();
-		System.out.println(stringResponse);
+		Log.d("addFriend",stringResponse);
 		return(stringResponse);
 	}
 	
@@ -176,11 +179,17 @@ public class PHPConnector {
 		return stringResponse;
 	}
 	
-	public static String getNotifications() throws ClientProtocolException, IOException{
-		httpResponse = httpclient.execute(new HttpGet(new String(server + "get_notifications.php")));
+	public static String getNotifications(String regid) throws ClientProtocolException, IOException{
+		nameValuePairs = new ArrayList<NameValuePair>(1);
+        nameValuePairs.add(new BasicNameValuePair("regid",regid)); 
+        Log.d("getNotifications", regid);
+        httppost = new HttpPost(server + "get_notifications.php");
+        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		httpResponse = httpclient.execute(httppost);
 		entity = httpResponse.getEntity();
 		stringResponse = EntityUtils.toString(entity,"UTF-8");
 		entity.consumeContent();
+		Log.d("getNotifications", stringResponse);
 		return stringResponse;
 	}
 	
@@ -191,15 +200,21 @@ public class PHPConnector {
 		entity = httpResponse.getEntity();
 		stringResponse = EntityUtils.toString(entity,"UTF-8");
 		entity.consumeContent();
-		System.out.println(stringResponse);
-        
+        Log.d("getData in "+url,stringResponse);
         String[] data_unformatted = stringResponse.split(",");
         ArrayList<HashMap<String,String>> data = new ArrayList<HashMap<String,String>>();
-        for(String item : data_unformatted){
+        if(!stringResponse.equals("no friends found")){
+	        for(String item : data_unformatted){
+	        	HashMap<String, String>data_map = new HashMap<String, String>();
+	        	String[] data_array = item.split(":");
+	        	data_map.put("ID", data_array[0]);
+	        	data_map.put("title", data_array[1]);
+	        	data.add(data_map);
+	        }
+        }else{
         	HashMap<String, String>data_map = new HashMap<String, String>();
-        	String[] data_array = item.split(":");
-        	data_map.put("ID", data_array[0]);
-        	data_map.put("title", data_array[1]);
+        	data_map.put("ID", "0");
+        	data_map.put("title", "Du hast noch keine Kontakte");
         	data.add(data_map);
         }
 		return data;
@@ -214,7 +229,7 @@ public class PHPConnector {
         for(int i = 0; i < people.size(); i++){
         	nameValuePairs.add(new BasicNameValuePair("person" + i,people.get(i)));
         }
-		httppost = new HttpPost(server+"set_paid.php");		//TODO: php schreiben
+		httppost = new HttpPost(server+"set_paid.php");
 		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		httpResponse = httpclient.execute(httppost);
 		entity = httpResponse.getEntity();
@@ -235,4 +250,17 @@ public class PHPConnector {
 		entity.consumeContent();
 		return(stringResponse);
 	}
+	
+//	public static DefaultHttpClient getThreadSafeClient() {
+//		
+//		DefaultHttpClient client = new DefaultHttpClient();
+//		
+//		ClientConnectionManager mgr = client.getConnectionManager();
+//		
+//		HttpParams params = client.getParams();
+//		
+//		client = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
+//		
+//		return client;
+//    }
 }

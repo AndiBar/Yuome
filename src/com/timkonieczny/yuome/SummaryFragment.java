@@ -10,6 +10,7 @@ import org.apache.http.client.ClientProtocolException;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +34,8 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
 	ArrayList<HashMap<String, String>> credits_list;
 	private boolean notLoggedIn = false;
 	public static ProgressDialog dialog = null;
+	
+	public static String regid;
 	
 	private List<SummaryRowItem> rowItems;
 
@@ -71,6 +74,9 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
 		
 		View rootView = inflater.inflate(R.layout.fragment_summary, container, false);
         
+		final SharedPreferences prefs = HandleSharedPreferences.getGcmPreferences(getActivity());
+		regid = prefs.getString(HandleSharedPreferences.PROPERTY_REG_ID, "");
+		
         for(HashMap debt : debts_list){
         	debit = (float) (Math.round((debit + Double.parseDouble(debt.get("balance").toString())) * 100) / 100.);
         }
@@ -81,11 +87,11 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
         }
         Log.d("credit", credit+"");
    
-		notificationThread= new Thread(	//TODO: Serverprobleme??
+		notificationThread= new Thread(
 				new Runnable(){
 					public void run(){
-						try {				//TODO: Wirft Exception
-								notificationString=PHPConnector.getNotifications();
+						try {
+								notificationString=PHPConnector.getNotifications(regid);
 								System.out.println("notificationString: "+notificationString);
 								
 								String[] notificationData1 = notificationString.split(";");
@@ -148,14 +154,17 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
 		        	switch(stringList.get(i)[0]){
 			        	case "0":
 			        		item = new SummaryRowItem("Neue Rechnung von "+stringList.get(i)[1]+", "+stringList.get(i)[4]+"€", stringList.get(i)[3]+" vom "+stringList.get(i)[2]+".");
+			        		rowItems.add(item);
 			        		break;
 			        	case "1":
 			        		item = new SummaryRowItem("Neuer Kontakt", stringList.get(i)[1]);
+			        		rowItems.add(item);
 			        		break;
 			        	case "2":
 			        		item = new SummaryRowItem(stringList.get(i)[2]+" hat "+stringList.get(i)[4]+"€ von dir erhalten.", "Die Rechnung vom "+stringList.get(i)[1]+" ("+stringList.get(i)[3]+") ist beglichen.");
+			        		rowItems.add(item);
+			        		break;
 		        	}
-		            rowItems.add(item);
 				}
 	        }
 	        	        

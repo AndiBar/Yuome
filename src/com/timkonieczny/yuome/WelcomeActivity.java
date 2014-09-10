@@ -48,19 +48,26 @@ public class WelcomeActivity extends Activity {
 		
 		context=getApplicationContext();
 		
-		if(HandleSharedPreference.getUserCredentials(this, "username").length()==0){
+		if(HandleSharedPreferences.getUserCredentials(this, "username").length()==0){
 			Log.d("WelcomeActivity","no SharedPreference");
 		}else{
 			Log.d("WelcomeActivity","SharedPreference saved");
-			Log.d("WelcomeActivity","Username="+HandleSharedPreference.getUserCredentials(this, "username")+" Password="+HandleSharedPreference.getUserCredentials(this, "password"));
+			Log.d("WelcomeActivity","Username="+HandleSharedPreferences.getUserCredentials(this, "username")+" Password="+HandleSharedPreferences.getUserCredentials(this, "password"));
 			dialog = ProgressDialog.show(WelcomeActivity.this, "","Login läuft", true);
-			new Thread(
+			Thread loginThread = new Thread(
 					new Runnable(){
 						public void run(){
-							userLogin(HandleSharedPreference.getUserCredentials(context, "username"),HandleSharedPreference.getUserCredentials(context, "password"),WelcomeActivity.this);
+							userLogin(HandleSharedPreferences.getUserCredentials(context, "username"),HandleSharedPreferences.getUserCredentials(context, "password"),WelcomeActivity.this);
 						}
 					}
-			).start();
+			);
+			loginThread.start();
+			try {
+				loginThread.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		setTheme(android.R.style.Theme_Holo_NoActionBar);
@@ -101,7 +108,7 @@ public class WelcomeActivity extends Activity {
 	                 }
 	             });
 	        	 
-	        	 HandleSharedPreference.setUserCredentials(context, username, password);	//	username und pw werden gespeichert, damit beim nächsten Mal kein Login notwendig ist
+	        	 HandleSharedPreferences.setUserCredentials(context, username, password);	//	username und pw werden gespeichert, damit beim nächsten Mal kein Login notwendig ist
 	        	 
 	             Intent intent = new Intent(activity, MainActivity.class);
 	             activity.startActivity(intent);

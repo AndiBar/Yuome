@@ -58,7 +58,7 @@ public class ContactsNewActivity extends Activity {
 	    // Handle presses on the action bar items
 	    switch (item.getItemId()) {
 	        case R.id.action_addbuy:
-	        		new Thread(new Runnable(){
+	        		Thread thread = new Thread(new Runnable(){
 						@Override
 						public void run() {
 				        	try {
@@ -69,7 +69,15 @@ public class ContactsNewActivity extends Activity {
 				        		e.printStackTrace();
 				        	}
 						}
-	        		}).start();
+	        		});
+	        		thread.start();
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        		
 	        	
 	        	
 	        	Intent intent = new Intent(this, MainActivity.class);
