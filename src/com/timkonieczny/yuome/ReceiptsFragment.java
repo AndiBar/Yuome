@@ -1,9 +1,6 @@
 package com.timkonieczny.yuome;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
-import org.apache.http.client.ClientProtocolException;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -86,48 +83,40 @@ public class ReceiptsFragment extends ListFragment implements OnItemClickListene
 		receiptsThread= new Thread(
 			new Runnable(){
 				public void run(){
-					try {				//TODO: Wirft Exception
-							receiptString=PHPConnector.getReceiptsFromUser();
-							System.out.println("receiptString: "+receiptString);
+					receiptString=PHPConnector.doRequest("get_user_receipts.php");
+					//receiptString=PHPConnector.getReceiptsFromUser();
+					System.out.println("receiptString: "+receiptString);
+					
+					if(!receiptString.equals("no receipts")){
+					    String[] receiptData = receiptString.split(":");
+					    for(String i: receiptData){
+					    	System.out.println("receiptData: "+i);
+					    }
+						
+						ReceiptsFragment.receiptsList = new ArrayList<Receipt>();
+//							ReceiptsFragment.receiptsList.add(new Receipt("01.01.2014","Aldi","Erik, Andi","15,63"));
+						
+						boolean isOwner;
+						
+						int j=0;
+						
+						people=new String[receiptData.length][];
+						sharePaid=new String[receiptData.length][];
+						
+						for(int i=0;i<receiptData.length;i+=7){
 							
-							if(!receiptString.equals("no receipts")){
-						        String[] receiptData = receiptString.split(":");
-						        for(String i: receiptData){
-						        	System.out.println("receiptData: "+i);
-						        }
-								
-								ReceiptsFragment.receiptsList = new ArrayList<Receipt>();
-	//							ReceiptsFragment.receiptsList.add(new Receipt("01.01.2014","Aldi","Erik, Andi","15,63"));
-								
-								boolean isOwner;
-								
-								int j=0;
-								
-								people=new String[receiptData.length][];
-								sharePaid=new String[receiptData.length][];
-								
-								for(int i=0;i<receiptData.length;i+=7){
-									
-									people[j] = receiptData[i+2].split(", ");
-									sharePaid[j] = receiptData[i+6].split(", ");
-									
-									if(receiptData[i+5].equals("isOwner")){	//Owner ist der erste der Liste an Personen
-										isOwner = true;
-									}else{
-										isOwner = false;
-									}
-									ReceiptsFragment.receiptsList.add(new Receipt(receiptData[i], receiptData[i+4],receiptData[i+3],receiptData[i+2],receiptData[i+1],isOwner));
-									j++;
-								}
+							people[j] = receiptData[i+2].split(", ");
+							sharePaid[j] = receiptData[i+6].split(", ");
+							
+							if(receiptData[i+5].equals("isOwner")){	//Owner ist der erste der Liste an Personen
+								isOwner = true;
+							}else{
+								isOwner = false;
 							}
-							
-						} catch (ClientProtocolException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							ReceiptsFragment.receiptsList.add(new Receipt(receiptData[i], receiptData[i+4],receiptData[i+3],receiptData[i+2],receiptData[i+1],isOwner));
+							j++;
 						}
+					}
 					}
 				}
 			);

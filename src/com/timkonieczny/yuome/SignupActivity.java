@@ -1,16 +1,10 @@
 package com.timkonieczny.yuome;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.os.Build;
@@ -20,7 +14,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -35,8 +28,6 @@ public class SignupActivity extends Activity {
     StringBuffer buffer;
     HttpResponse response;
     HttpClient httpclient;
-    List<NameValuePair> nameValuePairs;
-    ProgressDialog dialog = null;
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
@@ -55,8 +46,8 @@ public class SignupActivity extends Activity {
     		new OnClickListener() {
 	            @Override
 	            public void onClick(View v) {
+	            	WelcomeActivity.dialog = ProgressDialog.show(SignupActivity.this, "","Login läuft", true);
 	            	if(editPassword.getText().toString().trim().equals(repeatPassword.getText().toString().trim())){
-		                dialog = ProgressDialog.show(SignupActivity.this, "","Registrierung läuft", true);
 		                new Thread(
 		                		new Runnable(){
 		                			public void run(){
@@ -72,16 +63,14 @@ public class SignupActivity extends Activity {
     	);
 	}
 
-	void userSignup(){
-        try{
-            String response = PHPConnector.getLoginResponse("add_user.php",editUsername.getText().toString().trim(),editPassword.getText().toString().trim());
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    //debugText.setText("Response from PHP : " + response);
-                    dialog.dismiss();
-                }
-            });
-            //System.out.println(response);
+	void userSignup(){        	
+        	
+        	ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            nameValuePairs.add(new BasicNameValuePair("username",editUsername.getText().toString().trim()));  
+            nameValuePairs.add(new BasicNameValuePair("password",editPassword.getText().toString().trim()));
+            
+            String response = PHPConnector.doRequest(nameValuePairs, "add_user.php");
+
             if(response.equalsIgnoreCase("Success")){
                 runOnUiThread(new Runnable() {
                     public void run() {
@@ -92,11 +81,6 @@ public class SignupActivity extends Activity {
             }else{
                 showAlert();
             }
-
-        }catch(Exception e){
-            dialog.dismiss();
-            System.out.println("Exception : " + e.getMessage());
-        }
     }
     public void showAlert(){
         SignupActivity.this.runOnUiThread(new Runnable() {

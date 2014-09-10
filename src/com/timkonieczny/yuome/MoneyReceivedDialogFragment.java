@@ -1,10 +1,10 @@
 package com.timkonieczny.yuome;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.apache.http.client.ClientProtocolException;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -55,22 +55,24 @@ public class MoneyReceivedDialogFragment extends DialogFragment {
                 	   Thread moneyReceivedThread= new Thread(
                				new Runnable(){
                					public void run(){
-               						try {
-               								ArrayList<String> checkedPeople = new ArrayList<String>();
-               								for(int i=0; i<checkedPerson.length; i++){
-               									if(checkedPerson[i]){
-               										checkedPeople.add(people[i]);
-               									}
-               								}
-               								PHPConnector.setPaid(owner,checkedPeople,receiptId, total);
-               								
-               							} catch (ClientProtocolException e) {
-               								// TODO Auto-generated catch block
-               								e.printStackTrace();
-               							} catch (IOException e) {
-               								// TODO Auto-generated catch block
-               								e.printStackTrace();
-               							}
+               						ArrayList<String> checkedPeople = new ArrayList<String>();
+									for(int i=0; i<checkedPerson.length; i++){
+										if(checkedPerson[i]){
+											checkedPeople.add(people[i]);
+										}
+									}
+									
+									
+									ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+									nameValuePairs.add(new BasicNameValuePair("how_many_people",Integer.toString(checkedPeople.size())));
+									nameValuePairs.add(new BasicNameValuePair("individual_share",Float.toString(total)));
+									nameValuePairs.add(new BasicNameValuePair("receipt_id",receiptId));
+									nameValuePairs.add(new BasicNameValuePair("owner",owner));
+									for(int i = 0; i < checkedPeople.size(); i++){
+										nameValuePairs.add(new BasicNameValuePair("person" + i,checkedPeople.get(i)));
+									}
+									
+									PHPConnector.doRequest(nameValuePairs, "set_paid.php");
                						}
                					}
                				);

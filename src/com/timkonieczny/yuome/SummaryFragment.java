@@ -1,11 +1,11 @@
 package com.timkonieczny.yuome;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.http.client.ClientProtocolException;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
@@ -90,25 +90,17 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
 		notificationThread= new Thread(
 				new Runnable(){
 					public void run(){
-						try {
-								notificationString=PHPConnector.getNotifications(regid);
-								System.out.println("notificationString: "+notificationString);
-								
-								String[] notificationData1 = notificationString.split(";");
-								
-								for(int i=0;i<notificationData1.length;i++){
-									System.out.println("notificationData1: "+notificationData1[i]);
-									stringList.add(notificationData1[i].split(":"));
-								}
-							} catch (ClientProtocolException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-								notificationString="failed";
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-								notificationString="failed";
-							}
+						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+						nameValuePairs.add(new BasicNameValuePair("regid",regid));
+						
+						notificationString=PHPConnector.doRequest(nameValuePairs, "get_notifications.php");
+						
+						String[] notificationData = notificationString.split(";");
+						
+						for(int i=0;i<notificationData.length;i++){
+							System.out.println("notificationData: "+notificationData[i]);
+							stringList.add(notificationData[i].split(":"));
+						}
 						}
 					}
 				);
@@ -184,13 +176,25 @@ public class DebtThread extends Thread{
     	
     	public void run(){
     		try {
-    			debts_list = PHPConnector.getBalance("get_debts.php");
-    		} catch (ClientProtocolException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			String stringResponse = PHPConnector.doRequest("get_debts.php");
+    			
+    			if(stringResponse.equals("no debts found.")){
+    	        	
+    	        }else if(stringResponse.equals("not logged in.")){
+    	        	throw new NotLoggedInException("Bitte erneut anmelden.");
+    	        }else{
+    	        	String[] data_unformatted = stringResponse.split(",");
+    		        for(String item : data_unformatted){
+    		        	HashMap<String, String> data_map = new HashMap<String, String>();
+    		        	String[] balance_array = item.split(":");
+    		        	String[] data_array = balance_array[1].split("#");
+    		        	data_map.put("ID", balance_array[0]);
+    		        	data_map.put("balance", data_array[0]);
+    		        	data_map.put("username", data_array[1]);
+    		        	debts_list.add(data_map);
+    		        }
+    		    }
+    			
     		} catch (NotLoggedInException e) {
 			// TODO Auto-generated catch block
     			notLoggedIn = true;
@@ -201,13 +205,25 @@ public class DebtThread extends Thread{
     	
     	public void run(){
     		try {
-    			credits_list = PHPConnector.getBalance("get_credits.php");
-    		} catch (ClientProtocolException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			String stringResponse = PHPConnector.doRequest("get_credits.php");
+    			
+    			if(stringResponse.equals("no debts found.")){
+    	        	
+    	        }else if(stringResponse.equals("not logged in.")){
+    	        	throw new NotLoggedInException("Bitte erneut anmelden.");
+    	        }else{
+    	        	String[] data_unformatted = stringResponse.split(",");
+    		        for(String item : data_unformatted){
+    		        	HashMap<String, String> data_map = new HashMap<String, String>();
+    		        	String[] balance_array = item.split(":");
+    		        	String[] data_array = balance_array[1].split("#");
+    		        	data_map.put("ID", balance_array[0]);
+    		        	data_map.put("balance", data_array[0]);
+    		        	data_map.put("username", data_array[1]);
+    		        	credits_list.add(data_map);
+    		        }
+    		    }
+    			
     		} catch (NotLoggedInException e) {
     			// TODO Auto-generated catch block
     			notLoggedIn = true;

@@ -1,15 +1,13 @@
 package com.timkonieczny.yuome;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-import org.apache.http.client.ClientProtocolException;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ListFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -56,30 +54,18 @@ public class ReceiptDetailsFragment extends ListFragment {
 		Thread articlesThread= new Thread(
 				new Runnable(){
 					public void run(){
-						try {				//TODO: Wirft Exception
-								articlesString=PHPConnector.getArticles(id);
-//								Log.d("articlesString",articlesString);
-								
-						        String[] articleData = articlesString.split(":");
-//						        for(String i: articleData){
-//						        	Log.d("receiptData",i);
-//						        }
-						        
-						        
-						        articlesList.clear();
-						        for(int i=0;i<articleData.length;i+=3){
-									ReceiptDetailsFragment.articlesList.add(new Article(articleData[i+1], articleData[i+2],articleData[i]));
-									total+=Float.parseFloat(articleData[2])*Integer.parseInt(articleData[0]);
-								}
-						        total /= people.length;
-								
-							} catch (ClientProtocolException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+						nameValuePairs.add(new BasicNameValuePair("id",id));
+						articlesString=PHPConnector.doRequest(nameValuePairs, "get_articles.php");
+						
+						String[] articleData = articlesString.split(":");
+						
+						articlesList.clear();
+						for(int i=0;i<articleData.length;i+=3){
+							ReceiptDetailsFragment.articlesList.add(new Article(articleData[i+1], articleData[i+2],articleData[i]));
+							total+=Float.parseFloat(articleData[2])*Integer.parseInt(articleData[0]);
+						}
+						total /= people.length;
 						}
 					}
 				);

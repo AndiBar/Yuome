@@ -1,13 +1,15 @@
 package com.timkonieczny.yuome;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import org.apache.http.client.ClientProtocolException;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ListActivity;
@@ -30,9 +32,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ManualInputActivity extends ListActivity {
     public static SimpleAdapter mAdapter;
@@ -321,33 +321,6 @@ public class ManualInputActivity extends ListActivity {
 		// TODO Auto-generated method stub
 		
 	//}
-	
-	private void getItemList(String store){
-		System.out.println("getItemList");
-		final String Store=store;
-		new Thread(
-        		new Runnable(){
-        			public void run(){		//TODO: wirft immer noch Exception
-        				try{
-        					final String response = PHPConnector.getItemListResponse(Store);
-        					System.out.println("Response : " + response);
-        				}catch(Exception e){
-        					runOnUiThread(new Runnable() {
-        		                 public void run() {
-        		                     Toast.makeText(ManualInputActivity.this,"Connection failed", Toast.LENGTH_SHORT).show();
-        		                 }
-        		             });
-        				}
-        			}
-        		}
-        ).start();
-		
-	   	 try{
-			 
-	     }catch(Exception e){
-	         
-		 }
-    }
 		
 	public void onBackPressed(){
 		Log.d("ManualInputActivity", "BackButton pressed");
@@ -375,29 +348,32 @@ class AddStoreThread extends Thread{
   	  this.title = title;
     }
 	
-	  public void run(){
-	       	try {
-				PHPConnector.addStore(title);
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	  public void run(){   	
+		ArrayList<NameValuePair>nameValuePairs = new ArrayList<NameValuePair>(1);
+		nameValuePairs.add(new BasicNameValuePair("store",title));
+		PHPConnector.doRequest(nameValuePairs, "add_store.php");
 	  }
 }
 
 class StoresThread extends Thread{
 	  public void run(){
-	       	try {
-				ManualInputActivity.stores = PHPConnector.getData("get_stores.php");
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	       	String stringResponse = PHPConnector.doRequest("get_stores.php");
+			
+			String[] data_unformatted = stringResponse.split(",");
+			ManualInputActivity.stores = new ArrayList<HashMap<String,String>>();
+			if(!stringResponse.equals("no friends found")){
+			    for(String item : data_unformatted){
+			    	HashMap<String, String>data_map = new HashMap<String, String>();
+			    	String[] data_array = item.split(":");
+			    	data_map.put("ID", data_array[0]);
+			    	data_map.put("title", data_array[1]);
+			    	ManualInputActivity.stores.add(data_map);
+			    }
+			}else{
+				HashMap<String, String>data_map = new HashMap<String, String>();
+				data_map.put("ID", "0");
+				data_map.put("title", "Du hast noch keine Kontakte");
+				ManualInputActivity.stores.add(data_map);
 			}
 	  }
 }

@@ -16,14 +16,11 @@
 
 package com.timkonieczny.yuome;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.http.client.ClientProtocolException;
-
-import com.timkonieczny.yuome.ChooseContactsActivity.FriendsThread;
-import com.timkonieczny.yuome.DebtsActivity.updateDebtThread;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -227,15 +224,13 @@ public class CreditsActivity extends ListActivity implements OnItemClickListener
     }
     public class updateCreditThread extends Thread{
     	public void run(){
-    		try {
-				PHPConnector.updateBalance(credits_changed, "update_credits.php");
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+    		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			nameValuePairs.add(new BasicNameValuePair("debts_number",String.valueOf(credits_changed.size())));
+			for(int i = 0; i < credits_changed.size(); i++){
+				nameValuePairs.add(new BasicNameValuePair("ID" + i,credits_changed.get(i).get("ID")));
+				nameValuePairs.add(new BasicNameValuePair("balance" + i,credits_changed.get(i).get("balance")));
 			}
+			PHPConnector.doRequest(nameValuePairs, "update_credits.php");
   	  	}
     }
 }

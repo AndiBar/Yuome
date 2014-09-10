@@ -1,11 +1,13 @@
 package com.timkonieczny.yuome;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -97,39 +99,36 @@ public class WelcomeActivity extends Activity {
 	}
 
 	static void userLogin(String username, String password, final Activity activity){
-	   	 try{
-			 final String response = PHPConnector.getLoginResponse("check_for_user.php", username.toString().trim(), password.toString().trim());
-	         System.out.println("Response : " + response);
-//	         dialog.dismiss();
-	         if(response.equalsIgnoreCase(username + " has logged in successfully.")){
-	        	 activity.runOnUiThread(new Runnable() {
-	                 public void run() {
-	                     Toast.makeText(activity,response, Toast.LENGTH_SHORT).show();
-	                 }
-	             });
-	        	 
-	        	 HandleSharedPreferences.setUserCredentials(context, username, password);	//	username und pw werden gespeichert, damit beim nächsten Mal kein Login notwendig ist
-	        	 
-	             Intent intent = new Intent(activity, MainActivity.class);
-	             activity.startActivity(intent);
-	         }
-	         else if(response.equalsIgnoreCase(username + " already logged in.")){
-	        	 activity.runOnUiThread(new Runnable() {
-	                 public void run() {
-	                     Toast.makeText(activity,response, Toast.LENGTH_SHORT).show();
-	                 }
-	             });
-	             Intent intent = new Intent(activity, MainActivity.class);
-	             activity.startActivity(intent);
-	         }else{
-	        	 dialog.dismiss();
-	             AlertDialogs.showAlert(activity,"Login Error","User not found or password incorrect.");
-	         }
-	
-	     }catch(Exception e){
-	         dialog.dismiss();
-	         AlertDialogs.showAlert(activity,"Connection Error",e.getMessage());
-		 }
+	   		 
+   		 ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+         nameValuePairs.add(new BasicNameValuePair("username",username.toString().trim()));  
+         nameValuePairs.add(new BasicNameValuePair("password",password.toString().trim()));
+   		 
+         final String response = PHPConnector.doRequest(nameValuePairs, "check_for_user.php");
+         if(response.equalsIgnoreCase(username + " has logged in successfully.")){
+        	 activity.runOnUiThread(new Runnable() {
+                 public void run() {
+                     Toast.makeText(activity,response, Toast.LENGTH_SHORT).show();
+                 }
+             });
+        	 
+        	 HandleSharedPreferences.setUserCredentials(context, username, password);	//	username und pw werden gespeichert, damit beim nächsten Mal kein Login notwendig ist
+        	 
+             Intent intent = new Intent(activity, MainActivity.class);
+             activity.startActivity(intent);
+         }
+         else if(response.equalsIgnoreCase(username + " already logged in.")){
+        	 activity.runOnUiThread(new Runnable() {
+                 public void run() {
+                     Toast.makeText(activity,response, Toast.LENGTH_SHORT).show();
+                 }
+             });
+             Intent intent = new Intent(activity, MainActivity.class);
+             activity.startActivity(intent);
+         }else{
+        	 dialog.dismiss();
+             AlertDialogs.showAlert(activity,"Login Error","User not found or password incorrect.");
+         }
     }
 	
     public void showAlert(){

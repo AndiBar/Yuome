@@ -16,18 +16,14 @@
 
 package com.timkonieczny.yuome;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.http.client.ClientProtocolException;
-
-import com.timkonieczny.yuome.ChooseContactsActivity.FriendsThread;
-//import com.timkonieczny.yuome.SummaryFragment.DebtThread;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.app.ProgressDialog;
 import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -40,7 +36,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -48,7 +43,6 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -229,15 +223,13 @@ public class DebtsActivity extends ListActivity implements OnItemClickListener, 
     }
     public class updateDebtThread extends Thread{
     	public void run(){
-    		try {
-				PHPConnector.updateBalance(debts_changed,"update_debts.php");
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+    		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			nameValuePairs.add(new BasicNameValuePair("debts_number",String.valueOf(debts_changed.size())));
+			for(int i = 0; i < debts_changed.size(); i++){
+				nameValuePairs.add(new BasicNameValuePair("ID" + i,debts_changed.get(i).get("ID")));
+				nameValuePairs.add(new BasicNameValuePair("balance" + i,debts_changed.get(i).get("balance")));
 			}
+			PHPConnector.doRequest(nameValuePairs, "update_debts.php");
   	  	}
     }
     

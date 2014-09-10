@@ -1,17 +1,13 @@
 package com.timkonieczny.yuome;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import org.apache.http.client.ClientProtocolException;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -60,19 +56,15 @@ public class SettingsFragment extends Fragment implements OnItemClickListener {
 			dialog = ProgressDialog.show(getActivity(), "","Daten werden geladen", true);
 			new Thread(new Runnable(){public void run(){
 				String username = "";
-				try{
-					username = PHPConnector.getResponse("check_for_user.php");
-					String user = username.split(" ")[0];
-					String already = username.split(" ")[1];
-					if(!already.equals("already")){
-						AlertDialogs.showAlert(getActivity(), "Error", "Fehler beim abmelden. Benutzer bereits abgemeldet?");
-						dialog.dismiss();
-					}else{
-						showLogoutMessage(user);
-					}
-				}catch(Exception e){
-		            AlertDialogs.showAlert(getActivity(), "Error", e.getMessage());
-		    	}
+				username = PHPConnector.doRequest("check_for_user.php");
+				String user = username.split(" ")[0];
+				String already = username.split(" ")[1];
+				if(!already.equals("already")){
+					AlertDialogs.showAlert(getActivity(), "Error", "Fehler beim abmelden. Benutzer bereits abgemeldet?");
+					dialog.dismiss();
+				}else{
+					showLogoutMessage(user);
+				}
 			}}).start();
 		}
 	}
@@ -89,15 +81,7 @@ public class SettingsFragment extends Fragment implements OnItemClickListener {
 	
 			    public void onClick(DialogInterface dialog, int whichButton) {
 			    	new Thread(new Runnable(){public void run(){
-				    	try {
-							PHPConnector.logOff();
-						} catch (ClientProtocolException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+				    	PHPConnector.doRequest("log_off.php");
 			    	}}).start();
 				        Toast.makeText(getActivity(), "Erfolgreich abgemeldet.", Toast.LENGTH_SHORT).show();
 				        Intent intent = new Intent(getActivity(), WelcomeActivity.class);

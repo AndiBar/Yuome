@@ -24,11 +24,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.http.client.ClientProtocolException;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 public class ChooseContactsActivity extends ListActivity {
     public static ChooseContactsAdapter mAdapter;
@@ -112,28 +113,49 @@ public class ChooseContactsActivity extends ListActivity {
     }
     public class FriendsThread extends Thread{
     	  public void run(){
-  	       	try {
-  				friends_list = PHPConnector.getData("get_friends.php");
-  			} catch (ClientProtocolException e) {
-  				// TODO Auto-generated catch block
-  				e.printStackTrace();
-  			} catch (IOException e) {
-  				// TODO Auto-generated catch block
-  				e.printStackTrace();
-  			}
+  	       	String stringResponse = PHPConnector.doRequest("get_friends.php");
+		
+			String[] data_unformatted = stringResponse.split(",");
+			friends_list = new ArrayList<HashMap<String,String>>();
+			if(!stringResponse.equals("no friends found")){
+			    for(String item : data_unformatted){
+			    	HashMap<String, String>data_map = new HashMap<String, String>();
+			    	String[] data_array = item.split(":");
+			    	data_map.put("ID", data_array[0]);
+			    	data_map.put("title", data_array[1]);
+			    	friends_list.add(data_map);
+			    }
+			}else{
+				HashMap<String, String>data_map = new HashMap<String, String>();
+				data_map.put("ID", "0");
+				data_map.put("title", "Du hast noch keine Kontakte");
+				friends_list.add(data_map);
+			}
     	  }
     }
     public class AddBuyThread extends Thread{
     	public void run(){
-    		try {
-				PHPConnector.addBuy(article_list, mAdapter.getCheckedUserIDs(), data.getString("storeID"), data.getString("date"), data.getDouble("total"));
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+    		double debit_value = 0 - (data.getDouble("total") / (mAdapter.getCheckedUserIDs().size()));
+			debit_value = Math.round(debit_value * 100) / 100.;
+			double credit_value = data.getDouble("total") + debit_value;
+			
+			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			nameValuePairs.add(new BasicNameValuePair("article_number",String.valueOf(article_list.size())));
+			for(int i = 0; i < article_list.size(); i++){
+				nameValuePairs.add(new BasicNameValuePair("article" + i,article_list.get(i).get("article")));
+				nameValuePairs.add(new BasicNameValuePair("price" + i,article_list.get(i).get("price")));
+				nameValuePairs.add(new BasicNameValuePair("amount" + i,article_list.get(i).get("amount")));
 			}
+			nameValuePairs.add(new BasicNameValuePair("user_number",String.valueOf(mAdapter.getCheckedUserIDs().size())));
+			for(int i = 0; i < mAdapter.getCheckedUserIDs().size(); i++){
+				nameValuePairs.add(new BasicNameValuePair("ID" + i,mAdapter.getCheckedUserIDs().get(i)));
+			}  
+			nameValuePairs.add(new BasicNameValuePair("storeID",data.getString("storeID")));
+			nameValuePairs.add(new BasicNameValuePair("date",data.getString("date")));
+			nameValuePairs.add(new BasicNameValuePair("debit",String.valueOf(debit_value)));
+			nameValuePairs.add(new BasicNameValuePair("credit",String.valueOf(credit_value)));
+			
+			PHPConnector.doRequest(nameValuePairs, "add_buy.php");
     	}
     }
 }

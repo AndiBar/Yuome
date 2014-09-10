@@ -1,17 +1,11 @@
 package com.timkonieczny.yuome;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import org.apache.http.client.ClientProtocolException;
-
-import com.timkonieczny.yuome.ChooseContactsActivity.FriendsThread;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ListFragment;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,8 +18,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class ContactsFragment extends ListFragment {
     public static ArrayList<HashMap<String, String>> friends_list = new ArrayList<HashMap<String,String>>();
@@ -103,15 +95,26 @@ public class ContactsFragment extends ListFragment {
 	  
 	public class FriendsThread extends Thread{
   	  public void run(){
-  		  try {
-  			  friends_list = PHPConnector.getData("get_friends.php");
-  		  } catch (ClientProtocolException e) {
-  			  // TODO Auto-generated catch block
-  			  e.printStackTrace();
-  		  } catch (IOException e) {
-  			  // TODO Auto-generated catch block
-  			  e.printStackTrace();
-  		  }
+  		  
+  		  
+  		  String stringResponse = PHPConnector.doRequest("get_friends.php");
+		
+		String[] data_unformatted = stringResponse.split(",");
+		friends_list = new ArrayList<HashMap<String,String>>();
+		if(!stringResponse.equals("no friends found")){
+		    for(String item : data_unformatted){
+		    	HashMap<String, String>data_map = new HashMap<String, String>();
+		    	String[] data_array = item.split(":");
+		    	data_map.put("ID", data_array[0]);
+		    	data_map.put("title", data_array[1]);
+		    	friends_list.add(data_map);
+		    }
+		}else{
+			HashMap<String, String>data_map = new HashMap<String, String>();
+			data_map.put("ID", "0");
+			data_map.put("title", "Du hast noch keine Kontakte");
+			friends_list.add(data_map);
+		}
   	  }
 	}
 

@@ -1,8 +1,9 @@
 package com.timkonieczny.yuome;
 
-import java.io.IOException;
+import java.util.ArrayList;
 
-import org.apache.http.client.ClientProtocolException;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -61,13 +62,10 @@ public class ContactsNewActivity extends Activity {
 	        		Thread thread = new Thread(new Runnable(){
 						@Override
 						public void run() {
-				        	try {
-				        		System.out.println(PHPConnector.addFriend(username));
-				        	} catch (ClientProtocolException e) {
-				        		e.printStackTrace();
-				        	} catch (IOException e) {
-				        		e.printStackTrace();
-				        	}
+				        	ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+							nameValuePairs.add(new BasicNameValuePair("friend",username));
+							
+							PHPConnector.doRequest(nameValuePairs, "add_friend.php");
 						}
 	        		});
 	        		thread.start();

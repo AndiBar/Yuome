@@ -1,7 +1,5 @@
 package com.timkonieczny.yuome;
 
-import android.graphics.drawable.BitmapDrawable;
-
 public class SummaryRowItem {
     private String title;
     private String description, total;
