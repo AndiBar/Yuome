@@ -48,5 +48,7 @@
     <string name="contact_delete_success">Kontakt wurde gel\u00f6scht</string>
     <string name="title_activity_contacts_attending">ContactsAttendingActivity</string>
     <string name="contacts_attending_title">Freundschaftsanfrage</string>
+    <string name="contact_confirm">Freund annehmen</string>
+    <string name="contact_decline">Freund ablehnen</string>
 
 </resources>

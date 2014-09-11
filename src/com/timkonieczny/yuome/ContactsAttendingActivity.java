@@ -6,15 +6,21 @@ import java.util.HashMap;
 
 import org.apache.http.client.ClientProtocolException;
 
+import com.timkonieczny.yuome.ContactsFragment.MyMenuItemStuffListener;
+
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
@@ -68,7 +74,12 @@ public class ContactsAttendingActivity extends ListActivity {
         
 	}
 	
-
+	// Action Bar Button
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.actionbar_contacts_attending, menu);
+        return true;
+    }
 
 
 	public class FriendsThread extends Thread{
