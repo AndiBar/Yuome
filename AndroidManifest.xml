@@ -97,6 +97,10 @@
             android:name=".ReceiptDetailsActivity"
             android:label="@string/title_activity_receipt_details" >
         </activity>
+        <activity
+            android:name=".ContactsAttendingActivity"
+            android:label="@string/title_activity_contacts_attending" >
+        </activity>
         
         <receiver
             android:name=".GcmBroadcastReceiver"
