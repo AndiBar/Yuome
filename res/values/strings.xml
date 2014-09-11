@@ -17,7 +17,7 @@
     <string name="menu_icon">Hauptmen\u00fc</string>
     <string name="weiter">Weiter</string>
     <string name="new_contacts">neuen Kontakt hinzuf\u00fcgen</string>
-    
+
     <color name="green">#338A30</color>
     <color name="white">#FFFFFF</color>
 
@@ -36,7 +36,9 @@
     <string name="title_credits_activity"></string>
     <string name="contacts_new_textfield_username">Nutzername oder E-Mail eingeben</string>
     <string name="serverURL">http://andibar.dyndns.org/Yuome/</string>
+
     <color name="black">#000000</color>
+
     <string name="inDept">Du schuldest </string>
     <string name="owing">Du bekommst von </string>
     <string name="beEeven">Euer Schuldenstand ist ausgeglichen.</string>
@@ -44,5 +46,7 @@
     <string name="contact_delete_error">L\u00f6schen fehlgeschlagen</string>
     <string name="contact_delete_error_description">Der Schuldenstand deines Freundes ist nicht ausgeglichen.</string>
     <string name="contact_delete_success">Kontakt wurde gel\u00f6scht</string>
+    <string name="title_activity_contacts_attending">ContactsAttendingActivity</string>
+    <string name="contacts_attending_title">Freundschaftsanfrage</string>
 
 </resources>

@@ -19,9 +19,9 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
-            android:name="com.timkonieczny.yuome.WelcomeActivity"
+            android:name=".WelcomeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -31,52 +31,56 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.timkonieczny.yuome.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.timkonieczny.yuome.SignupActivity"
+            android:name=".SignupActivity"
             android:label="@string/title_activity_signup"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.timkonieczny.yuome.CameraActivity"
+            android:name=".CameraActivity"
             android:label="@string/title_activity_camera"
             android:screenOrientation="portrait" >
         </activity>
-           <activity
-            android:name="com.timkonieczny.yuome.ManualInputActivity"
+        <activity
+            android:name=".ManualInputActivity"
             android:label="@string/title_manual_input_activity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop" >
-            
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
-                <!-- No category needed, because the Intent will specify this class component-->
+                <!-- No category needed, because the Intent will specify this class component -->
             </intent-filter>
-               
+
             <!-- Points to searchable meta data. -->
-            <meta-data android:name="android.app.searchable"
-                       android:resource="@xml/searchable" />
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
-       	 <activity
-            android:name="com.timkonieczny.yuome.ChooseContactsActivity"
+        <activity
+            android:name=".ChooseContactsActivity"
             android:label="@string/title_chose_contacts_activity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.timkonieczny.yuome.DebtsActivity"
+            android:name=".DebtsActivity"
             android:label="@string/title_debts_activity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.timkonieczny.yuome.CreditsActivity"
+            android:name=".CreditsActivity"
             android:label="@string/title_credits_activity"
             android:screenOrientation="portrait" >
         </activity>
-        
-        <activity android:name="com.timkonieczny.yuome.ContactsNewActivity"></activity>
+        <activity android:name=".ContactsNewActivity" >
+        </activity>
+        <activity
+            android:name=".ContactsAttendingActivity"
+            android:label="@string/title_activity_contacts_attending" >
+        </activity>
     </application>
 
 </manifest>

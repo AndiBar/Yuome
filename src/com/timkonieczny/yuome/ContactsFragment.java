@@ -121,7 +121,7 @@ public class ContactsFragment extends ListFragment {
 	    new MyMenuItemStuffListener(menu_hotlist, "Show hot message") {
 	        @Override
 	        public void onClick(View v) {
-	        	Intent intent = new Intent(getActivity(), ContactsNewActivity.class);
+	        	Intent intent = new Intent(getActivity(), ContactsAttendingActivity.class);
 	            startActivity(intent);
 	        }
 	    };
