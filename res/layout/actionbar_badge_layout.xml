@@ -10,7 +10,7 @@
 
     <ImageView
         android:id="@+id/hotlist_bell"
-        android:src="@drawable/ic_action_group"
+        android:src="@drawable/ic_bell"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"

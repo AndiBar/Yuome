@@ -9,7 +9,7 @@
     <item android:id="@+id/action_attending_contacts"
         android:actionLayout="@layout/actionbar_badge_layout"
         android:showAsAction="always"
-        android:icon="@drawable/ic_action_group"
+        android:icon="@drawable/ic_bell"
         android:title="Notification" />
 
 </menu>

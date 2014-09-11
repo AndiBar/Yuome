@@ -90,7 +90,7 @@ public class PHPConnector {
 	}	
 	
 	public static String addFriend(String friend) throws ClientProtocolException, IOException {
-		httppost = new HttpPost("http://andibar.dyndns.org/Yuome/add_friend.php");
+		httppost = new HttpPost(server + "add_friend.php");
 		nameValuePairs.add(new BasicNameValuePair("friend",friend));
 		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
@@ -193,8 +193,19 @@ public class PHPConnector {
 		httppost = new HttpPost(server + "accept_friend.php");
 		
 		for(String user: friends) {
-			nameValuePairs.add(new BasicNameValuePair("friend",user));
-			
+			nameValuePairs.add(new BasicNameValuePair("friend", user));
+		}
+		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+        ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		response = httpclient.execute(httppost, responseHandler);
+		System.out.println("Response: " + response);
+	}
+	
+	public static void declineFriends (ArrayList<String> friends) throws ClientProtocolException, IOException {
+		httppost = new HttpPost(server + "decline_friend.php");
+		
+		for(String user: friends) {
+			nameValuePairs.add(new BasicNameValuePair("friend", user));
 		}
 		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
         ResponseHandler<String> responseHandler = new BasicResponseHandler();

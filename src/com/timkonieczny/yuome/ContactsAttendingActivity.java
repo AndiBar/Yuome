@@ -87,6 +87,7 @@ public class ContactsAttendingActivity extends ListActivity {
     }
     
     public boolean onOptionsItemSelected(MenuItem item) {
+    	Intent intent;
         switch (item.getItemId()) {
 	          case R.id.action_accept:
 	        	dialog = ProgressDialog.show(ContactsAttendingActivity.this, "","R.string.dialog_contact_handling", true);
@@ -105,30 +106,30 @@ public class ContactsAttendingActivity extends ListActivity {
 	            		}
 	        		}
 	            ).start();
-	          	Intent intent = new Intent(this, MainActivity.class);
+	          	intent = new Intent(this, MainActivity.class);
 	        	startActivity(intent);
 	            break;
 	            
 	            
 	          case R.id.action_decline:
-		        	dialog = ProgressDialog.show(ContactsAttendingActivity.this, "","R.string.dialog_contact_handling", true);
+		        	dialog = ProgressDialog.show(ContactsAttendingActivity.this, "", getString(R.string.dialog_contact_handling), true);
 		            new Thread(
 		            	new Runnable(){
 		            		public void run(){
-//								try {
-//									PHPConnector.addBuy(article_list, mAdapter.getCheckedUserIDs(), data.getString("storeID"), data.getString("date"), data.getDouble("total"));
-//								} catch (ClientProtocolException e) {
-//									// TODO Auto-generated catch block
-//									e.printStackTrace();
-//								} catch (IOException e) {
-//									// TODO Auto-generated catch block
-//									e.printStackTrace();
-//								}
+								try {
+									PHPConnector.declineFriends(mAdapter.getCheckedUserIDs());
+								} catch (ClientProtocolException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 		            		}
 		        		}
 		            ).start();
-//		          	Intent intent = new Intent(this, MainActivity.class);
-//		        	startActivity(intent);
+		          	intent = new Intent(this, MainActivity.class);
+		        	startActivity(intent);
 		            break;
 	          
 	          default:
@@ -141,7 +142,7 @@ public class ContactsAttendingActivity extends ListActivity {
 	public class FriendsThread extends Thread{
 	  	  public void run(){
 	  		  try {
-	  			  friends_attending_list = PHPConnector.getData("get_friends_attending.php");
+	  			  friends_attending_list = PHPConnector.getData(getString(R.string.dialog_contact_handling));
 	  		  } catch (ClientProtocolException e) {
 	  			  // TODO Auto-generated catch block
 	  			  e.printStackTrace();
