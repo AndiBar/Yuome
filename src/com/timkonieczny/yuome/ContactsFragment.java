@@ -29,9 +29,11 @@ import android.widget.Toast;
 
 public class ContactsFragment extends ListFragment {
     public static ArrayList<HashMap<String, String>> friends_list = new ArrayList<HashMap<String,String>>();
+    public static ArrayList<HashMap<String, String>> friends_attending_list = new ArrayList<HashMap<String,String>>();
 	private ListView settings;
     public static ContactsFragmentAdapter mAdapter;
-
+    private int bell_number = 0;
+    
 	public ContactsFragment() {
 		// Empty constructor required for fragment subclasses
 	}
@@ -52,7 +54,7 @@ public class ContactsFragment extends ListFragment {
         
         mAdapter = new ContactsFragmentAdapter(getActivity(),
         		friends_list,
-        		 R.layout.fragment_contacts_item,
+        		 R.layout.activity_choose_contacts,
                  new String[] {"title"},
                  new int[] {R.id.title});
         
@@ -81,8 +83,7 @@ public class ContactsFragment extends ListFragment {
 	}
 	
 	
-	private int bell_number = 0;
-	private TextView ui_bell = null;
+	
 	
 	// Action Bar Button
 	@Override
@@ -90,8 +91,17 @@ public class ContactsFragment extends ListFragment {
 		inflater.inflate(R.menu.contacts_new, menu);
 		
 		final View menu_hotlist = menu.findItem(R.id.action_attending_contacts).getActionView();
-		ui_bell = (TextView) menu_hotlist.findViewById(R.id.hotlist_hot);
-		ui_bell.setText(Integer.toString(1));
+		
+		MenuItem bell_button = menu.findItem(R.id.action_attending_contacts);
+		TextView ui_bell = (TextView) menu_hotlist.findViewById(R.id.hotlist_hot);
+		bell_number = friends_attending_list.size();
+		if (bell_number == 0) {
+			bell_button.setVisible(isHidden());
+		} else {
+			bell_button.setVisible(isVisible());
+			ui_bell.setText(Integer.toString(bell_number));
+		}
+		
 	    new MyMenuItemStuffListener(menu_hotlist, "Show hot message") {
 	        @Override
 	        public void onClick(View v) {
@@ -155,6 +165,7 @@ public class ContactsFragment extends ListFragment {
   	  public void run(){
   		  try {
   			  friends_list = PHPConnector.getData("get_friends.php");
+  			  friends_attending_list = PHPConnector.getData("get_friends_attending.php");
   		  } catch (ClientProtocolException e) {
   			  // TODO Auto-generated catch block
   			  e.printStackTrace();

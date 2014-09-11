@@ -50,5 +50,6 @@
     <string name="contacts_attending_title">Freundschaftsanfrage</string>
     <string name="contact_confirm">Freund annehmen</string>
     <string name="contact_decline">Freund ablehnen</string>
+    <string name="dialog_contact_handling">Anfrage wird verarbeitet</string>
 
 </resources>

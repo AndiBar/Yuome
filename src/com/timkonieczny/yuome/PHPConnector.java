@@ -109,12 +109,16 @@ public class PHPConnector {
         
         String[] data_unformatted = response.split(",");
         ArrayList<HashMap<String,String>> data = new ArrayList<HashMap<String,String>>();
-        for(String item : data_unformatted){
-        	HashMap data_map = new HashMap<String, String>();
-        	String[] data_array = item.split(":");
-        	data_map.put("ID", data_array[0]);
-        	data_map.put("title", data_array[1]);
-        	data.add(data_map);
+        try {
+	        for(String item : data_unformatted){
+	        	HashMap data_map = new HashMap<String, String>();
+	        	String[] data_array = item.split(":");
+	        	data_map.put("ID", data_array[0]);
+	        	data_map.put("title", data_array[1]);
+	        	data.add(data_map);
+	        }
+        } catch (ArrayIndexOutOfBoundsException e) {
+        	System.out.println();
         }
 		return data;
 	}
@@ -184,4 +188,18 @@ public class PHPConnector {
 		response = httpclient.execute(httppost, responseHandler);
 		System.out.println("Response: " + response);
 	}
+	
+	public static void acceptFriends (ArrayList<String> friends) throws ClientProtocolException, IOException {
+		httppost = new HttpPost(server + "accept_friend.php");
+		
+		for(String user: friends) {
+			nameValuePairs.add(new BasicNameValuePair("friend",user));
+			
+		}
+		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+        ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		response = httpclient.execute(httppost, responseHandler);
+		System.out.println("Response: " + response);
+	}
+	
 }
