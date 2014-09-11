@@ -29,10 +29,8 @@ import android.widget.Toast;
 
 public class ContactsFragment extends ListFragment {
     public static ArrayList<HashMap<String, String>> friends_list = new ArrayList<HashMap<String,String>>();
-    public static ArrayList<HashMap<String, String>> friends_attending_list = new ArrayList<HashMap<String,String>>();
 	private ListView settings;
     public static ContactsFragmentAdapter mAdapter;
-    public static ContactsFragmentAdapter attendingAdapter;
 
 	public ContactsFragment() {
 		// Empty constructor required for fragment subclasses
@@ -51,30 +49,6 @@ public class ContactsFragment extends ListFragment {
         } catch (InterruptedException e) {
         	e.printStackTrace();
         }
-        
-        
-        attendingAdapter = new ContactsFragmentAdapter(getActivity(),
-        		friends_attending_list,
-        		 R.layout.fragment_contacts_item,
-                 new String[] {"title"},
-                 new int[] {R.id.title});
-        
-       ListView attendListView = getListView();
-       setListAdapter(attendingAdapter);
-       //listView.setClickable(true);
-       attendListView.setFocusableInTouchMode(false);
-       attendListView.setFocusable(false);
-       attendListView.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            	SaveValue.setSelectedFriendName(friends_list.get(position).get("title"));
-            	Log.i("ContactsFragment", "Friend: " + friends_attending_list.get(position).get("title"));
-    			Fragment fragment = new ContactsDetailFragment();
-    			FragmentManager fragmentManager = getFragmentManager();
-    			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-            }
-        });
-	
-        
         
         mAdapter = new ContactsFragmentAdapter(getActivity(),
         		friends_list,
@@ -163,7 +137,6 @@ public class ContactsFragment extends ListFragment {
 	}
 	
 	
-	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    // Handle presses on the action bar items
@@ -181,7 +154,6 @@ public class ContactsFragment extends ListFragment {
 	public class FriendsThread extends Thread{
   	  public void run(){
   		  try {
-  			  friends_attending_list = PHPConnector.getData("get_friends_attending.php");
   			  friends_list = PHPConnector.getData("get_friends.php");
   		  } catch (ClientProtocolException e) {
   			  // TODO Auto-generated catch block
