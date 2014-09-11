@@ -1,16 +1,15 @@
 package com.timkonieczny.yuome;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-<<<<<<< HEAD
-=======
 import org.apache.http.client.ClientProtocolException;
 
->>>>>>> eriksBranch
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ListFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -25,6 +24,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class ContactsFragment extends ListFragment {
     public static ArrayList<HashMap<String, String>> friends_list = new ArrayList<HashMap<String,String>>();
