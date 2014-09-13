@@ -140,12 +140,16 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
 	        
 	        
 	        if(stringList!=null){
-
+	        	float sum;
 				for(int i=0;i<stringList.size();i++){
-				
 		        	switch(stringList.get(i)[0]){
 			        	case "0":
-			        		item = new SummaryRowItem("Neue Rechnung von "+stringList.get(i)[1]+", "+stringList.get(i)[4]+"€", stringList.get(i)[3]+" vom "+stringList.get(i)[2]+".");
+			        		sum = Float.parseFloat(stringList.get(i)[4]);
+			        		sum = sum*100;
+			        		sum = Math.round(sum);
+			        		sum = sum/100;
+			        		Log.d("notification",""+sum);
+			        		item = new SummaryRowItem("Neue Rechnung von "+stringList.get(i)[1]+", "+sum+"€", stringList.get(i)[3]+" vom "+stringList.get(i)[2]+".");
 			        		rowItems.add(item);
 			        		break;
 			        	case "1":
@@ -153,7 +157,11 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
 			        		rowItems.add(item);
 			        		break;
 			        	case "2":
-			        		item = new SummaryRowItem(stringList.get(i)[2]+" hat "+stringList.get(i)[4]+"€ von dir erhalten.", "Die Rechnung vom "+stringList.get(i)[1]+" ("+stringList.get(i)[3]+") ist beglichen.");
+			        		sum = Float.parseFloat(stringList.get(i)[4]);
+			        		sum = sum*100;
+			        		sum = Math.round(sum);
+			        		sum = sum/100;
+			        		item = new SummaryRowItem(stringList.get(i)[2]+" hat "+sum+"€ von dir erhalten.", "Die Rechnung vom "+stringList.get(i)[1]+" ("+stringList.get(i)[3]+") ist beglichen.");
 			        		rowItems.add(item);
 			        		break;
 		        	}
