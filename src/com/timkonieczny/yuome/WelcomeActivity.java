@@ -101,8 +101,8 @@ public class WelcomeActivity extends Activity {
 	static void userLogin(String username, String password, final Activity activity){
 	   		 
    		 ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-         nameValuePairs.add(new BasicNameValuePair("username",username.toString().trim()));  
-         nameValuePairs.add(new BasicNameValuePair("password",password.toString().trim()));
+         nameValuePairs.add(new BasicNameValuePair("username",username.toString().trim()));
+         nameValuePairs.add(new BasicNameValuePair("password",PasswordHash.toHash(password.toString().trim())));
    		 
          final String response = PHPConnector.doRequest(nameValuePairs, "check_for_user.php");
          if(response.equalsIgnoreCase(username + " has logged in successfully.")){
