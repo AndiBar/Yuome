@@ -3,8 +3,10 @@ package com.timkonieczny.yuome;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,17 +33,18 @@ public class InputFragment extends Fragment implements OnItemClickListener {
 		View rootView = inflater.inflate(R.layout.fragment_settings,
 				container, false);
 		settings = (ListView) rootView.findViewById(R.id.settings);
-		ArrayAdapter<String> listAdapter;
+		InputAdapter listAdapter;
 
 		String[] settingItems = { "Kassenzettel scannen", "Manuelle Eingabe" };
 		ArrayList<String> settingsList = new ArrayList<String>();
 		settingsList.addAll(Arrays.asList(settingItems));
 
 		// Create ArrayAdapter using the planet list.
-		listAdapter = new ArrayAdapter<String>(getActivity(),
-				R.layout.settings_item, settingsList);
+		listAdapter = new InputAdapter(getActivity(), R.layout.settings_item, settingsList);
 		settings.setAdapter(listAdapter);
 		settings.setOnItemClickListener(this);
+		//settings.getChildAt(0).setEnabled(false);
+		//settings.getAdapter().getView(0, null, null).setEnabled(false);
 		return rootView;
 	}
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
