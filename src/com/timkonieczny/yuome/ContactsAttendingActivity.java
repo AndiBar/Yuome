@@ -137,15 +137,18 @@ public class ContactsAttendingActivity extends ListActivity {
 
 	public class FriendsThread extends Thread{
 	  	  public void run(){
-	  		  try {
-	  			  friends_attending_list = PHPConnector.getData("get_friends_attending.php");
-	  		  } catch (ClientProtocolException e) {
-	  			  // TODO Auto-generated catch block
-	  			  e.printStackTrace();
-	  		  } catch (IOException e) {
-	  			  // TODO Auto-generated catch block
-	  			  e.printStackTrace();
-	  		  }
+	  		String stringResponse = PHPConnector.doRequest("get_friends_attending.php");
+			String[] data_unformatted = stringResponse.split(",");
+			friends_attending_list = new ArrayList<HashMap<String,String>>();
+			if(!stringResponse.equals("no friends found")){
+			    for(String item : data_unformatted){
+			    	HashMap<String, String>data_map = new HashMap<String, String>();
+			    	String[] data_array = item.split(":");
+			    	data_map.put("ID", data_array[0]);
+			    	data_map.put("title", data_array[1]);
+			    	friends_attending_list.add(data_map);
+			    }
+			}
 	  	  }
 		}
 	
