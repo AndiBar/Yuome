@@ -1,6 +1,10 @@
 package com.timkonieczny.yuome;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -361,6 +365,7 @@ public class MainActivity extends Activity {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
+            	Log.d("doInBackground","active");
                 String msg = "";
                 try {
                     if (gcm == null) {
@@ -368,10 +373,10 @@ public class MainActivity extends Activity {
                     }
                     regid = gcm.register(SENDER_ID);
                     msg = "Device registered, registration ID=" + regid;
-
+                    Log.d("MainActivity",msg);
                     // You should send the registration ID to your server over HTTP, so it
                     // can use GCM/HTTP or CCS to send messages to your app.
-                    sendRegistrationIdToBackend();
+                    sendRegistrationIdToBackend(regid);
 
                     // For this demo: we don't need to send it because the device will send
                     // upstream messages to a server that echo back the message using the
@@ -391,7 +396,9 @@ public class MainActivity extends Activity {
         }.execute(null, null, null);
     }
     
-    private void sendRegistrationIdToBackend() {
-        // Your implementation here.
+    private void sendRegistrationIdToBackend(String regid) {
+    	ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+		nameValuePairs.add(new BasicNameValuePair("regid",regid));
+        PHPConnector.doRequest(nameValuePairs, "insert_regid.php");
       }
 }

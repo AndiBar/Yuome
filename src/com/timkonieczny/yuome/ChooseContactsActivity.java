@@ -23,8 +23,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ListView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -69,7 +67,6 @@ public class ChooseContactsActivity extends ListActivity {
                  new String[] {"title", "contactCheckBox"},
                  new int[] {R.id.title, R.id.contactCheckBox});
         
-        ListView listView = getListView();
         setListAdapter(mAdapter);
         
     }

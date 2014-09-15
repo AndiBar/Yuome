@@ -36,8 +36,6 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
 	private boolean notLoggedIn = false;
 	public static ProgressDialog dialog = null;
 	
-	public static String regid;
-	
 	private List<SummaryRowItem> rowItems;
 
 	public SummaryFragment() {
@@ -74,9 +72,6 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
 		View rootView = inflater.inflate(R.layout.fragment_summary, container, false);
-        
-		final SharedPreferences prefs = HandleSharedPreferences.getGcmPreferences(getActivity());
-		regid = prefs.getString(HandleSharedPreferences.PROPERTY_REG_ID, "");
 		
         for(HashMap debt : debts_list){
         	debit = (float) (Math.round((debit + Double.parseDouble(debt.get("balance").toString())) * 100) / 100.);
@@ -91,10 +86,8 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
 		notificationThread= new Thread(
 				new Runnable(){
 					public void run(){
-						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-						nameValuePairs.add(new BasicNameValuePair("regid",regid));
 						
-						notificationString=PHPConnector.doRequest(nameValuePairs, "get_notifications.php");
+						notificationString=PHPConnector.doRequest("get_notifications.php");
 						
 						String[] notificationData = notificationString.split(";");
 						
