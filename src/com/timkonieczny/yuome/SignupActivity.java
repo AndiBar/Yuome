@@ -67,7 +67,7 @@ public class SignupActivity extends Activity {
         	
         	ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
             nameValuePairs.add(new BasicNameValuePair("username",editUsername.getText().toString().trim()));  
-            nameValuePairs.add(new BasicNameValuePair("password",editPassword.getText().toString().trim()));
+            nameValuePairs.add(new BasicNameValuePair("password",PasswordHash.toHash(editPassword.getText().toString().trim())));
             
             String response = PHPConnector.doRequest(nameValuePairs, "add_user.php");
 
