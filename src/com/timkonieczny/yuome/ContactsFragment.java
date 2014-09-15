@@ -182,6 +182,8 @@ public class ContactsFragment extends ListFragment {
 			data_map.put("title", "Du hast noch keine Kontakte");
 			friends_list.add(data_map);
 		}
+		
+		
   		try {
   		    friends_attending_list = PHPConnector.getData("get_friends_attending.php");
   		} catch (ClientProtocolException e) {

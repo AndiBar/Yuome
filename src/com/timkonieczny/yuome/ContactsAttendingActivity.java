@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.message.BasicNameValuePair;
 
 import com.timkonieczny.yuome.ContactsFragment.MyMenuItemStuffListener;
 
@@ -90,19 +92,17 @@ public class ContactsAttendingActivity extends ListActivity {
     	Intent intent;
         switch (item.getItemId()) {
 	          case R.id.action_accept:
-	        	dialog = ProgressDialog.show(ContactsAttendingActivity.this, "","R.string.dialog_contact_handling", true);
+	        	dialog = ProgressDialog.show(ContactsAttendingActivity.this, "", getString(R.string.dialog_contact_handling), true);
 	            new Thread(
 	            	new Runnable(){
-	            		public void run(){
-							try {
-								PHPConnector.acceptFriends(mAdapter.getCheckedUserIDs());
-							} catch (ClientProtocolException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+	            		public void run(){	 
+	            			
+	            			for(String user: mAdapter.getCheckedUserIDs()) {
+		            			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+	            				nameValuePairs.add(new BasicNameValuePair("friend", user));
+	            				PHPConnector.doRequest(nameValuePairs, "accept_friend.php");
 							}
+	            			
 	            		}
 	        		}
 	            ).start();
@@ -116,14 +116,10 @@ public class ContactsAttendingActivity extends ListActivity {
 		            new Thread(
 		            	new Runnable(){
 		            		public void run(){
-								try {
-									PHPConnector.declineFriends(mAdapter.getCheckedUserIDs());
-								} catch (ClientProtocolException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+		            			for(String user: mAdapter.getCheckedUserIDs()) {
+			            			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		            				nameValuePairs.add(new BasicNameValuePair("friend", user));
+		            				PHPConnector.doRequest(nameValuePairs, "decline_friend.php");
 								}
 		            		}
 		        		}
@@ -142,7 +138,7 @@ public class ContactsAttendingActivity extends ListActivity {
 	public class FriendsThread extends Thread{
 	  	  public void run(){
 	  		  try {
-	  			  friends_attending_list = PHPConnector.getData(getString(R.string.dialog_contact_handling));
+	  			  friends_attending_list = PHPConnector.getData("get_friends_attending.php");
 	  		  } catch (ClientProtocolException e) {
 	  			  // TODO Auto-generated catch block
 	  			  e.printStackTrace();
