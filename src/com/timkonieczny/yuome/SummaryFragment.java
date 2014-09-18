@@ -139,28 +139,36 @@ public class SummaryFragment extends Fragment implements OnItemClickListener {
 				for(int i=0;i<stringList.size();i++){
 		        	switch(stringList.get(i)[0]){
 			        	case "0":
-			        		sum = Float.parseFloat(stringList.get(i)[4]);
-			        		sum = sum*100;
-			        		sum = Math.round(sum);
-			        		sum = sum/100;
-			        		df = new DecimalFormat();
-			        		df.setMaximumFractionDigits(2);
-			        		item = new SummaryRowItem("Neue Rechnung von "+stringList.get(i)[1]+", "+df.format(sum)+"€", stringList.get(i)[3]+" vom "+stringList.get(i)[2]+".");
-			        		rowItems.add(item);
+			        		try{
+				        		sum = Float.parseFloat(stringList.get(i)[4]);
+				        		sum = sum*100;
+				        		sum = Math.round(sum);
+				        		sum = sum/100;
+				        		df = new DecimalFormat();
+				        		df.setMaximumFractionDigits(2);
+				        		item = new SummaryRowItem("Neue Rechnung von "+stringList.get(i)[1]+", "+df.format(sum)+"€", stringList.get(i)[3]+" vom "+stringList.get(i)[2]+".");
+				        		rowItems.add(item);
+			        		}catch(NumberFormatException e){
+			        			e.printStackTrace();
+			        		}
 			        		break;
 			        	case "1":
 			        		item = new SummaryRowItem("Neuer Kontakt", stringList.get(i)[1]);
 			        		rowItems.add(item);
 			        		break;
 			        	case "2":
-			        		sum = Float.parseFloat(stringList.get(i)[4]);
-			        		sum = sum*100;
-			        		sum = Math.round(sum);
-			        		sum = sum/100;
-			        		df = new DecimalFormat();
-			        		df.setMaximumFractionDigits(2);
-			        		item = new SummaryRowItem(stringList.get(i)[2]+" hat "+df.format(sum)+"€ von dir erhalten.", "Die Rechnung vom "+stringList.get(i)[1]+" ("+stringList.get(i)[3]+") ist beglichen.");
-			        		rowItems.add(item);
+			        		try{
+				        		sum = Float.parseFloat(stringList.get(i)[4]);
+				        		sum = sum*100;
+				        		sum = Math.round(sum);
+				        		sum = sum/100;
+				        		df = new DecimalFormat();
+				        		df.setMaximumFractionDigits(2);
+				        		item = new SummaryRowItem(stringList.get(i)[2]+" hat "+df.format(sum)+"€ von dir erhalten.", "Die Rechnung vom "+stringList.get(i)[1]+" ("+stringList.get(i)[3]+") ist beglichen.");
+				        		rowItems.add(item);
+			        		}catch(NumberFormatException e){
+			        			e.printStackTrace();
+			        		}
 			        		break;
 		        	}
 				}

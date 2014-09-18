@@ -2,13 +2,14 @@ package com.timkonieczny.yuome;
 
 public class Receipt {
 
-	private String id, date, shop, names, sum;
+	private String id, date, shop, owner, names, sum;
 	private boolean isOwner;
 	
-	public Receipt(String id, String date, String shop, String names, String sum, boolean isOwner) {
+	public Receipt(String id, String date, String shop, String owner, String names, String sum, boolean isOwner) {
 		super();
 		this.date = date;
 		this.shop = shop;
+		this.owner = owner;
 		this.names = names;
 		this.sum = sum;
 		this.id = id;
@@ -41,6 +42,10 @@ public class Receipt {
 	
 	public void setShop(String shop) {
 		this.shop = shop;
+	}
+	
+	public String getOwner() {
+		return owner;
 	}
 	
 	public String getNames() {

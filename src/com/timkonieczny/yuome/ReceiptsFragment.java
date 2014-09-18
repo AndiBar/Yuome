@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ListFragment;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ public class ReceiptsFragment extends ListFragment implements OnItemClickListene
 	public static ArrayList<Receipt> receiptsList;
 	private Thread receiptsThread;
 	private String[][] people, sharePaid;
+	public static ProgressDialog dialog = null;
 	
 	public ReceiptsFragment() {
 		// Empty constructor required for fragment subclasses
@@ -44,6 +46,7 @@ public class ReceiptsFragment extends ListFragment implements OnItemClickListene
 	
 	@Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+		dialog = ProgressDialog.show(getActivity(), "","Daten werden geladen", true);
         super.onListItemClick(l, v, position, id);
         Log.i("ReceiptsFragment", "[onListItemClick] Selected Position "+ position);
         
@@ -113,7 +116,13 @@ public class ReceiptsFragment extends ListFragment implements OnItemClickListene
 							}else{
 								isOwner = false;
 							}
-							ReceiptsFragment.receiptsList.add(new Receipt(receiptData[i], receiptData[i+4],receiptData[i+3],receiptData[i+2],receiptData[i+1],isOwner));
+							String payers = "Beteiligt: ";
+							String[] names = receiptData[i+2].split(",");
+							for(int k = 1; k < names.length; k++){
+								payers = payers + names[k] + ",";			
+							}
+							payers = payers.substring(0, payers.length()-1);
+							ReceiptsFragment.receiptsList.add(new Receipt(receiptData[i], receiptData[i+4],receiptData[i+3],names[0],payers,receiptData[i+1],isOwner));
 							j++;
 						}
 					}

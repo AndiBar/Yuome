@@ -41,10 +41,6 @@ public class ReceiptDetailsFragment extends ListFragment {
 		people=this.getArguments().getStringArray("people");
 		sharePaid=this.getArguments().getBooleanArray("share_paid");
 		
-		for(int i=0;i<sharePaid.length;i++){
-			System.out.println("sharePaid="+sharePaid[i]);
-		}
-		
 //		if(isOwner){
 //			MainActivity.receiptOwner.setVisible(true);
 //		}
@@ -76,6 +72,8 @@ public class ReceiptDetailsFragment extends ListFragment {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			ReceiptsFragment.dialog.dismiss();
 			
 			ArticleAdapter adapter = new ArticleAdapter(rootView.getContext(), articlesList);
 			setListAdapter(adapter);

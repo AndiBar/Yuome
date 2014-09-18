@@ -91,6 +91,11 @@
             android:label="@string/title_credits_activity"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".CreditReceiptsActivity"
+            android:label="@string/title_credit_receipts_activity"
+            android:screenOrientation="portrait" >
+        </activity>
         <activity android:name=".ContactsNewActivity" >
         </activity>
         <activity

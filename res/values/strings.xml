@@ -34,6 +34,7 @@
     <string name="title_chose_contacts_activity"></string>
     <string name="title_debts_activity"></string>
     <string name="title_credits_activity"></string>
+    <string name="title_credit_receipts_activity"></string>
     <string name="contacts_new_textfield_username">Nutzername oder E-Mail eingeben</string>
 	<string name="serverURL">http://andibar.dyndns.org/Yuome/</string>
 

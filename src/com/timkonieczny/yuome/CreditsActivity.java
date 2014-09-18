@@ -22,13 +22,17 @@ import java.util.HashMap;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ListActivity;
 import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -101,6 +105,13 @@ public class CreditsActivity extends ListActivity implements OnItemClickListener
        
     }
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
+		
+		/*Intent intent = new Intent(this, CreditReceiptsActivity.class);
+    	Bundle data = new Bundle();
+    	data.putString("userID", String.valueOf(credits_list.get(arg2).get("ID")));
+      	intent.putExtras(data);
+    	startActivity(intent);*/
+    	
 		selected_debt = arg2;
 		final int selected = arg2;
 		final RadioButton radio_button1 = (RadioButton) popupMessage.getContentView().findViewById(R.id.radioButton1);
@@ -149,8 +160,7 @@ public class CreditsActivity extends ListActivity implements OnItemClickListener
     	if(popupMessage.isShowing()){
 			popupMessage.dismiss();
 		}
-		popupMessage.showAsDropDown(arg1);
-		
+		popupMessage.showAsDropDown(arg1);	
 	}
     public void onClick(View v) {
 		RadioButton radio_button1 = (RadioButton) popupMessage.getContentView().findViewById(R.id.radioButton1);
@@ -179,7 +189,6 @@ public class CreditsActivity extends ListActivity implements OnItemClickListener
         radio_button2.setChecked(false);
 		popupMessage.dismiss();
 		// TODO Auto-generated method stub
-		
 	}    
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

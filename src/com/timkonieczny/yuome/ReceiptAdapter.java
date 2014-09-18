@@ -36,12 +36,14 @@ public class ReceiptAdapter extends ArrayAdapter<Receipt> {
 			// 3. Get the two text view from the rowView
 			TextView date = (TextView) rowView.findViewById(R.id.receipt_date);
 		    TextView shop = (TextView) rowView.findViewById(R.id.receipt_shop);
+		    TextView owner = (TextView) rowView.findViewById(R.id.receipt_owner);
 		    TextView names = (TextView) rowView.findViewById(R.id.receipt_names);
 		    TextView sum = (TextView) rowView.findViewById(R.id.receipt_sum);
 		    
 		    // 4. Set the text for textView 
 		    date.setText(itemsArrayList.get(position).getDate());
-		    shop.setText(itemsArrayList.get(position).getShop());
+		    shop.setText(itemsArrayList.get(position).getShop() + " ");
+		    owner.setText(itemsArrayList.get(position).getOwner());
 		    names.setText(itemsArrayList.get(position).getNames());
 		    sum.setText(itemsArrayList.get(position).getSum());
 		   

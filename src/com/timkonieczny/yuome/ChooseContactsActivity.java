@@ -136,6 +136,8 @@ public class ChooseContactsActivity extends ListActivity {
 			debit_value = Math.round(debit_value * 100) / 100.;
 			double credit_value = data.getDouble("total") + debit_value;
 			
+			System.out.println(mAdapter.getCheckedUserIDs().toString());
+			
 			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 			nameValuePairs.add(new BasicNameValuePair("article_number",String.valueOf(article_list.size())));
 			for(int i = 0; i < article_list.size(); i++){
