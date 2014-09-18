@@ -59,7 +59,7 @@ public class ReceiptDetailsFragment extends ListFragment {
 						articlesList.clear();
 						for(int i=0;i<articleData.length;i+=3){
 							ReceiptDetailsFragment.articlesList.add(new Article(articleData[i+1], articleData[i+2],articleData[i]));
-							total+=Float.parseFloat(articleData[2])*Integer.parseInt(articleData[0]);
+							total+=Float.parseFloat(articleData[i+2])*Integer.parseInt(articleData[i]);
 						}
 						total /= people.length;
 						}
