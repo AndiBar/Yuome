@@ -72,9 +72,11 @@ public class ContactsAttendingActivity extends ListActivity {
 	            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 	            	SaveValue.setSelectedFriendName(friends_attending_list.get(position).get("title"));
 	            	Log.i("ContactsFragment", "Friend: " + friends_attending_list.get(position).get("title"));
-	    			Fragment fragment = new ContactsDetailFragment();
-	    			FragmentManager fragmentManager = getFragmentManager();
-	    			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+	            	
+	            	Intent intent = new Intent(ContactsAttendingActivity.this, MainActivity.class);
+		        	int selected = 3;
+		        	intent.putExtra("drawerPosition", selected);
+		            startActivity(intent);
 	            }
 	        });
         
@@ -106,8 +108,10 @@ public class ContactsAttendingActivity extends ListActivity {
 	            		}
 	        		}
 	            ).start();
-	          	intent = new Intent(this, MainActivity.class);
-	        	startActivity(intent);
+	            intent = new Intent(ContactsAttendingActivity.this, MainActivity.class);
+	        	int selected = 3;
+	        	intent.putExtra("drawerPosition", selected);
+	            startActivity(intent);
 	            break;
 	            
 	            
@@ -124,8 +128,10 @@ public class ContactsAttendingActivity extends ListActivity {
 		            		}
 		        		}
 		            ).start();
-		          	intent = new Intent(this, MainActivity.class);
-		        	startActivity(intent);
+		             intent = new Intent(ContactsAttendingActivity.this, MainActivity.class);
+		        	selected = 3;
+		        	intent.putExtra("drawerPosition", selected);
+		            startActivity(intent);
 		            break;
 	          
 	          default:

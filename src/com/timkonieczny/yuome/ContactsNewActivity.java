@@ -79,7 +79,8 @@ public class ContactsNewActivity extends Activity {
 	        	
 	        	
 	        	Intent intent = new Intent(this, MainActivity.class);
-	        	intent.putExtra("selectedMenu", 3);
+	        	int selected = 3;
+	        	intent.putExtra("drawerPosition", selected);
 	            startActivity(intent);
 	            
 	            return true;

@@ -144,7 +144,7 @@ public class MainActivity extends Activity {
 		if(getIntent().getExtras()!=null){	// zu öffnendes Fragment wenn in einer anderen Activity der Back-Button gedrückt wird
 			int drawerPosition = getIntent().getExtras().getInt("drawerPosition");
 			Log.d("MainActivity", "DrawerPosition: "+drawerPosition);
-			openInputFragment(drawerPosition);
+			selectMenuItem(drawerPosition);
 		}else{
 			mDrawerLayout.openDrawer(mMainMenu); // Beim Erstellen der Activity wird der Drawer geöffnet (wird nicht geöffnet, wenn woanders Back gedrückt wird)
 		}
