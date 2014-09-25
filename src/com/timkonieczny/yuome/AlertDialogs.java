@@ -175,7 +175,6 @@ public class AlertDialogs {
 		new_store_button.setOnClickListener(new OnClickListener() {
 		public void onClick(View view) {
 			try{
-				//store = title_text.getText().toString();
 				ManualInputActivity.changeDate(new_date);
 				alertDialog.dismiss();
 			}catch(NumberFormatException e){

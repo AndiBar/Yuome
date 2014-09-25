@@ -5,7 +5,7 @@
     <string name="action_settings">Settings</string>
     <string name="login">Login</string>
     <string name="signup">Registrieren</string>
-    <string name="username">Username</string>
+    <string name="username">Benutzername</string>
     <string name="password">Passwort</string>
     <string name="title_activity_main">Yuome</string>
     <string name="hello_world">Hello world!</string>
@@ -53,5 +53,8 @@
     <string name="contact_confirm">Freund annehmen</string>
     <string name="contact_decline">Freund ablehnen</string>
     <string name="dialog_contact_handling">Anfrage wird verarbeitet</string>
+    <string name="name">Vorname</string>
+    <string name="lastname">Nachname</string>
+    <string name="email">E-Mail</string>
 
 </resources>

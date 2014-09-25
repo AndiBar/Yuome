@@ -105,12 +105,6 @@ public class CreditsActivity extends ListActivity implements OnItemClickListener
        
     }
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
-		
-		/*Intent intent = new Intent(this, CreditReceiptsActivity.class);
-    	Bundle data = new Bundle();
-    	data.putString("userID", String.valueOf(credits_list.get(arg2).get("ID")));
-      	intent.putExtras(data);
-    	startActivity(intent);*/
     	
 		selected_debt = arg2;
 		final int selected = arg2;

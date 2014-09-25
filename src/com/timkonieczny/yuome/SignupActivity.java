@@ -23,7 +23,7 @@ import android.widget.Toast;
 public class SignupActivity extends Activity {
 	
 	Button signupButton;
-    EditText editUsername,editPassword,repeatPassword;
+    EditText editUsername,editPassword,editName,editLastname,editEmail,repeatPassword;
     HttpPost httppost;
     StringBuffer buffer;
     HttpResponse response;
@@ -39,6 +39,9 @@ public class SignupActivity extends Activity {
 		
 		signupButton = (Button)findViewById(R.id.SignupButton);
         editUsername = (EditText)findViewById(R.id.EditUsername);
+        editName = (EditText)findViewById(R.id.EditName);
+        editLastname = (EditText)findViewById(R.id.EditLastname);
+        editEmail = (EditText)findViewById(R.id.EditEmail);
         editPassword= (EditText)findViewById(R.id.EditPassword);
         repeatPassword= (EditText)findViewById(R.id.RepeatPassword);
 
@@ -67,6 +70,9 @@ public class SignupActivity extends Activity {
         	
         	ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
             nameValuePairs.add(new BasicNameValuePair("username",editUsername.getText().toString().trim()));  
+            nameValuePairs.add(new BasicNameValuePair("name",editName.getText().toString().trim())); 
+            nameValuePairs.add(new BasicNameValuePair("lastname",editLastname.getText().toString().trim()));
+            nameValuePairs.add(new BasicNameValuePair("email",editEmail.getText().toString().trim())); 
             nameValuePairs.add(new BasicNameValuePair("password",PasswordHash.toHash(editPassword.getText().toString().trim())));
             
             String response = PHPConnector.doRequest(nameValuePairs, "add_user.php");
