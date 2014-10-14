@@ -49,17 +49,36 @@ public class SignupActivity extends Activity {
     		new OnClickListener() {
 	            @Override
 	            public void onClick(View v) {
-	            	WelcomeActivity.dialog = ProgressDialog.show(SignupActivity.this, "","Login läuft", true);
-	            	if(editPassword.getText().toString().trim().equals(repeatPassword.getText().toString().trim())){
-		                new Thread(
+	            	if(editUsername.getText().toString().trim().equals("")){
+	            		Toast.makeText(SignupActivity.this,"Kein Benutzername angegeben", Toast.LENGTH_SHORT).show();
+	            	}
+	            	else if(editName.getText().toString().trim().equals("")){
+	            		Toast.makeText(SignupActivity.this,"Kein Vorname angegeben", Toast.LENGTH_SHORT).show();
+	            	}
+	            	else if(editLastname.getText().toString().trim().equals("")){
+	            		Toast.makeText(SignupActivity.this,"Kein Nachname angegeben", Toast.LENGTH_SHORT).show();
+	            	}
+	            	else if(editEmail.getText().toString().trim().equals("")){
+	            		Toast.makeText(SignupActivity.this,"Keine E-Mail-Adresse angegeben", Toast.LENGTH_SHORT).show();
+	            	}
+	            	else if((editEmail.getText().toString().trim().split("@").length < 2) || (editEmail.getText().toString().split("\\.").length < 2)){
+	            		Toast.makeText(SignupActivity.this,"Ungültige E-Mail-Adresse", Toast.LENGTH_SHORT).show();
+	            	}
+	            	else if(editPassword.getText().toString().trim().equals("")){
+	            		Toast.makeText(SignupActivity.this,"Kein Passwort angegeben", Toast.LENGTH_SHORT).show();
+	            	}
+	            	else if(!editPassword.getText().toString().trim().equals(repeatPassword.getText().toString().trim())){
+	            		Toast.makeText(SignupActivity.this,"Passwörter stimmen nicht überein", Toast.LENGTH_SHORT).show();
+	            		
+	            	}else{
+	            		WelcomeActivity.dialog = ProgressDialog.show(SignupActivity.this, "","Login läuft", true);
+	            		new Thread(
 		                		new Runnable(){
 		                			public void run(){
 		                				userSignup();
 		                			}
 		                		}
 		                ).start();
-	            	}else{
-	        			Toast.makeText(SignupActivity.this,"Passwörter stimmen nicht überein", Toast.LENGTH_SHORT).show();
 	            	}
 	            }
     		}
